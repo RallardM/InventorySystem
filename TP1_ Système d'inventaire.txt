@@ -1,0 +1,56 @@
+﻿Énoncé:
+En équipe de deux, vous devrez compléter un système d’inventaire à partir d’une petite base de code qui vous est fournie.
+Vous devrez à la fin fournir, en plus de la solution entière et d’un exécutable du projet (.zip), un rapport individuel expliquant comment le travail s’est passé (découpage des tâches) et expliquer rapidement les difficultés rencontrées si applicables.
+La note sera commune, sauf en cas exceptionnel de mauvais travail d’équipe, donc soyez certain de vous entraider.
+Pondération:
+* 20%: Affichage adéquat des prompts à l’utilisateur, des objets d’inventaire, de la liste entière et de l’équipement du personnage.
+* 10%: Navigation du système d’inventaire
+* 30%: Ajouts et retraits des éléments dans la liste // Remi
+* 20%: Sauvegarde et chargement d’un inventaire à partir d’un fichier externe // Remi
+* 20%: Classes enfants bien implémentées. Bonne utilisation de l’héritage et de l’overriding
+
+De plus, je me réserve le droit de retirer des points par rapport à la lisibilité du code, le respect des conventions vues en classe et autres bonnes pratiques de programmation.
+À implémenter:
+Vous devez implémenter les éléments suivants:
+   * Après chaque impression, il faut prompt l’utilisateur pour lui indiquer ses actions disponibles. Celles-ci sont:
+   * Navigation:
+   * Accepter ‘A’ ou ‘D’ pour naviguer vers les éléments précédents et suivants.
+   * Le dernier objet de votre liste doit pouvoir naviguer vers le premier et vice-versa.
+   * Lorsqu’un objet est sélectionné, il faut afficher son contenu avec inventoryObject->ToString(); Ceci affiche toujours le nom et le coût d’un objet, et d’autres informations selon la nature de l’objet (expliqué plus bas).
+   * Ajouts/retraits
+   * Avoir la possibilité de créer et d’insérer un nouvel objet d’inventaire. L’utilisateur devrait n’avoir qu’une information à entrer par prompt. 
+Ex:
+      * (I) pour ajouter un objet d’inventaire (entraîne le prompt suivant)
+      * (C)  pour ajouter un objet (C)onsumable, (E) pour ajouter un objet (E)quipement, (B) pour objets de (B)ase.
+      * Puis, entrer le nom en un prompt, le coût dans un autre prompt, et lorsque applicable les autres informations.
+      * Avoir la possibilité de détruire (R) pour Remove l’objet d’inventaire présentement sélectionné.
+      * Si un objet est détruit, l’objet courant doit être retiré de la liste et détruit adéquatement. De plus, soyez certains de réinitialiser le pointeur correspondant au prochain objet valide.
+      * Sauvegarde/Chargement: Avoir la possibilité de sauvegarder l’inventaire et de le “charger” (soyez clair sur l’indication dans vos prompts pour cette commande).
+      * Un fichier contenant quelques objets vous est fourni. Ce fichier doit fonctionner avec votre système de sauvegarde. Un fichier similaire sera utilisé pour corriger cette partie.
+      * Les lignes vides ne doivent pas affecter la lecture au chargement. Également, les espacements et l’ordre des données pour chaque objet n’importe pas.
+      * Vous devez également créer deux classes enfant de InventoryObject:
+      * Une classe “ConsumableObject” qui peut stacker de multiples éléments jusqu’à un compte de 20. On doit pouvoir augmenter et diminuer ce nombre facilement. Lorsque le nombre dépasse 20, un autre objet comportant 1 stack apparaît. Lorsque le nombre est réduit à 0, l’objet est détruit.
+      * Les objets Consumables peuvent augmenter de stack avec la touche ‘+’ ou diminuer avec la touche ‘-’.
+      * Les stacks doivent être affichés lors de l’impression des objets consumables.
+      * Une classe “EquipmentObject”, qui a une durabilité (unsigned int), une durabilité maximum (unsigned int) et peut être équipée à l’un des endroits approprié:
+      * Torso
+      * Head
+      * Legs
+      * Weapon1
+      * Weapon2
+      * Si un objet était déjà équipé, cet objet retourne dans l’inventaire, à l’emplacement de l’objet échangé.
+      * Ceci doit bien évidemment être affiché. Ex:
+“Casque 2 a été équipé sur la tête. Casque 1 a été remis dans l’inventaire.”
+      * La durabilité, durabilité maximum et le slot d’inventaire approprié doivent être affichés, en plus des informations de base (nom et coût), lors de l’affichage d’un EquipmentObject.
+         * Finalement, l’utilisateur doit pouvoir afficher le contenu de l’entièreté de la liste d’inventaire à partir du premier élément à n’importe quel moment avec la touche ESPACE. Cet affichage de la liste entière est plus court, n’affichant que le nom des objets. 
+Également, il doit pouvoir afficher l’équipement du personnage avec la touche (P) pour (P)ersonnage. Exemple possible d’affichage:
+
+Le personnage a comme équipement:
+        Tête: rien
+        Torse: Armure de bronze
+        Jambes: Pantalons de bronze
+        Arme1: Épée courte
+        Arme2: Bouclier de bois
+Astuces:
+Il serait judicieux d’implémenter la base du travail en peer programming.
+Il est également fortement conseillé de code review votre binôme.
