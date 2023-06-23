@@ -13,6 +13,7 @@ private:
 
 	//Member variables
 public:
+private:
 	enum e_equimentSlots
 	{
 		HEAD,
@@ -22,8 +23,6 @@ public:
 		WEAPON2,
 		COUNT
 	};
-
-private:
 	string m_name = "nameless object";
 	string m_type = "nameless type";
 	unsigned short int m_cost = 0;
