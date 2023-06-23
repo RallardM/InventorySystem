@@ -1,7 +1,8 @@
 #include "InventoryObject.h"
 
-InventoryObject::InventoryObject(string name, int cost)
+InventoryObject::InventoryObject(string type, string name, int cost)
 {
+	m_type = type;
 	m_name = name;
 	m_cost = cost;
 }

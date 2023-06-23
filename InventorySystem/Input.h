@@ -14,11 +14,12 @@ private:
 
 	enum e_inputMode
 	{
-		Navigation,
-		Edition
+		NAVIGATION,
+		EDITION,
+		COUNT
 	};
 
-	e_inputMode m_currentInputMode = Navigation;
+	e_inputMode m_currentInputMode = NAVIGATION;
 
 
 };

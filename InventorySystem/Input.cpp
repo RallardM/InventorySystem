@@ -5,10 +5,10 @@ void Input::GetInput()
 {
 	switch (m_currentInputMode)
 	{
-	case Navigation:
+	case NAVIGATION:
 		GetNavigationInput();
 		break;
-	case Edition:
+	case EDITION:
 		GetEditionInput();
 		break;
 	default:
@@ -44,7 +44,7 @@ void Input::GetNavigationInput()
 	case 'i':
 	case 'I':
 		// TODO : Remi : Change the input mode to edition
-		m_currentInputMode = Edition; // TODO : Remi : Find the different ways to return back to Navigation mode.
+		m_currentInputMode = EDITION; // TODO : Remi : Find the different ways to return back to Navigation mode.
 		break;
 	default:
 		// TODO : Paulo : Error message : You have to enter an invalid input

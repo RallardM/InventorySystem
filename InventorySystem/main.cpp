@@ -2,12 +2,16 @@
 
 #include "Inventory.h"
 #include "Input.h"
+#include "FileManager.h"
 
 
 int main()
 {
+	// Create pointer objects
 	Input* input = new Input();
 	Inventory* inventory = new Inventory();
+	FileManager* fileManager = new FileManager(inventory);
+
 	bool isGameRunning = true;
 
 
