@@ -1,6 +1,12 @@
 #include "InventoryObject.h"
 
-InventoryObject::InventoryObject(string type, string name, int cost)
+InventoryObject::InventoryObject(
+	string type,
+	string name,
+	unsigned short int cost,
+	unsigned short int currentDurability,
+	unsigned short int maxDurability,
+	E_equimentSlots slot)
 {
 	m_type = type;
 	m_name = name;

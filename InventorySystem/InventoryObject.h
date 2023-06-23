@@ -1,33 +1,36 @@
 #pragma once
 #include <string>
 
+#include "Enumerations.h"
+
 using namespace std;
 
 class InventoryObject
 {
 	//Methods
 public:
-	InventoryObject(string type, string name, int cost = 0);
+	InventoryObject(
+		string type, 
+		string name, 
+		unsigned short int cost, 
+		unsigned short int currentDurability, 
+		unsigned short int maxDurability, 
+		E_equimentSlots slot);
+
 	string ToString();
 private:
 
 	//Member variables
 public:
+
+
 private:
-	enum e_equimentSlots
-	{
-		HEAD,
-		CHEST,
-		LEGS,
-		WEAPON1,
-		WEAPON2,
-		COUNT
-	};
 	string m_name = "nameless object";
 	string m_type = "nameless type";
 	unsigned short int m_cost = 0;
 	unsigned short int m_stackSize = 0;
 	unsigned short int m_currentDurability = 0;
 	unsigned short int m_maxDurability = 0;
+	E_equimentSlots m_equipmentSlot = E_equimentSlots::COUNT;
 
 };

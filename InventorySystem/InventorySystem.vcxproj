@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Enumerations.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Inventory.h" />
