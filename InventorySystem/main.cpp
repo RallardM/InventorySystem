@@ -14,6 +14,8 @@ int main()
 
 	bool isGameRunning = true;
 
+	fileManager->LoadInventory();
+
 
 	//inventory->DisplaySelectedItem();
 	//TODO: Remove this part. These are examples of item instantiations

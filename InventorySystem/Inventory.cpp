@@ -1,9 +1,9 @@
 #include "Inventory.h"
 #include <iostream>
 
-void Inventory::AddItem(string itemName, int itemCost /* = 0 */)
+void Inventory::AddItem(string itemType, string itemName, int itemCost /* = 0 */)
 {
-	m_inventoryObjectsList.push_back(InventoryObject(itemName, itemCost));
+	m_inventoryObjectsList.push_back(InventoryObject(itemType, itemName, itemCost));
 	if (m_inventoryObjectsList.size() == 1)
 	{
 		m_currentItem = &m_inventoryObjectsList.front();

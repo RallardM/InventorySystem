@@ -8,7 +8,7 @@ class Inventory
 {
 //Methods
 public:
-	void AddItem(string itemName, int itemCost = 0);
+	void AddItem(string itemType, string itemName, int itemCost = 0);
 	void DisplaySelectedItem();
 private:
 

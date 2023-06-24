@@ -6,11 +6,17 @@ InventoryObject::InventoryObject(
 	unsigned short int cost,
 	unsigned short int currentDurability,
 	unsigned short int maxDurability,
-	E_equimentSlots slot)
+	E_equimentSlots slot
+	/*currentDurability = 0,
+	maxDurability = 0,
+	slot = E_equimentSlots::COUNT */)
 {
 	m_type = type;
 	m_name = name;
 	m_cost = cost;
+	m_currentDurability = currentDurability;
+	m_maxDurability = maxDurability;
+	m_equipmentSlot = slot;
 }
 
 string InventoryObject::ToString()

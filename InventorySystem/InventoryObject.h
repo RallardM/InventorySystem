@@ -10,12 +10,12 @@ class InventoryObject
 	//Methods
 public:
 	InventoryObject(
-		string type, 
-		string name, 
-		unsigned short int cost, 
-		unsigned short int currentDurability, 
-		unsigned short int maxDurability, 
-		E_equimentSlots slot);
+	string type, 
+	string name, 
+	unsigned short int cost, 
+	unsigned short int currentDurability = 0, 
+	unsigned short int maxDurability = 0, 
+	E_equimentSlots slot = E_equimentSlots::COUNT);
 
 	string ToString();
 private:
