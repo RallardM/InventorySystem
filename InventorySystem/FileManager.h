@@ -11,16 +11,9 @@ public:
 	void LoadInventory();
 
 private:
-	void RemoveSpaces(string& line);
-	void IdentifyString(
-		string* line,
-		string* previousLine,
-		string& type,
-		string& name,
-		unsigned short int& cost,
-		unsigned short int& currentDurability,
-		unsigned short int& maxDurability,
-		E_equimentSlots& slot);
+	void RemoveDoubleSpaces(string& line);
+	void RemoveLoneSpaces(string& line);
+	void IdentifyString(string* line, string* previousLine, string& type, string& name, E_equimentSlots& slot, unsigned short int& cost, unsigned short int& currentDurability, unsigned short int& maxDurability);
 	bool IsThisStringInLine(string* line, const char* word, unsigned short int xFirstLetters);
 
 //Member variables
