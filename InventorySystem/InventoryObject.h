@@ -13,14 +13,15 @@ public:
 	string& type, 
 	string& name, 
 	unsigned short int& cost, 
+	unsigned short int stacks = 1, 
 	unsigned short int currentDurability = 0, 
 	unsigned short int maxDurability = 0, 
-	E_equimentSlots slot = E_equimentSlots::COUNT);
+	E_equimentSlots slot = E_equimentSlots::Count);
 
 	string ToString();
+	void DeleteAttributes();
 
 private:
-
 	//Member variables
 public:
 

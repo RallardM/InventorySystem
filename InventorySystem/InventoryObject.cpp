@@ -4,6 +4,7 @@ InventoryObject::InventoryObject(
 	string& type,
 	string& name,
 	unsigned short int& cost,
+	unsigned short int stacks/* = 1 */,
 	unsigned short int currentDurability/* = 0 */,
 	unsigned short int maxDurability/* = 0 */,
 	E_equimentSlots slot/* = E_equimentSlots::COUNT */)
@@ -22,4 +23,15 @@ string InventoryObject::ToString()
 	returnValue += "\nItem name: " + *m_name + "\nItem cost: " + to_string(*m_cost);
 
 	return returnValue;
+}
+
+void InventoryObject::DeleteAttributes()
+{
+	delete m_name;
+	delete m_type;
+	delete m_equipmentSlot;
+	delete m_cost;
+	delete m_stackSize;
+	delete m_currentDurability;
+	delete m_maxDurability;
 }

@@ -2,10 +2,10 @@
 
 enum class E_equimentSlots : unsigned short int
 {
-	HEAD,
-	CHEST,
-	LEGS,
-	WEAPON1,
-	WEAPON2,
-	COUNT
+	Head,
+	Chest,
+	Legs,
+	Weapon1,
+	Weapon2,
+	Count
 };

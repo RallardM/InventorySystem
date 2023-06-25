@@ -39,5 +39,6 @@ int main()
 
 	// Delete pointer objects
 	delete input;
+	inventory->DestroyAllInventoryObjects();
 	delete inventory;
 }
