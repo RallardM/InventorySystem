@@ -8,6 +8,7 @@ using namespace std;
 FileManager::FileManager(Inventory* inventory) :
 	m_inventory(inventory)
 {
+	cout << "FileManager constructor called!" << endl;
 }
 
 void FileManager::LoadInventory()
@@ -34,6 +35,11 @@ void FileManager::LoadInventory()
 
 	while (getline(loadFile, line))
 	{
+		if (IsLineEmpty(&line))
+		{
+			continue;
+		}
+
 		RemoveDoubleSpaces(line);
 		RemoveSpaceInFront(line);
 		RemoveSpaceInMiddle(line);
@@ -140,7 +146,6 @@ void FileManager::IdentifyString(string* line, string& previousLine, string& typ
 
 }
 
-
 //bool FileManager::IsStringAnEnum(string* line)
 //{
 //	// Source : https://cplusplus.com/reference/string/string/compare/
@@ -210,8 +215,6 @@ E_equimentSlots FileManager::StringToEnum(string* line)
 
 void FileManager::RemoveDoubleSpaces(string& line)
 {
-	CheckIfEmpty(&line);
-
 	// Source : https://stackoverflow.com/questions/83439/remove-spaces-from-stdstring-in-c
 	// Source : https://stackoverflow.com/questions/48029688/how-to-remove-all-double-spaces-from-string
 	std::size_t doubleSpace = line.find("  ");
@@ -225,8 +228,6 @@ void FileManager::RemoveDoubleSpaces(string& line)
 // To only use afte a RemoveDoubleSpaces() to check if uneven spaces are still there.
 void FileManager::RemoveSpaceInFront(string& line)
 {
-	CheckIfEmpty(&line);
-
 	// Source : https://en.cppreference.com/w/cpp/string/byte/isspace
 	// If there is a lonely space at the beginning of the string
 	if (isspace(line[0]))
@@ -243,8 +244,6 @@ void FileManager::RemoveSpaceInFront(string& line)
 
 void FileManager::RemoveSpaceInMiddle(string& line)
 {
-	CheckIfEmpty(&line);
-
 	// If there is a lonely space between a colon and a character
 	for (size_t i = 0; i < line.length() - 1; i++)
 	{
@@ -272,8 +271,6 @@ void FileManager::RemoveSpaceInMiddle(string& line)
 
 void FileManager::RemoveSpaceInBack(string& line)
 {
-	CheckIfEmpty(&line);
-
 	// If there is a lonely space at the end of the (non-empty) string
 	if (!line.empty() && std::isspace(line.back()))
 	{
@@ -284,8 +281,6 @@ void FileManager::RemoveSpaceInBack(string& line)
 
 void FileManager::RemoveRawStrings(string& line)
 {
-	CheckIfEmpty(&line);
-
 	// Source : https://learn.microsoft.com/en-us/cpp/cpp/string-and-character-literals-cpp?view=msvc-170
 	char rawStrings[12] = { '\n', '\r', '\t', '\v', '\f', '\b', '\a', '\\', '\?' , '\'', '\"', '\0'};
 	size_t rawStringsLength = sizeof(rawStrings) / sizeof(rawStrings[0]);
@@ -328,8 +323,6 @@ void FileManager::RemoveRawStrings(string& line)
 
 void FileManager::RemoveStringFromString(string& line, const char* STRING_TO_REMOVE)
 {
-	CheckIfEmpty(&line);
-
 	// For chars in line that are not chars in STRING_TO_REMOVE 
 	// move STRING_TO_REMOVE characters to the beginning of the string
 	for (size_t i = 0; i < line.length(); i++)
@@ -358,8 +351,6 @@ void FileManager::RemoveStringFromString(string& line, const char* STRING_TO_REM
 
 void FileManager::RemoveExtraLengthFromString(string& line, const char* STRING_TO_REMOVE)
 {
-	CheckIfEmpty(&line);
-
 	// Source : https://stackoverflow.com/questions/74150327/string-size-returns-1-too-large-value-in-evaluation-system
 
 	// "Hello World!\r\n" Windows string have two encoded raw strings at the end. 
@@ -383,13 +374,44 @@ void FileManager::RemoveExtraLengthFromString(string& line, const char* STRING_T
 	}
 }
 
-void FileManager::CheckIfEmpty(string* line)
+bool FileManager::IsLineEmpty(string* line)
 {
+	bool isLineEmpty = line->empty();// TODO : Remove after debug
+	auto* emptyString = "";// TODO : Remove after debug
+	bool isEmptyLine = (*line == "");// TODO : Remove after debug 
+	bool isEmptyLineString = (*line == emptyString);// TODO : Remove after debug 
 	// If the line is empty, remove it from memory
+	if (*line == "")
+	{
+		return true;
+	}
+
 	if (line->empty())
 	{
-		return;
+		return true;
 	}
+
+	if (isLineEmpty)
+	{
+		return true;
+	}
+
+	if (*line == emptyString)
+	{
+		return true;
+	}
+
+	if (isEmptyLineString)
+	{
+		return true;
+	}
+
+	if (isEmptyLine)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 bool FileManager::IsThisStringInLine(string* line, const char* word)

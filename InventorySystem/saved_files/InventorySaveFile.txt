@@ -1,13 +1,3 @@
-Equipment
-{
-	Cost: 150
-		Name: Cool Helmet
-	CurrentDurability: 50
-	MaxDurability: 50
-	
-	
-		EquipmentSlot: Head
-}
 BaseObject
 {
 	Name: Broken urn

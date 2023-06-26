@@ -1,4 +1,7 @@
+#include <iostream>
 #include "InventoryObject.h"
+
+using namespace std;
 
 InventoryObject::InventoryObject(
 	string& type,
@@ -9,9 +12,11 @@ InventoryObject::InventoryObject(
 	unsigned short int maxDurability/* = 0 */,
 	E_equimentSlots slot/* = E_equimentSlots::COUNT */)
 {
+	cout << "InventoryObject constructor called!" << endl;
 	m_type = new string(type);
 	m_name = new string(name);
 	m_cost = new unsigned short int(cost);
+	m_stackSize = new unsigned short int(stacks);
 	m_currentDurability = new unsigned short int(currentDurability);
 	m_maxDurability = new unsigned short int(maxDurability);
 	m_equipmentSlot = new E_equimentSlots(slot);
@@ -27,6 +32,7 @@ string InventoryObject::ToString()
 
 void InventoryObject::DeleteAttributes()
 {
+	cout << "InventoryObject destructor called!" << endl;
 	delete m_name;
 	delete m_type;
 	delete m_equipmentSlot;

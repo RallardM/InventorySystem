@@ -22,7 +22,7 @@ private:
 	void RemoveRawStrings(string& line);
 	void RemoveStringFromString(string& line, const char* NAME);
 	void RemoveExtraLengthFromString(string& line, const char* STRING_TO_REMOVE);
-	void CheckIfEmpty(string* line);
+	bool IsLineEmpty(string* line);
 	bool IsThisStringInLine(string* line, const char* word);
 
 //Member variables
