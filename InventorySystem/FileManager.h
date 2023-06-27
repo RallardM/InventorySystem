@@ -8,33 +8,50 @@ class FileManager
 //Methods
 public:
 	FileManager(Inventory* inventory);
+	~FileManager();
+
 	void LoadInventory();
 
 private:
-	void IdentifyString(string* line, string& previousLine, string& type, string& name, E_equimentSlots& slot, unsigned short int& cost, unsigned short int& stacks, unsigned short int& currentDurability, unsigned short int& maxDurability);
-	//bool IsStringAnEnum(string* line);
-	E_equimentSlots StringToEnum(string* line);
-	//void EnumtoIntString(string* line, string& modifiedAttribute);
-	void RemoveDoubleSpaces(string& line);
-	void RemoveSpaceInFront(string& line);
-	void RemoveSpaceInMiddle(string& line);
-	void RemoveSpaceInBack(string& line);
-	void RemoveRawStrings(string& line);
-	void RemoveStringFromString(string& line, const char* NAME);
-	void RemoveExtraLengthFromString(string& line, const char* STRING_TO_REMOVE);
-	bool IsLineEmpty(string* line);
-	bool IsThisStringInLine(string* line, const char* word);
+	void IdentifyString(string& previousLine, string& type, string& name, E_equimentSlots& slot, unsigned short int& cost, unsigned short int& stacks, unsigned short int& currentDurability, unsigned short int& maxDurability);
+	E_equimentSlots StringToEnum();
+	void RemoveDoubleSpaces();
+	void RemoveSpaceInFront();
+	void RemoveSpaceInMiddle();
+	void RemoveSpaceInBack();
+	void RemoveRawStrings();
+	void RemoveStringFromString(const char* NAME);
+	void RemoveExtraLengthFromString(const char* CHAR_TO_REMOVE);
+	bool IsLineEmpty();
+	bool IsLineSingleRawString();
+	bool IsThisStringInLine(const char* word);
+	bool IsThisStringThisString(const char* word, size_t wordIndex, size_t lineIndex);
+	void ShiftCharsToLeftInLine(size_t index);
+	void ShiftCharsToStartOfString(const char* STRING_TO_MOVE, size_t j);
+	unsigned short int ConstCharSize(const char* a);
 
 //Member variables
 public:
-	
-
-
-
 
 private:
-	Inventory* m_inventory = nullptr;
-	string m_loadfilePath = "saved_files/InventorySaveFile.txt";
-	string m_savefilePath = "saved_files";
+	Inventory* m_inventory = nullptr; // Size: total size of the member variables in Inventory class.
+	
+
+	const char* rawStrings[12] = { "\n", "\r", "\t", "\v", "\f", "\b", "\a", "\\", "\?" , "\'", "\"", "\0" };
+
+	//In order to have a string pointer it can only be a const char* with "".
+	const char* SAVE_FILE_PATH = "saved_files";
+	const char* LOAD_FILE_PATH = "saved_files/InventorySaveFile.txt";
+	const char* OPENING_BRACKETS = "{";
+	const char* CLOSING_BRACKETS = "}";
+	const char* NAME = "Name:";
+	const char* COST = "Cost:";
+	const char* STACKS = "Stacks:";
+	const char* CURRENT_DURABILITY = "CurrentDurability:";
+	const char* MAX_DURABILITY = "MaxDurability:";
+	const char* EQUIPMENT_SLOT = "EquipmentSlot:";
+
+	// Dynamic size
+	string* m_line;
 };
 

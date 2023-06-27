@@ -1,21 +1,29 @@
 #include <fstream>
 #include <iostream>
+#include <cctype>
 
 #include "FileManager.h"
 
 using namespace std;
 
 FileManager::FileManager(Inventory* inventory) :
-	m_inventory(inventory)
+	m_inventory(inventory),
+	m_line(new string())
 {
 	cout << "FileManager constructor called!" << endl;
+}
+
+FileManager::~FileManager()
+{
+	cout << "FileManager destructor called!" << endl;
+	delete m_line;
 }
 
 void FileManager::LoadInventory()
 {
 	ifstream loadFile;
-	loadFile.open(m_loadfilePath);
-	string line = "";
+	loadFile.open(LOAD_FILE_PATH);
+	
 	string previousLine = "";
 
 	string type = "";
@@ -33,43 +41,35 @@ void FileManager::LoadInventory()
 		return;
 	}
 
-	while (getline(loadFile, line))
+	while (getline(loadFile, *m_line))
 	{
-		if (IsLineEmpty(&line))
+		if (IsLineEmpty() || IsLineSingleRawString())
 		{
 			continue;
 		}
 
-		RemoveDoubleSpaces(line);
-		RemoveSpaceInFront(line);
-		RemoveSpaceInMiddle(line);
-		RemoveSpaceInBack(line);
-		RemoveRawStrings(line);
-		IdentifyString(&line, previousLine, type, name, equipmentSlot, cost, stacks, currentDurability, maxDurability);
-		previousLine = line;
+		RemoveRawStrings();
+		RemoveDoubleSpaces();
+		RemoveSpaceInFront();
+		RemoveSpaceInMiddle();
+		RemoveSpaceInBack();
+		// TODO : Add a check if all words starts with a capital letter. ex: Broken urn
+		IdentifyString(previousLine, type, name, equipmentSlot, cost, stacks, currentDurability, maxDurability);
+		previousLine = *m_line;
 	}
 	loadFile.close();
 }
 
 // Throws a warning if slot is placed last in the parameter list.
-void FileManager::IdentifyString(string* line, string& previousLine, string& type, string& name, E_equimentSlots& slot, unsigned short int& cost, unsigned short int& stacks, unsigned short int& currentDurability, unsigned short int& maxDurability)
+void FileManager::IdentifyString(string& previousLine, string& type, string& name, E_equimentSlots& slot, unsigned short int& cost, unsigned short int& stacks, unsigned short int& currentDurability, unsigned short int& maxDurability)
 {
-	//In order to have a string pointer it can only be a const char* with "".
-	const char* OPENING_BRACKETS = "{";
-	const char* CLOSING_BRACKETS = "}";
-	const char* NAME = "Name:";
-	const char* COST = "Cost:";
-	const char* STACKS = "Stacks:";
-	const char* CURRENT_DURABILITY = "CurrentDurability:";
-	const char* MAX_DURABILITY = "MaxDurability:";
-	const char* EQUIPMENT_SLOT = "EquipmentSlot:";
-
-	if (line[0] == OPENING_BRACKETS)
+	if (m_line[0] == OPENING_BRACKETS)
 	{
+		// TODO : Add a check to see if the type is valid.
 		type = previousLine;
 		return;
 	}
-	else if (line[0] == CLOSING_BRACKETS)
+	else if (m_line[0] == CLOSING_BRACKETS)
 	{
 		m_inventory->AddItem(type, name, slot, cost, stacks, currentDurability, maxDurability);
 		previousLine = "";
@@ -84,63 +84,63 @@ void FileManager::IdentifyString(string* line, string& previousLine, string& typ
 	}
 
 	// Early return if the previous line is empty, 
-	// because it means that it is a new item.
+	// because iterations means that iterations is a new item.
 	if (previousLine.empty())
 	{
 		return;
 	}
 
-	if (IsThisStringInLine(line, NAME))
+	if (IsThisStringInLine(NAME))
 	{
-		RemoveStringFromString(*line, NAME);
-		RemoveRawStrings(*line);
-		RemoveExtraLengthFromString(*line, NAME);
-		name = *line;
+		RemoveStringFromString(NAME);
+		RemoveRawStrings();
+		RemoveExtraLengthFromString(NAME);
+		name = *m_line;
 		return;
 	}
 
-	if (IsThisStringInLine(line, COST))
+	if (IsThisStringInLine(COST))
 	{
-		RemoveStringFromString(*line, COST);
-		RemoveRawStrings(*line);
-		RemoveExtraLengthFromString(*line, COST);
-		cost = stoi(*line);
+		RemoveStringFromString(COST);
+		RemoveRawStrings();
+		RemoveExtraLengthFromString(COST);
+		cost = stoi(*m_line);
 		return;
 	}
 
-	if (IsThisStringInLine(line, STACKS))
+	if (IsThisStringInLine(STACKS))
 	{
-		RemoveStringFromString(*line, STACKS);
-		RemoveRawStrings(*line);
-		RemoveExtraLengthFromString(*line, STACKS);
-		stacks = stoi(*line);
+		RemoveStringFromString(STACKS);
+		RemoveRawStrings();
+		RemoveExtraLengthFromString(STACKS);
+		stacks = stoi(*m_line);
 		return;
 	}
 
-	if (IsThisStringInLine(line, CURRENT_DURABILITY))
+	if (IsThisStringInLine(CURRENT_DURABILITY))
 	{
-		RemoveStringFromString(*line, CURRENT_DURABILITY);
-		RemoveRawStrings(*line);
-		RemoveExtraLengthFromString(*line, CURRENT_DURABILITY);
-		currentDurability = stoi(*line);
+		RemoveStringFromString(CURRENT_DURABILITY);
+		RemoveRawStrings();
+		RemoveExtraLengthFromString(CURRENT_DURABILITY);
+		currentDurability = stoi(*m_line);
 		return;
 	}
 
-	if (IsThisStringInLine(line, MAX_DURABILITY))
+	if (IsThisStringInLine(MAX_DURABILITY))
 	{
-		RemoveStringFromString(*line, MAX_DURABILITY);
-		RemoveRawStrings(*line);
-		RemoveExtraLengthFromString(*line, MAX_DURABILITY);
-		maxDurability = stoi(*line);
+		RemoveStringFromString(MAX_DURABILITY);
+		RemoveRawStrings();
+		RemoveExtraLengthFromString(MAX_DURABILITY);
+		maxDurability = stoi(*m_line);
 		return;
 	}
 
-	if (IsThisStringInLine(line, EQUIPMENT_SLOT))
+	if (IsThisStringInLine(EQUIPMENT_SLOT))
 	{
-		RemoveStringFromString(*line, EQUIPMENT_SLOT);
-		RemoveRawStrings(*line);
-		RemoveExtraLengthFromString(*line, EQUIPMENT_SLOT);
-		slot = StringToEnum(line);
+		RemoveStringFromString(EQUIPMENT_SLOT);
+		RemoveRawStrings();
+		RemoveExtraLengthFromString(EQUIPMENT_SLOT);
+		slot = StringToEnum();
 		return;
 	}
 
@@ -156,25 +156,25 @@ void FileManager::IdentifyString(string* line, string& previousLine, string& typ
 //	return false;
 //}
 
-E_equimentSlots FileManager::StringToEnum(string* line)
+E_equimentSlots FileManager::StringToEnum()
 {
-	if (IsThisStringInLine(line, "Head"))
+	if (IsThisStringInLine("Head"))
 	{
 		return E_equimentSlots::Head;
 	}
-	else if (IsThisStringInLine(line, "Chest"))
+	else if (IsThisStringInLine("Chest"))
 	{
 		return E_equimentSlots::Chest;
 	}
-	else if (IsThisStringInLine(line, "Legs"))
+	else if (IsThisStringInLine("Legs"))
 	{
 		return E_equimentSlots::Legs;
 	}
-	else if (IsThisStringInLine(line, "Weapon1"))
+	else if (IsThisStringInLine("Weapon1"))
 	{
 		return E_equimentSlots::Weapon1;
 	}
-	else if (IsThisStringInLine(line, "Weapon2"))
+	else if (IsThisStringInLine("Weapon2"))
 	{
 		return E_equimentSlots::Weapon2;
 	}
@@ -184,107 +184,79 @@ E_equimentSlots FileManager::StringToEnum(string* line)
 	}
 }
 
-
-//void FileManager::EnumtoIntString(string* line, string& modifiedAttribute)
-//{
-//	switch ((E_equimentSlots)stoi(*line))
-//	{
-//	case E_equimentSlots::Head:
-//		modifiedAttribute = to_string(static_cast<int>(E_equimentSlots::Head));
-//		break;
-//	case E_equimentSlots::Chest:
-//		modifiedAttribute = to_string(static_cast<int>(E_equimentSlots::Chest));
-//		break;
-//	case E_equimentSlots::Legs:
-//		modifiedAttribute = to_string(static_cast<int>(E_equimentSlots::Legs));
-//		break;
-//	case E_equimentSlots::Weapon1:
-//		modifiedAttribute = to_string(static_cast<int>(E_equimentSlots::Weapon1));
-//		break;
-//	case E_equimentSlots::Weapon2:
-//		modifiedAttribute = to_string(static_cast<int>(E_equimentSlots::Weapon2));
-//		break;
-//	case E_equimentSlots::Count:
-//		modifiedAttribute = to_string(static_cast<int>(E_equimentSlots::Count));
-//		break;
-//	default:
-//		// TODO : Add error message
-//		break;
-//	}
-//}
-
-void FileManager::RemoveDoubleSpaces(string& line)
+void FileManager::RemoveDoubleSpaces()
 {
 	// Source : https://stackoverflow.com/questions/83439/remove-spaces-from-stdstring-in-c
 	// Source : https://stackoverflow.com/questions/48029688/how-to-remove-all-double-spaces-from-string
-	std::size_t doubleSpace = line.find("  ");
-	while (doubleSpace != std::string::npos)
+	size_t doubleSpace = m_line->find("  ");
+
+	// While there are double spaces, remove them until the end of string 
+	// (npos is the greatest possible value for an element of type size_t)
+	// Source : https://cplusplus.com/reference/string/string/npos/
+	while (doubleSpace != string::npos)
 	{
-		line.erase(doubleSpace, 1);
-		doubleSpace = line.find("  ");
+		m_line->erase(doubleSpace, 1);
+		doubleSpace = m_line->find("  ");
 	}
 }
 
 // To only use afte a RemoveDoubleSpaces() to check if uneven spaces are still there.
-void FileManager::RemoveSpaceInFront(string& line)
+void FileManager::RemoveSpaceInFront()
 {
-	// Source : https://en.cppreference.com/w/cpp/string/byte/isspace
-	// If there is a lonely space at the beginning of the string
-	if (isspace(line[0]))
+	// isspace() does not work well with pointers 
+	if (m_line[0] == " ")
 	{
 		// Shift all characters to the left by one
-		for (size_t i = 0; i < line.length() - 1; i++)
-		{
-			line[i] = line[i + 1];
-		}
+		ShiftCharsToLeftInLine(0);
 
-		line[line.length() - 1] = '\0';
+		// Remove the last extra character
+		m_line->pop_back();
 	}
 }
 
-void FileManager::RemoveSpaceInMiddle(string& line)
+void FileManager::RemoveSpaceInMiddle()
 {
 	// If there is a lonely space between a colon and a character
-	for (size_t i = 0; i < line.length() - 1; i++)
+	for (size_t i = 0; i < m_line->length() - 1; i++)
 	{
-		if (line[i] == ':' && isspace(line[i + 1]))
+		// Source : https://stackoverflow.com/questions/30457813/varn-what-does-iterations-mean-in-c
+		// isspace() does not work well with pointers 
+		auto linei = (*m_line)[i]; // TODO : Remove after debug
+		auto linei1 = (*m_line)[i + 1]; // TODO : Remove after debug
+
+		// If the element is not out of range and there is a space before a colon
+		if (i > 0 && (*m_line)[i - 1] == ' ' && (*m_line)[i] == ':')
 		{
-			// Shift all characters to the left by one
-			for (size_t j = i + 1; j < line.length() - 1; j++)
-			{
-				line[j] = line[j + 1];
-			}
-			break;
+			// Shift all characters to the left by one to remove the space
+			ShiftCharsToLeftInLine(i - 1);
 		}
 
-		if (i > 0 && isspace(line[i - 1]) && line[i] == ':')
+		// If there is a space after a colon
+		if ((*m_line)[i] == ':' && (*m_line)[i + 1] == ' ')
 		{
-			// Shift all characters to the left by one
-			for (size_t j = i + 1; j < line.length() - 1; j++)
-			{
-				line[j] = line[j + 1];
-			}
+			// Shift all characters to the left by one to remove the space
+			ShiftCharsToLeftInLine(i + 1);
 			break;
 		}
 	}
 }
 
-void FileManager::RemoveSpaceInBack(string& line)
+void FileManager::RemoveSpaceInBack()
 {
 	// If there is a lonely space at the end of the (non-empty) string
-	if (!line.empty() && std::isspace(line.back()))
+	if (!m_line->empty() && (isspace(m_line->back()) || m_line->back() == ' ')) // Double check because isspace() does not work well with pointers 
 	{
 		// Remove the last character from memory
-		line.pop_back();
+		m_line->pop_back();
 	}
 }
 
-void FileManager::RemoveRawStrings(string& line)
+void FileManager::RemoveRawStrings()
 {
 	// Source : https://learn.microsoft.com/en-us/cpp/cpp/string-and-character-literals-cpp?view=msvc-170
-	char rawStrings[12] = { '\n', '\r', '\t', '\v', '\f', '\b', '\a', '\\', '\?' , '\'', '\"', '\0'};
+	//const char* rawStrings[12] = { '\n', '\r', '\t', '\v', '\f', '\b', '\a', '\\', '\?' , '\'', '\"', '\0'}; // TODO : Remove after debug
+	
 	size_t rawStringsLength = sizeof(rawStrings) / sizeof(rawStrings[0]);
-	string initialLine = line;
 	//const char* newLine = "\n";
 	//const char* carriageReturn = "\r";
 	//const char* tabulation = "\t";
@@ -300,72 +272,72 @@ void FileManager::RemoveRawStrings(string& line)
 	//const char* octalValue = "\ooo"; C4129 warning
 	//const char* hexValue = "\xhh"; Error E0022
 
-	for (size_t i = 0; i < line.length(); i++)
+	for (size_t i = 0; i < m_line->length(); i++)
 	{
 		for (size_t j = i + 1; j < rawStringsLength; j++)
 		{
-			auto stringi = line[i];// TODO : Remove after debug
-			auto rawStr = rawStrings[j];// TODO : Remove after debug
+			auto stringi = (*m_line)[i];// TODO : Remove after debug
+			auto rawStr = *rawStrings[j];// TODO : Remove after debug
 
-			if (line[i] == rawStrings[j])
+			if ((*m_line)[i] == *rawStrings[j])
 			{
-				// Shift all characters to the begginig of the string
-				for (size_t K = i; K < line.length() - 1; K++)
-				{
-					line[K] = line[K + 1];
-				}
-				break;
+				ShiftCharsToLeftInLine(i);
+				j = 0;
 			}
 		}
 		break;
 	}
 }
 
-void FileManager::RemoveStringFromString(string& line, const char* STRING_TO_REMOVE)
+void FileManager::RemoveStringFromString(const char* STRING_TO_REMOVE)
 {
-	// For chars in line that are not chars in STRING_TO_REMOVE 
-	// move STRING_TO_REMOVE characters to the beginning of the string
-	for (size_t i = 0; i < line.length(); i++)
+	unsigned short int strToRemLength = ConstCharSize(STRING_TO_REMOVE);
+	// For chars in line that are not chars in CHAR_TO_REMOVE 
+	// move CHAR_TO_REMOVE characters to the beginning of the string
+	for (size_t i = 0; i < m_line->length(); i++)
 	{
-		for (size_t j = i; j < strlen(STRING_TO_REMOVE); j++)
+		for (size_t j = i; j < ConstCharSize(STRING_TO_REMOVE); j++)
 		{
-			auto linei = line[j];// TODO : Remove after debug
-			auto stringToRemovej = STRING_TO_REMOVE[i];// TODO : Remove after debug
-			auto lineiPlus = line[j + (strlen(STRING_TO_REMOVE) - 1)];// TODO : Remove after debug
-			auto stringToRemovejPlus = STRING_TO_REMOVE[i + (strlen(STRING_TO_REMOVE) - 1)];// TODO : Remove after debug
-
-			// If the first and last char fits for both line and STRING_TO_REMOVE
-			if (line[j] == STRING_TO_REMOVE[i] && line[j + (strlen(STRING_TO_REMOVE) - 1)] == STRING_TO_REMOVE[i + (strlen(STRING_TO_REMOVE) - 1)])
+			// If the first characters fits for both line and CHAR_TO_REMOVE
+			// Source : https://stackoverflow.com/questions/30457813/varn-what-does-iterations-mean-in-c
+			if ((*m_line)[i] != STRING_TO_REMOVE[j])
 			{
-				// Shift all characters to the begginig of the string
-				for (size_t k = j; k < line.length() - (strlen(STRING_TO_REMOVE) + 1); k++)
-				{
-					line[k] = line[k + (strlen(STRING_TO_REMOVE))];
-				}
-				break;
+				continue;
 			}
+
+			if (!IsThisStringThisString(STRING_TO_REMOVE, j, i))
+			{
+				continue;
+			}
+
+			// Shift all characters to the begginig of the string
+			ShiftCharsToStartOfString(STRING_TO_REMOVE, j);
+			break;
 		}
 		break;
 	}
 }
 
-void FileManager::RemoveExtraLengthFromString(string& line, const char* STRING_TO_REMOVE)
+void FileManager::RemoveExtraLengthFromString(const char* CHAR_TO_REMOVE)
 {
 	// Source : https://stackoverflow.com/questions/74150327/string-size-returns-1-too-large-value-in-evaluation-system
 
 	// "Hello World!\r\n" Windows string have two encoded raw strings at the end. 
 	unsigned short const int ENCODED_RAW_STRINGS = 2;
-	size_t lineLength = line.length();// + ENCODED_RAW_STRINGS;
-	size_t stringLength = strlen(STRING_TO_REMOVE);// +ENCODED_RAW_STRINGS;
+	size_t lineLength = m_line->length();// TODO : Remove after debug
+	size_t stringLength = ConstCharSize(CHAR_TO_REMOVE);// TODO : Remove after debug
 	size_t leanghtToRemain = (lineLength - stringLength) - ENCODED_RAW_STRINGS;
+	auto lineDifference = lineLength - stringLength;// TODO : Remove after debug
 
 	// For the remaining characters in the string, remove them from memory
 	for (size_t i = lineLength; i > 0; i--)
 	{
-		// Source : https://en.cppreference.com/w/cpp/string/byte/isspace
-		if (i != leanghtToRemain)
+		// If the last element is not the length of the string, that is
+		// the object's name (or not the difference between the line and the string)
+		if (i != lineDifference)
 		{
-			line.pop_back();
+			// Remove the last character from memory
+			m_line->pop_back();
 		}
 		else
 		{
@@ -374,19 +346,27 @@ void FileManager::RemoveExtraLengthFromString(string& line, const char* STRING_T
 	}
 }
 
-bool FileManager::IsLineEmpty(string* line)
+
+// isspace does not work well with pointers
+bool FileManager::IsLineEmpty()
 {
-	bool isLineEmpty = line->empty();// TODO : Remove after debug
+	bool isLineEmpty = m_line->empty();// TODO : Remove after debug
 	auto* emptyString = "";// TODO : Remove after debug
-	bool isEmptyLine = (*line == "");// TODO : Remove after debug 
-	bool isEmptyLineString = (*line == emptyString);// TODO : Remove after debug 
-	// If the line is empty, remove it from memory
-	if (*line == "")
+	bool isEmptyLine = (*m_line == "");// TODO : Remove after debug 
+	bool isEmptyLineString = (*m_line == emptyString);// TODO : Remove after debug 
+
+	// If the line is empty, remove iterations from memory
+	//if (isspace(*m_line->c_str())) // TODO : Remove after debug
+	//{
+	//	return true;
+	//}
+
+	if (*m_line == "")
 	{
 		return true;
 	}
 
-	if (line->empty())
+	if (m_line->empty())
 	{
 		return true;
 	}
@@ -396,7 +376,7 @@ bool FileManager::IsLineEmpty(string* line)
 		return true;
 	}
 
-	if (*line == emptyString)
+	if (*m_line == emptyString)
 	{
 		return true;
 	}
@@ -414,33 +394,129 @@ bool FileManager::IsLineEmpty(string* line)
 	return false;
 }
 
-bool FileManager::IsThisStringInLine(string* line, const char* word)
+bool FileManager::IsLineSingleRawString()
 {
-	// Source : https://stackoverflow.com/questions/347949/how-to-convert-a-stdstring-to-const-char-or-char
-	// Convert string* to const char* to compare it to the line pointer
-	const char* lineChar = line->c_str();
-	auto sixe = strlen(word);
+	auto lineLength = m_line->length();// TODO : Remove after debug
 
-	for (size_t i = 0; i < strlen(word); i++)
+	// If the line is not a single char string, return false
+	if (m_line->length() != 1)
 	{
-		for (size_t j = i; j < line->length(); j++)
+		return false;
+	}
+
+	for (size_t i = 0; i < m_line->length(); i++)
+	{
+		for (size_t j = i + 1; j < sizeof(rawStrings) / sizeof(rawStrings[0]); j++)
 		{
-			auto linezero = lineChar[j]; // TODO : Remove after debug
-			auto wordzero = word[i]; // TODO : Remove after debug
-			auto lineone = lineChar[j + strlen(word) - 1]; // TODO : Remove after debug
-			auto wordone = word[i + strlen(word) - 1]; // TODO : Remove after debug
+			auto stringi = (*m_line)[i];// TODO : Remove after debug
+			auto rawStr = *rawStrings[j];// TODO : Remove after debug
 
-			// If it reaches the end of the string, return false
-			if (lineChar[j + strlen(word) - 1] == '\0')
-			{
-				return false;
-			}
-
-			if (lineChar[j] == word[i] && lineChar[j + strlen(word) - 1] == word[i + strlen(word) - 1])
+			// If it finds a raw string in the line, return true
+			if ((*m_line)[i] == *rawStrings[j])
 			{
 				return true;
 			}
 		}
 	}
 	return false;
+}
+
+// Verify if the given string is in m_line
+bool FileManager::IsThisStringInLine(const char* word)
+{
+	// Source : https://stackoverflow.com/questions/347949/how-to-convert-a-stdstring-to-const-char-or-char
+	// Convert string* to const char* to compare iterations to the line pointer
+	const char* lineChar = m_line->c_str();// TODO : Remove after debug
+	auto sixe = ConstCharSize(word); // TODO : Remove after debug
+
+	for (size_t i = 0; i < ConstCharSize(word); i++)
+	{
+		for (size_t j = i; j < m_line->length(); j++)
+		{
+			auto linezero = lineChar[j]; // TODO : Remove after debug
+			auto lineone = lineChar[j + 1]; // TODO : Remove after debug
+
+			auto wordzero = word[i]; // TODO : Remove after debug
+			auto wordone = word[i + 1]; // TODO : Remove after debug
+
+			// If iterations reaches the end of the string, return false
+			if (m_line->c_str()[j + ConstCharSize(word)-1] == '\0')
+			{
+				return false;
+			}
+
+			// As long as the characters are not the same, continue
+			if (m_line->c_str()[j] != word[i])
+			{
+				continue;
+			}
+
+			// Once they are the same,
+			// check if the rest of the elements fits for both line and word
+			if (IsThisStringThisString(word, i, j))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+// Verify if the given string is the string in m_line by comparing their char positions at specific elements(indexes)
+bool FileManager::IsThisStringThisString(const char* word, size_t wordIndex, size_t lineIndex)
+{
+	for (size_t i = 0; i < ConstCharSize(word); i++)
+	{
+		if (m_line->c_str()[lineIndex + i] == word[wordIndex + i])
+		{
+			continue;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+	return true;
+}
+
+void FileManager::ShiftCharsToLeftInLine(size_t index)
+{
+	// Shift all characters to the left by one
+	for (size_t i = index; i < m_line->length() - 1; i++)
+	{
+		(*m_line)[i] = (*m_line)[i + 1];
+
+		// Remove the last character from memory
+		if (i >= m_line->length() - 2)
+		{
+			m_line->pop_back();
+		}
+	}
+}
+
+void FileManager::ShiftCharsToStartOfString(const char* STRING_TO_MOVE, size_t j)
+{
+	auto lineLength = m_line->length();// TODO : Remove after debug
+	auto stringLength = ConstCharSize(STRING_TO_MOVE);// TODO : Remove after debug
+	auto lineDifference = lineLength - stringLength;// TODO : Remove after debug
+	// Shift all characters to the begginig of the string
+	for (size_t i = j; i < m_line->length() - (ConstCharSize(STRING_TO_MOVE)); i++)
+	{
+		auto linei = (*m_line)[i]; // TODO : Remove after debug
+		auto lineToMove = (*m_line)[i + ConstCharSize(STRING_TO_MOVE)]; // TODO : Remove after debug
+		(*m_line)[i] = (*m_line)[i + ConstCharSize(STRING_TO_MOVE)];
+	}
+}
+
+// Source : https://stackoverflow.com/questions/72124875/number-of-elements-in-const-char-array
+unsigned short int FileManager::ConstCharSize(const char* a)
+{
+	unsigned short int iterations = 0;
+	while (a[iterations] != '\0') 
+	{
+		++iterations;
+	}
+
+	return iterations;
 }
