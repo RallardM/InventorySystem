@@ -140,6 +140,15 @@ void Inventory::DisplaySelectedItem()
 	cout << endl << "Current item: " << endl << m_currentItem->ToString();
 }
 
+void Inventory::DisplayMenu()
+{
+	switch (Inventory)
+	{
+	default:
+		break;
+	}
+}
+
 void Inventory::DisplayLoadingMenu()
 {
 	system("CLS");

@@ -17,13 +17,7 @@ private:
 public:
 private:
 	Inventory* m_inventory = nullptr;
-	enum e_inputMode
-	{
-		LOADING,
-		NAVIGATION,
-		EDITION,
-		COUNT
-	};
 
-	e_inputMode m_currentInputMode = NAVIGATION;
+
+	e_inputMode m_currentInputMode = LOADING;
 };

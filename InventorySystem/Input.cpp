@@ -5,7 +5,7 @@ void Input::GetInput()
 {
 	switch (m_currentInputMode)
 	{
-	case LOADING:
+	case Loading:
 		GetLoadingInput();
 		break;
 

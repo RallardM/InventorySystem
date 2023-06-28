@@ -16,7 +16,7 @@ int main()
 	//fileManager->LoadInventory();
 	//delete fileManager;
 
-	inventory->DisplayLoadingMenu();
+	inventory->DisplayCurrentMenu();
 
 
 	bool isGameRunning = true;
@@ -28,6 +28,8 @@ int main()
 			// Verify that key
 			input->GetInput();
 		}
+
+
 		
 	}
 

@@ -9,3 +9,11 @@ enum class E_equimentSlots : unsigned short int
 	Weapon2,
 	Count
 };
+
+enum class E_inputMode : unsigned short int
+{
+	Loading,
+	Navigation,
+	Edition,
+	Count
+};
