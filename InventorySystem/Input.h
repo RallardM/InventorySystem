@@ -17,5 +17,4 @@ private:
 public:
 private:
 	Inventory* m_inventory = nullptr;
-	
 };

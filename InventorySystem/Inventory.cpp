@@ -152,10 +152,6 @@ void Inventory::DisplayCurrentMenu()
 {
 	switch (GetCurrentInputMode())
 	{
-	case E_inputMode::Loading:
-		DisplayLoadingMenu();
-		break;
-
 	case E_inputMode::Navigation:
 		DisplayNavigationMenu();
 		break;
@@ -174,15 +170,15 @@ void Inventory::DisplayCurrentSelection()
 {
 	switch (m_currentInputMode)
 	{
-	case E_inputMode::Loading:
-		DisplaySelectedInventory();
-		break;
 	case E_inputMode::Navigation:
 		break;
+
 	case E_inputMode::Edition:
 		break;
+
 	case E_inputMode::Count:
 		break;
+
 	default:
 		break;
 	}
@@ -192,29 +188,19 @@ bool Inventory::IsCurrentSelectionPrinted() // TODO: To complete
 {
 	switch (m_currentInputMode)
 	{
-	case E_inputMode::Loading:
-
-		break;
 	case E_inputMode::Navigation:
 		break;
+
 	case E_inputMode::Edition:
 		break;
+
 	case E_inputMode::Count:
 		break;
+
 	default:
 		break;
 	}
 	return false;
-}
-
-void Inventory::DisplayLoadingMenu()
-{
-	system("CLS");
-	cout << endl << 
-		"    " << "A. Previous Inventory" << 
-		"    " << "D. Next Inventory" << 
-		"    " << "R. Remove Selected" << 
-		"    " << "I. Edit Inventory";
 }
 
 void Inventory::DisplayNavigationMenu()

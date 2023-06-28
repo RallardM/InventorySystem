@@ -44,5 +44,5 @@ private:
 	InventoryObject* m_currentItem = nullptr;
 	const unsigned short int MAX_INVENTORY_OBJECTS = 20;
 	E_equimentSlots m_currentEquipmentSlot = E_equimentSlots::Head;
-	E_inputMode m_currentInputMode = E_inputMode::Loading;
+	E_inputMode m_currentInputMode = E_inputMode::Navigation;
 };
