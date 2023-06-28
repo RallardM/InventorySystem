@@ -18,6 +18,11 @@ void Input::GetInput()
 
 }
 
+void Input::SetInventory(Inventory* inventory)
+{
+	m_inventory = inventory;
+}
+
 void Input::GetNavigationInput()
 {
 	char input = _getch();
@@ -43,9 +48,10 @@ void Input::GetNavigationInput()
 
 	case 'i':
 	case 'I':
-		// TODO : Remi : Change the input mode to edition
-		m_currentInputMode = EDITION; // TODO : Remi : Find the different ways to return back to Navigation mode.
+		m_currentInputMode = EDITION;
+		m_inventory->DisplayEditionMenu();
 		break;
+
 	default:
 		// TODO : Paulo : Error message : You have to enter an invalid input
 		break;
@@ -60,12 +66,12 @@ void Input::GetEditionInput()
 	{
 	case 'b':
 	case 'B':
-		// TODO : Remi : Add base object to inventory
+		m_inventory->AddBasicObject();
 		break;
 
 	case 'c':
 	case 'C':
-		// TODO : Remi : Add consumable object to inventory
+		m_inventory->AddConsumable();
 		break;
 
 	case 'e':
@@ -73,9 +79,9 @@ void Input::GetEditionInput()
 		// TODO : Remi : Add equipment object to inventory
 		break;
 
-	case 'i':
-	case 'I':
-		// TODO : Remi : Add object to inventory : triggers the add objercts mode
+	case 'n':
+	case 'N':
+		m_inventory->DisplayNavigationMenu();
 		break;
 
 	default:

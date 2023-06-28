@@ -60,8 +60,8 @@ void FileManager::LoadInventory()
 	loadFile.close();
 }
 
-// Throws a warning if slot is placed last in the parameter list.
-void FileManager::IdentifyString(string& previousLine, string& type, string& name, E_equimentSlots& slot, unsigned short int& cost, unsigned short int& stacks, unsigned short int& currentDurability, unsigned short int& maxDurability)
+// Throws a warning if equipmentSlot is placed last in the parameter list.
+void FileManager::IdentifyString(string& previousLine, string& type, string& name, E_equimentSlots& equipmentSlot, unsigned short int& cost, unsigned short int& stacks, unsigned short int& currentDurability, unsigned short int& maxDurability)
 {
 	if (m_line[0] == OPENING_BRACKETS)
 	{
@@ -71,7 +71,7 @@ void FileManager::IdentifyString(string& previousLine, string& type, string& nam
 	}
 	else if (m_line[0] == CLOSING_BRACKETS)
 	{
-		m_inventory->AddItem(type, name, slot, cost, stacks, currentDurability, maxDurability);
+		m_inventory->AddItem(type, name, cost, stacks, currentDurability, maxDurability, equipmentSlot);
 		previousLine = "";
 		type = "";
 		name = "";
@@ -79,7 +79,7 @@ void FileManager::IdentifyString(string& previousLine, string& type, string& nam
 		stacks = 1;
 		currentDurability = 0;
 		maxDurability = 0;
-		slot = E_equimentSlots::Count;
+		equipmentSlot = E_equimentSlots::Count;
 		return;
 	}
 
@@ -140,21 +140,11 @@ void FileManager::IdentifyString(string& previousLine, string& type, string& nam
 		RemoveStringFromString(EQUIPMENT_SLOT);
 		RemoveRawStrings();
 		RemoveExtraLengthFromString(EQUIPMENT_SLOT);
-		slot = StringToEnum();
+		equipmentSlot = StringToEnum();
 		return;
 	}
 
 }
-
-//bool FileManager::IsStringAnEnum(string* line)
-//{
-//	// Source : https://cplusplus.com/reference/string/string/compare/
-//	if (line->compare("Head") == 0 || line->compare("Chest") == 0 || line->compare("Legs") == 0 || line->compare("Weapon1") == 0 || line->compare("Weapon2") == 0)
-//	{
-//		return true;
-//	}
-//	return false;
-//}
 
 E_equimentSlots FileManager::StringToEnum()
 {

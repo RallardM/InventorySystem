@@ -12,19 +12,14 @@ int main()
 	Inventory* inventory = new Inventory();
 	FileManager* fileManager = new FileManager(inventory);
 
-	bool isGameRunning = true;
-
+	input->SetInventory(inventory);
 	fileManager->LoadInventory();
+	delete fileManager;
 
-	//inventory->DisplaySelectedItem();
-	//TODO: Remove this part. These are examples of item instantiations
-	//inventory->AddItem("Test", 30);
-	//inventory->AddItem("Test2");
-	//inventory->AddItem("Test3", 3);
-	//inventory->AddItem("Test4", 10);
+	inventory->DisplayNavigationMenu();
 
-	//inventory->DisplaySelectedItem();
 
+	bool isGameRunning = true;
 	while (isGameRunning)
 	{
 		// If the user presses a key
