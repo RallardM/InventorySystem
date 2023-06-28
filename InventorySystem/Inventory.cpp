@@ -1,6 +1,9 @@
-#include "Inventory.h"
+#include <string>
 #include <iostream>
 #include <conio.h>
+#include <filesystem>
+
+#include "Inventory.h"
 
 using namespace std;
 
@@ -140,25 +143,88 @@ void Inventory::DisplaySelectedItem()
 	cout << endl << "Current item: " << endl << m_currentItem->ToString();
 }
 
-void Inventory::DisplayMenu()
+void Inventory::DisplaySelectedInventory()
 {
-	switch (Inventory)
+	// TODO : Remi
+}
+
+void Inventory::DisplayCurrentMenu()
+{
+	switch (GetCurrentInputMode())
 	{
+	case E_inputMode::Loading:
+		DisplayLoadingMenu();
+		break;
+
+	case E_inputMode::Navigation:
+		DisplayNavigationMenu();
+		break;
+
+	case E_inputMode::Edition:
+		DisplayEditionMenu();
+
+	case E_inputMode::Count:
+	default:
+		// TODO : Remi Error message
+		break;
+	}
+}
+
+void Inventory::DisplayCurrentSelection()
+{
+	switch (m_currentInputMode)
+	{
+	case E_inputMode::Loading:
+		DisplaySelectedInventory();
+		break;
+	case E_inputMode::Navigation:
+		break;
+	case E_inputMode::Edition:
+		break;
+	case E_inputMode::Count:
+		break;
 	default:
 		break;
 	}
 }
 
+bool Inventory::IsCurrentSelectionPrinted() // TODO: To complete
+{
+	switch (m_currentInputMode)
+	{
+	case E_inputMode::Loading:
+
+		break;
+	case E_inputMode::Navigation:
+		break;
+	case E_inputMode::Edition:
+		break;
+	case E_inputMode::Count:
+		break;
+	default:
+		break;
+	}
+	return false;
+}
+
 void Inventory::DisplayLoadingMenu()
 {
 	system("CLS");
-	cout << endl << "    " << "A. Previous Inventory" << "    " << "D. Next Inventory" << "    " << "R. Remove Selected" << "    " << "I. Edit Inventory";
+	cout << endl << 
+		"    " << "A. Previous Inventory" << 
+		"    " << "D. Next Inventory" << 
+		"    " << "R. Remove Selected" << 
+		"    " << "I. Edit Inventory";
 }
 
 void Inventory::DisplayNavigationMenu()
 {
 	system("CLS");
-	cout << endl << "    " << "A. Previous Object" << "    " << "D. Next Object" << "    " << "R. Remove Selected" << "    " << "I. Edit Objects";
+	cout << endl << 
+		"    " << "A. Previous Object" << 
+		"    " << "D. Next Object" << 
+		"    " << "R. Remove Selected" << 
+		"    " << "I. Edit Objects";
 }
 
 void Inventory::DisplayEditionMenu()
@@ -211,6 +277,16 @@ string Inventory::GetEnumString(E_equimentSlots equipmentSlot)
 		break;
 	}
 	return "Error";
+}
+
+E_inputMode Inventory::GetCurrentInputMode()
+{
+	return m_currentInputMode;
+}
+
+void Inventory::SetCurrentInputMode(E_inputMode currentInputMode)
+{
+	m_currentInputMode = currentInputMode;
 }
 
 void Inventory::ClearConsolePreviousLine()

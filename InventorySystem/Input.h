@@ -17,7 +17,5 @@ private:
 public:
 private:
 	Inventory* m_inventory = nullptr;
-
-
-	e_inputMode m_currentInputMode = LOADING;
+	
 };

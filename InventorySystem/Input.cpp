@@ -3,17 +3,17 @@
 
 void Input::GetInput()
 {
-	switch (m_currentInputMode)
+	switch (m_inventory->GetCurrentInputMode())
 	{
-	case Loading:
+	case E_inputMode::Loading:
 		GetLoadingInput();
 		break;
 
-	case NAVIGATION:
+	case E_inputMode::Navigation:
 		GetNavigationInput();
 		break;
 
-	case EDITION:
+	case E_inputMode::Edition:
 		GetEditionInput();
 		break;
 
@@ -87,7 +87,7 @@ void Input::GetNavigationInput()
 
 	case 'i':
 	case 'I':
-		m_currentInputMode = EDITION;
+		m_inventory->SetCurrentInputMode(E_inputMode::Edition);
 		m_inventory->DisplayEditionMenu();
 		break;
 
@@ -105,28 +105,28 @@ void Input::GetEditionInput()
 	case 'b':
 	case 'B':
 		m_inventory->AddBasicObject();
-		m_currentInputMode = NAVIGATION;
+		m_inventory->SetCurrentInputMode(E_inputMode::Navigation);
 		m_inventory->DisplayNavigationMenu();
 		break;
 
 	case 'c':
 	case 'C':
 		m_inventory->AddConsumable();
-		m_currentInputMode = NAVIGATION;
+		m_inventory->SetCurrentInputMode(E_inputMode::Navigation);
 		m_inventory->DisplayNavigationMenu();
 		break;
 
 	case 'e':
 	case 'E':
 		m_inventory->AddEquipment();
-		m_currentInputMode = NAVIGATION;
+		m_inventory->SetCurrentInputMode(E_inputMode::Navigation);
 		m_inventory->DisplayNavigationMenu();
 		break;
 
 	case 'n':
 	case 'N':
 		m_inventory->DisplayNavigationMenu();
-		m_currentInputMode = NAVIGATION;
+		m_inventory->SetCurrentInputMode(E_inputMode::Navigation);
 		m_inventory->DisplayNavigationMenu();
 		break;
 

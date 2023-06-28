@@ -22,7 +22,7 @@ FileManager::~FileManager()
 void FileManager::LoadInventory()
 {
 	ifstream loadFile;
-	loadFile.open(LOAD_FILE_PATH);
+	loadFile.open(m_inventory->LOAD_FILE_PATH);
 	
 	string previousLine = "";
 

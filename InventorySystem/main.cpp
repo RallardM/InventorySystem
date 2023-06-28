@@ -4,7 +4,6 @@
 #include "Input.h"
 #include "FileManager.h"
 
-
 int main()
 {
 	// Create pointer objects
@@ -29,8 +28,10 @@ int main()
 			input->GetInput();
 		}
 
-
-		
+		if (!inventory->IsCurrentSelectionPrinted()) // TODO: to complete
+		{
+			inventory->DisplayCurrentSelection();
+		}
 	}
 
 	// Delete pointer objects

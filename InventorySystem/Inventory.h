@@ -16,12 +16,17 @@ public:
 	void AddEquipment();
 	void NavigateEquipmentSlots();
 	void DisplaySelectedItem();
-	void DisplayMenu();
+	void DisplaySelectedInventory();
+	void DisplayCurrentMenu();
+	void DisplayCurrentSelection();
+	bool IsCurrentSelectionPrinted();
 	void DisplayLoadingMenu();
 	void DisplayNavigationMenu();
 	void DisplayEditionMenu();
 	void DestroyAllInventoryObjects();
 	string GetEnumString(E_equimentSlots equipmentSlot);
+	E_inputMode GetCurrentInputMode();
+	void SetCurrentInputMode(E_inputMode currentInputMode);
 	void ClearConsolePreviousLine();
 
 private:
@@ -30,8 +35,14 @@ private:
 public:
 	// Source : https://stackoverflow.com/questions/19762755/creating-a-list-in-c-with-initial-capacity
 	list<InventoryObject*> m_inventoryObjectsList = list<InventoryObject*>{ MAX_INVENTORY_OBJECTS };
+
+	//In order to have a string pointer it can only be a const char* with "".
+	const char* FILES_PATH = "saved_files/";
+	const char* LOAD_FILE_PATH = "saved_files/InventorySaveFile.txt";
+
 private:
 	InventoryObject* m_currentItem = nullptr;
 	const unsigned short int MAX_INVENTORY_OBJECTS = 20;
 	E_equimentSlots m_currentEquipmentSlot = E_equimentSlots::Head;
+	E_inputMode m_currentInputMode = E_inputMode::Loading;
 };

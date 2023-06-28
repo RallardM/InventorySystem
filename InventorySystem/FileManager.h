@@ -40,8 +40,6 @@ private:
 	const char* rawStrings[12] = { "\n", "\r", "\t", "\v", "\f", "\b", "\a", "\\", "\?" , "\'", "\"", "\0" };
 
 	//In order to have a string pointer it can only be a const char* with "".
-	const char* SAVE_FILE_PATH = "saved_files";
-	const char* LOAD_FILE_PATH = "saved_files/InventorySaveFile.txt";
 	const char* OPENING_BRACKETS = "{";
 	const char* CLOSING_BRACKETS = "}";
 	const char* NAME = "Name:";
