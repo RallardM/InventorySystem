@@ -67,20 +67,28 @@ void Input::GetEditionInput()
 	case 'b':
 	case 'B':
 		m_inventory->AddBasicObject();
+		m_currentInputMode = NAVIGATION;
+		m_inventory->DisplayNavigationMenu();
 		break;
 
 	case 'c':
 	case 'C':
 		m_inventory->AddConsumable();
+		m_currentInputMode = NAVIGATION;
+		m_inventory->DisplayNavigationMenu();
 		break;
 
 	case 'e':
 	case 'E':
-		// TODO : Remi : Add equipment object to inventory
+		m_inventory->AddEquipment();
+		m_currentInputMode = NAVIGATION;
+		m_inventory->DisplayNavigationMenu();
 		break;
 
 	case 'n':
 	case 'N':
+		m_inventory->DisplayNavigationMenu();
+		m_currentInputMode = NAVIGATION;
 		m_inventory->DisplayNavigationMenu();
 		break;
 

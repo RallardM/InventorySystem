@@ -143,17 +143,17 @@ void Inventory::DisplaySelectedItem()
 void Inventory::DisplayNavigationMenu()
 {
 	system("CLS");
-	cout << endl << '\t' << "A. Previous Object" << '\t' << "D. Next Object" << '\t' << "R. Remove Selected" << '\t' << "I. Edit Objects";
+	cout << endl << "    " << "A. Previous Object" << "    " << "D. Next Object" << "    " << "R. Remove Selected" << "    " << "I. Edit Objects";
 }
 
 void Inventory::DisplayEditionMenu()
 {
 	system("CLS");
 	cout << endl <<
-		'\t' << "B. Add Basic Object" <<
-		'\t' << "C. Add Consumable" <<
-		'\t' << "E. Add Equipment" << endl <<
-		'\t' << "N. Back To Navigation";
+		"    " << "B. Add Basic Object" <<
+		"    " << "C. Add Consumable" <<
+		"    " << "E. Add Equipment" << endl <<
+		"    " << "N. Back To Navigation";
 }
 
 void Inventory::DestroyAllInventoryObjects() // TODO : Delete objects of objects before deleting the objects
