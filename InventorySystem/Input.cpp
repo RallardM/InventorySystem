@@ -5,22 +5,61 @@ void Input::GetInput()
 {
 	switch (m_currentInputMode)
 	{
+	case LOADING:
+		GetLoadingInput();
+		break;
+
 	case NAVIGATION:
 		GetNavigationInput();
 		break;
+
 	case EDITION:
 		GetEditionInput();
 		break;
+
 	default:
 		// TODO : Remi : Error handling : The input mode is not valid
 		break;
 	}
-
 }
 
 void Input::SetInventory(Inventory* inventory)
 {
 	m_inventory = inventory;
+}
+
+void Input::GetLoadingInput()
+{
+	char input = _getch();
+	switch (input)
+	{
+		// Move the selection to the inventory on the left
+	case 'a':
+	case 'A':
+		// TODO : Remi : inventory navigation
+		break;
+
+		// Move the selection to the inventory on the right
+	case 'd':
+	case 'D':
+		// TODO : Remi : inventory navigation
+		break;
+
+		// Remove the selected inventory from the inventory
+	case 'r':
+	case 'R':
+		// TODO : Remi : inventory navigation
+		break;
+
+	case 'i':
+	case 'I':
+		// TODO : Remi : inventory navigation
+		break;
+
+	default:
+		// TODO : Paulo : Error message : You have to enter an invalid input
+		break;
+	}
 }
 
 void Input::GetNavigationInput()
@@ -56,7 +95,6 @@ void Input::GetNavigationInput()
 		// TODO : Paulo : Error message : You have to enter an invalid input
 		break;
 	}
-
 }
 
 void Input::GetEditionInput()

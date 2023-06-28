@@ -13,10 +13,10 @@ int main()
 	FileManager* fileManager = new FileManager(inventory);
 
 	input->SetInventory(inventory);
-	fileManager->LoadInventory();
-	delete fileManager;
+	//fileManager->LoadInventory();
+	//delete fileManager;
 
-	inventory->DisplayNavigationMenu();
+	inventory->DisplayLoadingMenu();
 
 
 	bool isGameRunning = true;

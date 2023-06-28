@@ -140,6 +140,12 @@ void Inventory::DisplaySelectedItem()
 	cout << endl << "Current item: " << endl << m_currentItem->ToString();
 }
 
+void Inventory::DisplayLoadingMenu()
+{
+	system("CLS");
+	cout << endl << "    " << "A. Previous Inventory" << "    " << "D. Next Inventory" << "    " << "R. Remove Selected" << "    " << "I. Edit Inventory";
+}
+
 void Inventory::DisplayNavigationMenu()
 {
 	system("CLS");

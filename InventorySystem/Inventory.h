@@ -16,6 +16,7 @@ public:
 	void AddEquipment();
 	void NavigateEquipmentSlots();
 	void DisplaySelectedItem();
+	void DisplayLoadingMenu();
 	void DisplayNavigationMenu();
 	void DisplayEditionMenu();
 	void DestroyAllInventoryObjects();

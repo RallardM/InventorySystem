@@ -9,6 +9,7 @@ public:
 	void SetInventory(Inventory* inventory);
 
 private:
+	void GetLoadingInput();
 	void GetNavigationInput();
 	void GetEditionInput();
 	
@@ -18,6 +19,7 @@ private:
 	Inventory* m_inventory = nullptr;
 	enum e_inputMode
 	{
+		LOADING,
 		NAVIGATION,
 		EDITION,
 		COUNT
