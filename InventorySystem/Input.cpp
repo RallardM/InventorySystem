@@ -190,5 +190,4 @@ void Input::NavigateSlots(bool isNext)
 			m_inventory->SetCurrentInputMode(firstEnumPosition);
 		}
 	}
-
 }
