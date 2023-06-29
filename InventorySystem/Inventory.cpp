@@ -25,9 +25,11 @@ void Inventory::AddBasicObject()
 	string itemName;
 	unsigned short int itemCost;
 
-	cout << endl << "Enter item name: ";
+	cout << endl << 
+		"    " << "Enter item name: ";
 	cin >> itemName;
-	cout << endl << "Enter item cost: ";
+	cout << endl << 
+		"    " << "Enter item cost: ";
 	cin >> itemCost;
 
 	AddItem(itemType, itemName, itemCost);
@@ -40,11 +42,14 @@ void Inventory::AddConsumable()
 	unsigned short int itemCost;
 	unsigned short int itemStacks;
 
-	cout << endl << "Enter item name: ";
+	cout << endl <<
+		"    " << "Enter item name: ";
 	cin >> itemName;
-	cout << endl << "Enter item cost: ";
+	cout << endl << 
+		"    " << "Enter item cost: ";
 	cin >> itemCost;
-	cout << endl << "Enter item stacks: ";
+	cout << endl << 
+		"    " << "Enter item stacks: ";
 	cin >> itemStacks;
 
 	AddItem(itemType, itemName, itemCost, itemStacks);
@@ -58,19 +63,40 @@ void Inventory::AddEquipment()
 	unsigned short int currentDurability;
 	unsigned short int maxDurability;
 
-	cout << endl << "Enter item name: ";
+	system("CLS");
+	cout << endl << 
+		"    " << "Enter item name: ";
 	cin >> itemName;
-	cout << endl << "Enter item cost: ";
+
+	system("CLS");
+	cout << endl <<
+		"    " << "Enter item cost: ";
 	cin >> itemCost;
-	cout << endl << "Enter item current durability: ";
+
+	system("CLS");
+	cout << endl <<
+		"    " << "Enter item current durability: ";
 	cin >> currentDurability;
-	cout << endl << "Enter item max durability: ";
+
+	system("CLS");
+	cout << endl << 
+		"    " << "Enter item max durability: ";
 	cin >> maxDurability;
-	cout << endl << "Select an item equipment slot: ";
-	cout << endl << '\t' << "A. Previous Slot" << '\t' << "D. Next Slot" << "E. Select";
-	cout << endl << '\t' << GetEnumString(m_currentEquipmentSlot);
+
+	system("CLS");
+	cout << endl << 
+		"    " << "A. Previous Slot" << "    " << "D. Next Slot" << "    " << "E. Select";
+	cout << endl <<
+		"    " << "Select an item equipment slot: ";
+
+	MoveCursorToLocation( {35, 2} ); // TODO : Remi : Magic number
+	cout << GetEnumString(&m_currentEquipmentSlot) << endl;
+
+	// Access to Input class by creating an instance of it and assigning the current Inventory 
+	// class object to give Input access to this new instance specifically.
 	Input input;
-	input.NavigateEquipmentSlots();
+	input.SetInventory(this);
+	input.NavigateEquipmentSlots(m_currentEquipmentSlot);
 
 	AddItem(itemType, itemName, itemCost, 1, currentDurability, maxDurability, m_currentEquipmentSlot);
 }
@@ -98,6 +124,7 @@ void Inventory::DisplayCurrentMenu()
 
 	case E_inputMode::Edition:
 		DisplayEditionMenu();
+		break;
 
 	case E_inputMode::Count:
 	default:
@@ -117,9 +144,8 @@ void Inventory::DisplayCurrentSelection()
 		break;
 
 	case E_inputMode::Count:
-		break;
-
 	default:
+		// TODO : Remi Error message
 		break;
 	}
 }
@@ -135,9 +161,8 @@ bool Inventory::IsCurrentSelectionPrinted() // TODO: To complete
 		break;
 
 	case E_inputMode::Count:
-		break;
-
 	default:
+		// TODO : Remi Error message
 		break;
 	}
 	return false;
@@ -150,7 +175,7 @@ void Inventory::DisplayNavigationMenu()
 		"    " << "A. Previous Object" << 
 		"    " << "D. Next Object" << 
 		"    " << "R. Remove Selected" << 
-		"    " << "I. Edit Objects";
+		"    " << "I. Edit Objects" << endl;
 }
 
 void Inventory::DisplayEditionMenu()
@@ -160,7 +185,7 @@ void Inventory::DisplayEditionMenu()
 		"    " << "B. Add Basic Object" <<
 		"    " << "C. Add Consumable" <<
 		"    " << "E. Add Equipment" << endl <<
-		"    " << "N. Back To Navigation";
+		"    " << "N. Back To Navigation" << endl;
 }
 
 void Inventory::DestroyAllInventoryObjects() // TODO : Delete objects of objects before deleting the objects
@@ -173,20 +198,20 @@ void Inventory::DestroyAllInventoryObjects() // TODO : Delete objects of objects
 	m_inventoryObjectsList.clear();
 }
 
-string Inventory::GetEnumString(E_equimentSlots equipmentSlot)
+string Inventory::GetEnumString(E_equimentSlots* equipmentSlot)
 {
-	switch (equipmentSlot)
+	switch (*equipmentSlot)
 	{
 	case E_equimentSlots::Head:
-		return "Head";
+		return "Head   ";
 		break;
 
 	case E_equimentSlots::Chest:
-		return "Chest";
+		return "Chest  ";
 		break;
 
 	case E_equimentSlots::Legs:
-		return "Legs";
+		return "Legs   ";
 		break;
 
 	case E_equimentSlots::Weapon1:
@@ -199,7 +224,7 @@ string Inventory::GetEnumString(E_equimentSlots equipmentSlot)
 
 	default:
 		// TODO : Remi : Error message : You have to enter an invalid input
-		return "Error";
+		return "Error : wrong slot";
 		break;
 	}
 	return "Error";
@@ -215,9 +240,9 @@ E_equimentSlots Inventory::GetCurrentEquipmentSlot()
 	return m_currentEquipmentSlot;
 }
 
-void Inventory::SetCurrentInputMode(E_equimentSlots currentEquipmentSlot)
+void Inventory::SetCurrentInputMode(E_equimentSlots currentEquipmentSlotPtr)
 {
-	m_currentEquipmentSlot = currentEquipmentSlot;
+	m_currentEquipmentSlot = currentEquipmentSlotPtr;
 }
 
 void Inventory::SetCurrentInputMode(E_inputMode currentInputMode)
@@ -228,4 +253,10 @@ void Inventory::SetCurrentInputMode(E_inputMode currentInputMode)
 void Inventory::ClearConsolePreviousLine()
 {
 	std::cout << "\033[1A\033[0K";
+}
+
+void Inventory::MoveCursorToLocation(COORD position)
+{
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleCursorPosition(hConsole, position);
 }

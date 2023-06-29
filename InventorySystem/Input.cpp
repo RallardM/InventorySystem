@@ -3,7 +3,6 @@
 
 #include "Input.h"
 
-
 using namespace std;
 
 void Input::GetInput()
@@ -112,33 +111,39 @@ void Input::GetEditionInput()
 	}
 }
 
-void Input::NavigateEquipmentSlots()
+void Input::NavigateEquipmentSlots(E_equimentSlots& currentEquipmentSlot)
 {
-	while (_kbhit())
+	bool IsChoiceMade = false;
+	while (!IsChoiceMade)
 	{
-		char input = _getch();
-		switch (input)
+		if (_kbhit())
 		{
+			char input = _getch();
+			switch (input)
+			{
 			// Move the selection to the slot on the left
-		case 'a':
-		case 'A':
-			NavigateSlots(true);
-			break;
+			case 'a':
+			case 'A':
+				NavigateSlots(true);
+				break;
 
 			// Move the selection to the slot on the right
-		case 'd':
-		case 'D':
-			NavigateSlots(false);
-			break;
+			case 'd':
+			case 'D':
+				NavigateSlots(false);
+				break;
 
-		case 'e':
-		case 'E':
-			m_inventory->ClearConsolePreviousLine();
-			break;
+			// Choose the selected slot
+			case 'e':
+			case 'E':
+				IsChoiceMade = true;
+				m_inventory->ClearConsolePreviousLine();
+				break;
 
-		default:
-			// TODO : Remi : Error message : You have to enter an invalid input
-			break;
+			default:
+				// TODO : Remi : Error message : You have to enter an invalid input
+				break;
+			}
 		}
 	}
 }
@@ -150,20 +155,21 @@ void Input::NavigateSlots(bool isNext)
 	E_equimentSlots firstEnumPosition = static_cast<E_equimentSlots>(0);
 	E_equimentSlots lastEnumPosition = static_cast<E_equimentSlots>(static_cast<int>(E_equimentSlots::Count) - 1);
 
-	m_inventory->ClearConsolePreviousLine();
-
 	if (isNext)
 	{
 		// If the current enum number is greater than 0, it can move the selection to the slot on the left
+		// and this selected enum number is smaller than the last enum number (invalid enum number comes out as large integers)
 		// else it will move the selection to the last slot
-		if (newLeftEnumPosition >= firstEnumPosition)
+		if ((newLeftEnumPosition >= firstEnumPosition) && (newLeftEnumPosition < lastEnumPosition))
 		{
-			cout << endl << '\t' << m_inventory->GetEnumString(newLeftEnumPosition);
+			m_inventory->MoveCursorToLocation({ 35, 2 }); // TODO : Remi : Magic number
+			cout << m_inventory->GetEnumString(&newLeftEnumPosition) << endl;
 			m_inventory->SetCurrentInputMode(newLeftEnumPosition);
 		}
 		else
 		{
-			cout << endl << '\t' << m_inventory->GetEnumString(lastEnumPosition);
+			m_inventory->MoveCursorToLocation({ 35, 2 }); // TODO : Remi : Magic number
+			cout << m_inventory->GetEnumString(&lastEnumPosition) << endl;
 			m_inventory->SetCurrentInputMode(lastEnumPosition);
 		}
 	}
@@ -173,12 +179,14 @@ void Input::NavigateSlots(bool isNext)
 		// else it will move the selection to the first slot
 		if (newRightEnumPosition <= lastEnumPosition)
 		{
-			cout << endl << '\t' << m_inventory->GetEnumString(newRightEnumPosition);
+			m_inventory->MoveCursorToLocation({ 35, 2 }); // TODO : Remi : Magic number
+			cout << m_inventory->GetEnumString(&newRightEnumPosition) << endl;
 			m_inventory->SetCurrentInputMode(newRightEnumPosition);
 		}
 		else
 		{
-			cout << endl << '\t' << m_inventory->GetEnumString(firstEnumPosition);
+			m_inventory->MoveCursorToLocation({ 35, 2 }); // TODO : Remi : Magic number
+			cout << m_inventory->GetEnumString(&firstEnumPosition) << endl;
 			m_inventory->SetCurrentInputMode(firstEnumPosition);
 		}
 	}

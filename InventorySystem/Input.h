@@ -7,7 +7,7 @@ class Input
 public:
 	void GetInput();
 	void SetInventory(Inventory* inventory);
-	void NavigateEquipmentSlots();
+	void NavigateEquipmentSlots(E_equimentSlots& currentEquipmentSlot);
 
 	void NavigateSlots(bool isNext);
 

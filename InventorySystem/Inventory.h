@@ -1,5 +1,6 @@
 #pragma once
 #include <list>
+#include <windows.h>
 
 #include "InventoryObject.h"
 #include "Enumerations.h"
@@ -21,12 +22,13 @@ public:
 	void DisplayNavigationMenu();
 	void DisplayEditionMenu();
 	void DestroyAllInventoryObjects();
-	string GetEnumString(E_equimentSlots equipmentSlot);
+	string GetEnumString(E_equimentSlots* equipmentSlot);
 	E_inputMode GetCurrentInputMode();
 	E_equimentSlots GetCurrentEquipmentSlot();
 	void SetCurrentInputMode(E_equimentSlots currentEquipmentSlot);
 	void SetCurrentInputMode(E_inputMode currentInputMode);
 	void ClearConsolePreviousLine();
+	void MoveCursorToLocation(COORD position);
 
 private:
 
