@@ -1,5 +1,10 @@
 #include <conio.h>
+#include <iostream>
+
 #include "Input.h"
+
+
+using namespace std;
 
 void Input::GetInput()
 {
@@ -29,19 +34,19 @@ void Input::GetNavigationInput()
 	char input = _getch();
 	switch (input)
 	{
-	// Move the selection to the object on the left
+		// Move the selection to the object on the left
 	case 'a':
 	case 'A':
 		// TODO : Paulo : Navigation
 		break;
 
-	// Move the selection to the object on the right
+		// Move the selection to the object on the right
 	case 'd':
 	case 'D':
 		// TODO : Paulo : Navigation
 		break;
 
-	// Remove the selected object from the inventory
+		// Remove the selected object from the inventory
 	case 'r':
 	case 'R':
 		// TODO : Remi
@@ -61,7 +66,7 @@ void Input::GetNavigationInput()
 	case 'L':
 		// TODO : Remi load inventory : Display in the cout
 		break;
-	
+
 	default:
 		// TODO : Paulo : Error message : You have to enter an invalid input
 		break;
@@ -107,3 +112,75 @@ void Input::GetEditionInput()
 	}
 }
 
+void Input::NavigateEquipmentSlots()
+{
+	while (_kbhit())
+	{
+		char input = _getch();
+		switch (input)
+		{
+			// Move the selection to the slot on the left
+		case 'a':
+		case 'A':
+			NavigateSlots(true);
+			break;
+
+			// Move the selection to the slot on the right
+		case 'd':
+		case 'D':
+			NavigateSlots(false);
+			break;
+
+		case 'e':
+		case 'E':
+			m_inventory->ClearConsolePreviousLine();
+			break;
+
+		default:
+			// TODO : Remi : Error message : You have to enter an invalid input
+			break;
+		}
+	}
+}
+
+void Input::NavigateSlots(bool isNext)
+{
+	E_equimentSlots newLeftEnumPosition = static_cast<E_equimentSlots>(static_cast<int>(m_inventory->GetCurrentEquipmentSlot()) - 1);
+	E_equimentSlots newRightEnumPosition = static_cast<E_equimentSlots>(static_cast<int>(m_inventory->GetCurrentEquipmentSlot()) + 1);
+	E_equimentSlots firstEnumPosition = static_cast<E_equimentSlots>(0);
+	E_equimentSlots lastEnumPosition = static_cast<E_equimentSlots>(static_cast<int>(E_equimentSlots::Count) - 1);
+
+	m_inventory->ClearConsolePreviousLine();
+
+	if (isNext)
+	{
+		// If the current enum number is greater than 0, it can move the selection to the slot on the left
+		// else it will move the selection to the last slot
+		if (newLeftEnumPosition >= firstEnumPosition)
+		{
+			cout << endl << '\t' << m_inventory->GetEnumString(newLeftEnumPosition);
+			m_inventory->SetCurrentInputMode(newLeftEnumPosition);
+		}
+		else
+		{
+			cout << endl << '\t' << m_inventory->GetEnumString(lastEnumPosition);
+			m_inventory->SetCurrentInputMode(lastEnumPosition);
+		}
+	}
+	else if (!isNext)
+	{
+		// If the current enum number is smaller than the last enum number, it can move the selection to the slot on the right
+		// else it will move the selection to the first slot
+		if (newRightEnumPosition <= lastEnumPosition)
+		{
+			cout << endl << '\t' << m_inventory->GetEnumString(newRightEnumPosition);
+			m_inventory->SetCurrentInputMode(newRightEnumPosition);
+		}
+		else
+		{
+			cout << endl << '\t' << m_inventory->GetEnumString(firstEnumPosition);
+			m_inventory->SetCurrentInputMode(firstEnumPosition);
+		}
+	}
+
+}

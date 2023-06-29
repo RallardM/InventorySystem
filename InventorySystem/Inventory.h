@@ -14,18 +14,17 @@ public:
 	void AddBasicObject();
 	void AddConsumable();
 	void AddEquipment();
-	void NavigateEquipmentSlots();
 	void DisplaySelectedItem();
-	void DisplaySelectedInventory();
 	void DisplayCurrentMenu();
 	void DisplayCurrentSelection();
 	bool IsCurrentSelectionPrinted();
-	void DisplayLoadingMenu();
 	void DisplayNavigationMenu();
 	void DisplayEditionMenu();
 	void DestroyAllInventoryObjects();
 	string GetEnumString(E_equimentSlots equipmentSlot);
 	E_inputMode GetCurrentInputMode();
+	E_equimentSlots GetCurrentEquipmentSlot();
+	void SetCurrentInputMode(E_equimentSlots currentEquipmentSlot);
 	void SetCurrentInputMode(E_inputMode currentInputMode);
 	void ClearConsolePreviousLine();
 

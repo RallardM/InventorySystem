@@ -28,10 +28,10 @@ int main()
 			input->GetInput();
 		}
 
-		if (!inventory->IsCurrentSelectionPrinted()) // TODO: to complete
-		{
-			inventory->DisplayCurrentSelection();
-		}
+		//if (!inventory->IsCurrentSelectionPrinted()) // TODO: to complete
+		//{
+		//	inventory->DisplayCurrentSelection();
+		//}
 	}
 
 	// Delete pointer objects

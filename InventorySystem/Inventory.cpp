@@ -4,6 +4,7 @@
 #include <filesystem>
 
 #include "Inventory.h"
+#include "Input.h"
 
 using namespace std;
 
@@ -68,69 +69,13 @@ void Inventory::AddEquipment()
 	cout << endl << "Select an item equipment slot: ";
 	cout << endl << '\t' << "A. Previous Slot" << '\t' << "D. Next Slot" << "E. Select";
 	cout << endl << '\t' << GetEnumString(m_currentEquipmentSlot);
-	NavigateEquipmentSlots();
+	Input input;
+	input.NavigateEquipmentSlots();
 
 	AddItem(itemType, itemName, itemCost, 1, currentDurability, maxDurability, m_currentEquipmentSlot);
 }
 
-void Inventory::NavigateEquipmentSlots()
-{
-	while (_kbhit())
-	{
-		E_equimentSlots newLeftEnumPosition = static_cast<E_equimentSlots>(static_cast<int>(m_currentEquipmentSlot) - 1);
-		E_equimentSlots newRightEnumPosition = static_cast<E_equimentSlots>(static_cast<int>(m_currentEquipmentSlot) + 1);
-		E_equimentSlots firstEnumPosition = static_cast<E_equimentSlots>(0);
-		E_equimentSlots lastEnumPosition = static_cast<E_equimentSlots>(static_cast<int>(E_equimentSlots::Count) - 1);
-		char input = _getch();
-		switch (input)
-		{
-			// Move the selection to the slot on the left
-		case 'a':
-		case 'A':
-			ClearConsolePreviousLine();
-			// If the current enum number is greater than 0, it can move the selection to the slot on the left
-			// else it will move the selection to the last slot
-			if (newLeftEnumPosition >= firstEnumPosition)
-			{
-				cout << endl << '\t' << GetEnumString(newLeftEnumPosition);
-				m_currentEquipmentSlot = newLeftEnumPosition;
-			}
-			else
-			{
-				cout << endl << '\t' << GetEnumString(lastEnumPosition);
-				m_currentEquipmentSlot = lastEnumPosition;
-			}
-			break;
 
-			// Move the selection to the slot on the right
-		case 'd':
-		case 'D':
-			ClearConsolePreviousLine();
-			// If the current enum number is smaller than the last enum number, it can move the selection to the slot on the right
-			// else it will move the selection to the first slot
-			if (newRightEnumPosition <= lastEnumPosition)
-			{
-				cout << endl << '\t' << GetEnumString(newRightEnumPosition);
-				m_currentEquipmentSlot = newRightEnumPosition;
-			}
-			else
-			{
-				cout << endl << '\t' << GetEnumString(firstEnumPosition);
-				m_currentEquipmentSlot = firstEnumPosition;
-			}
-			break;
-
-		case 'e':
-		case 'E':
-			ClearConsolePreviousLine();
-			break;
-
-		default:
-			// TODO : Remi : Error message : You have to enter an invalid input
-			break;
-		}
-	}
-}
 
 void Inventory::DisplaySelectedItem()
 {
@@ -141,11 +86,6 @@ void Inventory::DisplaySelectedItem()
 		return;
 	}
 	cout << endl << "Current item: " << endl << m_currentItem->ToString();
-}
-
-void Inventory::DisplaySelectedInventory()
-{
-	// TODO : Remi
 }
 
 void Inventory::DisplayCurrentMenu()
@@ -268,6 +208,16 @@ string Inventory::GetEnumString(E_equimentSlots equipmentSlot)
 E_inputMode Inventory::GetCurrentInputMode()
 {
 	return m_currentInputMode;
+}
+
+E_equimentSlots Inventory::GetCurrentEquipmentSlot()
+{
+	return m_currentEquipmentSlot;
+}
+
+void Inventory::SetCurrentInputMode(E_equimentSlots currentEquipmentSlot)
+{
+	m_currentEquipmentSlot = currentEquipmentSlot;
 }
 
 void Inventory::SetCurrentInputMode(E_inputMode currentInputMode)

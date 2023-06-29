@@ -7,9 +7,11 @@ class Input
 public:
 	void GetInput();
 	void SetInventory(Inventory* inventory);
+	void NavigateEquipmentSlots();
+
+	void NavigateSlots(bool isNext);
 
 private:
-	void GetLoadingInput();
 	void GetNavigationInput();
 	void GetEditionInput();
 	
