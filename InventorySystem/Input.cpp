@@ -46,14 +46,14 @@ void Input::GetNavigationInput()
 	{
 	// Move the selection to the object on the left
 	case 'a':
-	case 'A':
+	case 'A': // TODO : Add a no object message
 		m_inventory->CleanIfLogMessagePrinted();
 		NavigateItems(false);
 		break;
 
 	// Move the selection to the object on the right
 	case 'd':
-	case 'D':
+	case 'D': // TODO : Add a no object message
 		m_inventory->CleanIfLogMessagePrinted();
 		NavigateItems(true);
 		break;
