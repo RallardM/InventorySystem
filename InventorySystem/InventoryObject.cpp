@@ -4,13 +4,14 @@
 using namespace std;
 
 InventoryObject::InventoryObject(
-	string& type,
-	string& name,
-	unsigned short int& cost,
+	string type,
+	string name,
+	unsigned short int cost,
 	unsigned short int stacks/* = 1 */,
 	unsigned short int currentDurability/* = 0 */,
 	unsigned short int maxDurability/* = 0 */,
-	E_equimentSlots slot/* = E_equimentSlots::COUNT */)
+	E_equimentSlots slot/* = E_equimentSlots::COUNT */)//,
+	//bool isEmpty /* = true */)
 {
 	cout << "InventoryObject constructor called!" << endl;
 	m_type = new string(type);
@@ -20,6 +21,7 @@ InventoryObject::InventoryObject(
 	m_currentDurability = new unsigned short int(currentDurability);
 	m_maxDurability = new unsigned short int(maxDurability);
 	m_equipmentSlot = new E_equimentSlots(slot);
+	//m_isEmpty = new bool(isEmpty);
 }
 
 string InventoryObject::ToString()

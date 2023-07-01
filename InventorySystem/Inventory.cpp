@@ -8,14 +8,26 @@
 
 using namespace std;
 
-void Inventory::AddItem(string& itemType, string& itemName, unsigned short int itemCost/* = 0 */, unsigned short int itemStacks/* = 1 */, unsigned short int currentDurability/* = 0 */, unsigned short int maxDurability /* = 0 */, E_equimentSlots equipmentSlot/* = E_equimentSlots::Count */)
+Inventory::Inventory()
 {
-	InventoryObject* newObject = new InventoryObject(itemType, itemName, itemCost, itemStacks, currentDurability, maxDurability, equipmentSlot);
+	cout << "Enters Inventory constructor" << endl;
+	//for (size_t i = 0; i < MAX_INVENTORY_OBJECTS; i++)
+	//{
+	//	m_inventoryObjectsList.push_back(new InventoryObject("Typeless", "Nameless", 0, 0, 0, 0, E_equimentSlots::Count, true));
+	//}
+
+	m_inventoryPtrIterator = m_inventoryObjectsList.begin();
+}
+
+void Inventory::AddItem(string itemType, string itemName, unsigned short int itemCost/* = 0 */, unsigned short int itemStacks/* = 1 */, unsigned short int currentDurability/* = 0 */, unsigned short int maxDurability /* = 0 */, E_equimentSlots equipmentSlot/* = E_equimentSlots::Count */)//, bool isEmpty /* = false */)
+{
+	InventoryObject* newObject = new InventoryObject(itemType, itemName, itemCost, itemStacks, currentDurability, maxDurability, equipmentSlot);// , isEmpty);
 	m_inventoryObjectsList.push_back(newObject);
 
 	if (m_inventoryObjectsList.size() == 1)
 	{
-		m_currentItem = m_inventoryObjectsList.front();
+		m_inventoryPtrIterator = m_inventoryObjectsList.begin();
+		//m_currentItem = *m_inventoryPtrIterator;
 	}
 }
 
@@ -101,18 +113,16 @@ void Inventory::AddEquipment()
 	AddItem(itemType, itemName, itemCost, 1, currentDurability, maxDurability, m_currentEquipmentSlot);
 }
 
-
-
-void Inventory::DisplaySelectedItem()
-{
-	system("CLS");
-	if (!m_currentItem)
-	{
-		cout << endl << "There is no item in this inventory!";
-		return;
-	}
-	cout << endl << "Current item: " << endl << m_currentItem->ToString();
-}
+//void Inventory::DisplaySelectedItem()
+//{
+//	system("CLS");
+//	if (!m_currentItem)
+//	{
+//		cout << endl << "There is no item in this inventory!";
+//		return;
+//	}
+//	cout << endl << "Current item: " << endl << m_currentItem->ToString();
+//}
 
 void Inventory::DisplayCurrentMenu()
 {
@@ -178,7 +188,7 @@ void Inventory::DisplayNavigationMenu()
 		"    " << "I. Edit Objects" << endl << endl <<
 		"    " << "L. Load Invetory" <<
 		"    " << "S. Save Invetory" <<
-		"    " << "Q. Quit" << endl;
+		"    " << "Q. Quit" << endl << endl;
 }
 
 void Inventory::DisplayEditionMenu()
@@ -189,7 +199,21 @@ void Inventory::DisplayEditionMenu()
 		"    " << "C. Add Consumable" <<
 		"    " << "E. Add Equipment" << endl << endl <<
 		"    " << "N. Back To Navigation" <<
-		"    " << "Q. Quit" << endl;
+		"    " << "Q. Quit" << endl << endl;
+}
+
+void Inventory::DisplayCurrentObject()
+{
+	if (IsInventoryEmpty())
+	{
+		return;
+	}
+
+	cout << endl;
+	ClearConsolePreviousLine();
+	cout << "    " << "Selected objec: ";
+	cout << *(*m_inventoryPtrIterator)->GetName() + "   "; 
+	// TODO : Add stacks from consumable class
 }
 
 void Inventory::DestroyAllInventoryObjects() // TODO : Delete objects of objects before deleting the objects

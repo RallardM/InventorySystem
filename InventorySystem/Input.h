@@ -6,11 +6,12 @@ class Input
 {
 // Methods
 public:
-	Input() = default;
+	Input();
 	Input(bool* isGameRunning);
 	void GetInput();
 	void NavigateEquipmentSlots(E_equimentSlots& currentEquipmentSlot);
 	void NavigateSlots(bool isNext);
+	void NavigateItems(bool isNext);
 	bool GetIsGameRunning();
 	void SetInventory(Inventory* inventory);
 	void SetFileManager(FileManager* fileManager);

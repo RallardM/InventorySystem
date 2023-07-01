@@ -14,20 +14,19 @@ Consumable
 Consumable
 {
 	Name: Mana Potion
-	
 	Cost: 25
 	Stacks: 2
 }
+
 Equipment
 {
+	Name: Cool Helmet
 	Cost: 150
-		Name: Cool Helmet
 	CurrentDurability: 50
 	MaxDurability: 50
-	
-	
-		EquipmentSlot: Head
+	EquipmentSlot: Head
 }
+
 Equipment
 {
 	Name: Rusty Sword
@@ -36,3 +35,4 @@ Equipment
 	MaxDurability: 30
 	EquipmentSlot: Weapon1
 }
+

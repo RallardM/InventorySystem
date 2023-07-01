@@ -19,8 +19,9 @@ int main()
 	input->SetFileManager(fileManager);
 	input->SetInventory(inventory);
 
-	// Initial display of current menu, which is the navigation menu by default
+	// Initial display of current menu selected object, which is the navigation menu by default
 	inventory->DisplayCurrentMenu();
+	inventory->DisplayCurrentObject();
 
 	while (input->GetIsGameRunning())
 	{

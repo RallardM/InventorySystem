@@ -10,13 +10,14 @@ class InventoryObject
 	//Methods
 public:
 	InventoryObject(
-	string& type, 
-	string& name, 
-	unsigned short int& cost, 
-	unsigned short int stacks = 1, 
-	unsigned short int currentDurability = 0, 
-	unsigned short int maxDurability = 0, 
-	E_equimentSlots slot = E_equimentSlots::Count);
+		string type,
+		string name,
+		unsigned short int cost,
+		unsigned short int stacks = 1,
+		unsigned short int currentDurability = 0,
+		unsigned short int maxDurability = 0,
+		E_equimentSlots slot = E_equimentSlots::Count);// ,
+	//bool isEmpty = true);
 
 	string ToString();
 	void DeleteAttributes();
@@ -27,6 +28,7 @@ public:
 	unsigned short int* GetStackSize() { return m_stackSize; }
 	unsigned short int* GetCurrentDurability() { return m_currentDurability; }
 	unsigned short int* GetMaxDurability() { return m_maxDurability; }
+	//bool* IsEmpty() { return m_isEmpty; }
 
 private:
 	//Member variables
@@ -41,4 +43,5 @@ private:
 	unsigned short int* m_stackSize;
 	unsigned short int* m_currentDurability;
 	unsigned short int* m_maxDurability;
+	//bool* m_isEmpty;
 };

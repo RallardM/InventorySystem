@@ -39,7 +39,6 @@ public:
 private:
 	Inventory* m_inventory = nullptr; // Size: total size of the member variables in Inventory class.
 	
-
 	const char* rawStrings[12] = { "\n", "\r", "\t", "\v", "\f", "\b", "\a", "\\", "\?" , "\'", "\"", "\0" };
 
 	//In order to have a string pointer it can only be a const char* with "".

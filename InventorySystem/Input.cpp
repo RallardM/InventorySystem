@@ -5,8 +5,20 @@
 
 using namespace std;
 
-Input::Input(bool* isGameRunning) : m_isGameRunning(isGameRunning)
+Input::Input() :
+	m_isGameRunning(nullptr),
+	m_inventory(nullptr),
+	m_fileManager(nullptr)
 {
+	cout << "First Input constructor called!" << endl;
+}
+
+Input::Input(bool* isGameRunning) :
+	m_isGameRunning(isGameRunning),
+	m_inventory(nullptr),
+	m_fileManager(nullptr)
+{
+	cout << "Second Input constructor called!" << endl;
 }
 
 void Input::GetInput()
@@ -36,12 +48,14 @@ void Input::GetNavigationInput()
 	case 'a':
 	case 'A':
 		// TODO : Paulo : Navigation
+		NavigateItems(false);
 		break;
 
 	// Move the selection to the object on the right
 	case 'd':
 	case 'D':
 		// TODO : Paulo : Navigation
+		NavigateItems(true);
 		break;
 
 	// Remove the selected object from the inventory
@@ -97,6 +111,7 @@ void Input::GetEditionInput()
 		m_inventory->AddBasicObject();
 		m_inventory->SetCurrentInputMode(E_inputMode::Navigation);
 		m_inventory->DisplayNavigationMenu();
+		m_inventory->DisplayCurrentObject();
 		break;
 
 	// Add a consumable to the inventory
@@ -105,6 +120,7 @@ void Input::GetEditionInput()
 		m_inventory->AddConsumable();
 		m_inventory->SetCurrentInputMode(E_inputMode::Navigation);
 		m_inventory->DisplayNavigationMenu();
+		m_inventory->DisplayCurrentObject();
 		break;
 	
 	// Add an equipment to the inventory
@@ -113,6 +129,7 @@ void Input::GetEditionInput()
 		m_inventory->AddEquipment();
 		m_inventory->SetCurrentInputMode(E_inputMode::Navigation);
 		m_inventory->DisplayNavigationMenu();
+		m_inventory->DisplayCurrentObject();
 		break;
 
 	// Quit the game
@@ -128,6 +145,7 @@ void Input::GetEditionInput()
 		m_inventory->DisplayNavigationMenu();
 		m_inventory->SetCurrentInputMode(E_inputMode::Navigation);
 		m_inventory->DisplayNavigationMenu();
+		m_inventory->DisplayCurrentObject();
 		break;
 	
 	default:
@@ -149,13 +167,13 @@ void Input::NavigateEquipmentSlots(E_equimentSlots& currentEquipmentSlot)
 			// Move the selection to the slot on the left
 			case 'a':
 			case 'A':
-				NavigateSlots(true);
+				NavigateSlots(false); // TODO: Remi : check if correct directions
 				break;
 
 			// Move the selection to the slot on the right
 			case 'd':
 			case 'D':
-				NavigateSlots(false);
+				NavigateSlots(true); // TODO: Remi : check if correct directions
 				break;
 
 			// Choose the selected slot
@@ -216,6 +234,43 @@ void Input::NavigateSlots(bool isNext)
 		}
 	}
 }
+
+void Input::NavigateItems(bool isNext)
+{
+	if (!m_inventory->m_inventoryObjectsList.empty())
+	{
+		if (isNext)
+		{
+			// Increment the iterator if it's not pointing to the last element
+			if (m_inventory->m_inventoryPtrIterator != m_inventory->m_inventoryObjectsList.end() && m_inventory->m_inventoryPtrIterator != prev(m_inventory->m_inventoryObjectsList.end()) && *(*m_inventory->m_inventoryPtrIterator)->GetStackSize() != 0)
+			{
+				++m_inventory->m_inventoryPtrIterator;
+			}
+			else
+			{
+				// Wrap around to the first element if at the end
+				m_inventory->m_inventoryPtrIterator = m_inventory->m_inventoryObjectsList.begin();
+			}
+			m_inventory->m_inventoryPtrIterator = m_inventory->m_inventoryPtrIterator;
+		}
+		else
+		{
+			// Decrement the iterator if it's not pointing to the first element
+			if (m_inventory->m_inventoryPtrIterator != m_inventory->m_inventoryObjectsList.begin() && *(*m_inventory->m_inventoryPtrIterator)->GetStackSize() != 0)
+			{
+				--m_inventory->m_inventoryPtrIterator;
+			}
+			else
+			{
+				// Wrap around to the last element if at the beginning
+				m_inventory->m_inventoryPtrIterator = prev(m_inventory->m_inventoryObjectsList.end());
+			}
+		}
+
+		m_inventory->DisplayCurrentObject();
+	}
+}
+
 
 bool Input::GetIsGameRunning() 
 {

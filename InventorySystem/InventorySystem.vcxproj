@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ConsumableObject.h" />
     <ClInclude Include="Enumerations.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="Input.h" />
@@ -138,6 +139,7 @@
     <ClInclude Include="InventoryObject.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ConsumableObject.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Inventory.cpp" />

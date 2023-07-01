@@ -104,7 +104,7 @@ void FileManager::SaveInventory()
 	}
 
 	saveFile.close();
-	cout << endl << "Inventory saved!" << endl; // TODO : Remi : Test
+	cout << endl << "Inventory saved!" << endl; // TODO : Remi : Test to see if message shows
 }
 
 // Source : https://stackoverflow.com/questions/17032970/clear-data-inside-text-file-in-c
