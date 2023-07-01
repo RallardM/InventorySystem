@@ -25,12 +25,12 @@ void Inventory::AddBasicObject()
 	string itemName;
 	unsigned short int itemCost;
 
-	cout << endl << 
+	cout << endl <<
 		"    " << "Enter item name: ";
-	cin >> itemName;
-	cout << endl << 
+	cin >> itemName; // TODO : Remi : Use getline to allow spaces in the name // TODO : Remi : Check for wrong inputs
+	cout << endl <<
 		"    " << "Enter item cost: ";
-	cin >> itemCost;
+	cin >> itemCost; // TODO : Remi : Check for wrong inputs
 
 	AddItem(itemType, itemName, itemCost);
 }
@@ -44,11 +44,11 @@ void Inventory::AddConsumable()
 
 	cout << endl <<
 		"    " << "Enter item name: ";
-	cin >> itemName;
-	cout << endl << 
+	cin >> itemName; // TODO : Remi : Check for wrong inputs
+	cout << endl <<
 		"    " << "Enter item cost: ";
-	cin >> itemCost;
-	cout << endl << 
+	cin >> itemCost; // TODO : Remi : Check for wrong inputs
+	cout << endl <<
 		"    " << "Enter item stacks: ";
 	cin >> itemStacks;
 
@@ -64,32 +64,32 @@ void Inventory::AddEquipment()
 	unsigned short int maxDurability;
 
 	system("CLS");
-	cout << endl << 
+	cout << endl <<
 		"    " << "Enter item name: ";
-	cin >> itemName;
+	cin >> itemName; // TODO : Remi : Check for wrong inputs
 
 	system("CLS");
 	cout << endl <<
 		"    " << "Enter item cost: ";
-	cin >> itemCost;
+	cin >> itemCost; // TODO : Remi : Check for wrong inputs
 
 	system("CLS");
 	cout << endl <<
 		"    " << "Enter item current durability: ";
-	cin >> currentDurability;
+	cin >> currentDurability; // TODO : Remi : Check for wrong inputs
 
 	system("CLS");
-	cout << endl << 
+	cout << endl <<
 		"    " << "Enter item max durability: ";
-	cin >> maxDurability;
+	cin >> maxDurability; // TODO : Remi : Check for wrong inputs
 
 	system("CLS");
-	cout << endl << 
+	cout << endl <<
 		"    " << "A. Previous Slot" << "    " << "D. Next Slot" << "    " << "E. Select";
 	cout << endl <<
 		"    " << "Select an item equipment slot: ";
 
-	MoveCursorToLocation( {35, 2} ); // TODO : Remi : Magic number
+	MoveCursorToLocation({ 35, 2 }); // TODO : Remi : Magic number
 	cout << GetEnumString(&m_currentEquipmentSlot) << endl;
 
 	// Access to Input class by creating an instance of it and assigning the current Inventory 
@@ -171,11 +171,14 @@ bool Inventory::IsCurrentSelectionPrinted() // TODO: To complete
 void Inventory::DisplayNavigationMenu()
 {
 	system("CLS");
-	cout << endl << 
-		"    " << "A. Previous Object" << 
-		"    " << "D. Next Object" << 
-		"    " << "R. Remove Selected" << 
-		"    " << "I. Edit Objects" << endl;
+	cout << endl <<
+		"    " << "A. Previous Object" <<
+		"    " << "D. Next Object" <<
+		"    " << "R. Remove Selected" <<
+		"    " << "I. Edit Objects" << endl << endl <<
+		"    " << "L. Load Invetory" <<
+		"    " << "S. Save Invetory" <<
+		"    " << "Q. Quit" << endl;
 }
 
 void Inventory::DisplayEditionMenu()
@@ -184,12 +187,17 @@ void Inventory::DisplayEditionMenu()
 	cout << endl <<
 		"    " << "B. Add Basic Object" <<
 		"    " << "C. Add Consumable" <<
-		"    " << "E. Add Equipment" << endl <<
-		"    " << "N. Back To Navigation" << endl;
+		"    " << "E. Add Equipment" << endl << endl <<
+		"    " << "N. Back To Navigation" <<
+		"    " << "Q. Quit" << endl;
 }
 
 void Inventory::DestroyAllInventoryObjects() // TODO : Delete objects of objects before deleting the objects
 {
+	if (IsInventoryEmpty())
+	{
+		return;
+	}
 	for (InventoryObject* object : m_inventoryObjectsList)
 	{
 		object->DeleteAttributes();
@@ -259,4 +267,14 @@ void Inventory::MoveCursorToLocation(COORD position)
 {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleCursorPosition(hConsole, position);
+}
+
+bool Inventory::IsInventoryEmpty()
+{
+	return m_inventoryObjectsList.empty();
+}
+
+void Inventory::ClearInventoryList()
+{
+	m_inventoryObjectsList.clear();
 }

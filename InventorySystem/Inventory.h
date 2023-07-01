@@ -29,6 +29,8 @@ public:
 	void SetCurrentInputMode(E_inputMode currentInputMode);
 	void ClearConsolePreviousLine();
 	void MoveCursorToLocation(COORD position);
+	bool IsInventoryEmpty();
+	void ClearInventoryList();
 
 private:
 

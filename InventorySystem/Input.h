@@ -1,15 +1,20 @@
 #pragma once
 #include "Inventory.h"
+#include "FileManager.h"
 
 class Input
 {
 // Methods
 public:
-	void GetInput();
-	void SetInventory(Inventory* inventory);
-	void NavigateEquipmentSlots(E_equimentSlots& currentEquipmentSlot);
+	Input() = default;
 
+	Input(bool* isGameRunning);
+	void GetInput();
+	void NavigateEquipmentSlots(E_equimentSlots& currentEquipmentSlot);
 	void NavigateSlots(bool isNext);
+	bool GetIsGameRunning();
+	void SetInventory(Inventory* inventory);
+	void SetFileManager(FileManager* fileManager);
 
 private:
 	void GetNavigationInput();
@@ -19,4 +24,6 @@ private:
 public:
 private:
 	Inventory* m_inventory = nullptr;
+	FileManager* m_fileManager = nullptr;
+	bool m_isGameRunning;
 };

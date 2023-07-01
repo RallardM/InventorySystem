@@ -1,0 +1,38 @@
+BaseObject
+{
+	Name: Broken urn
+	Cost: 5
+}
+
+Consumable
+{
+	Name: Health Potion
+	Cost: 15
+	Stacks: 5
+}
+
+Consumable
+{
+	Name: Mana Potion
+	
+	Cost: 25
+	Stacks: 2
+}
+Equipment
+{
+	Cost: 150
+		Name: Cool Helmet
+	CurrentDurability: 50
+	MaxDurability: 50
+	
+	
+		EquipmentSlot: Head
+}
+Equipment
+{
+	Name: Rusty Sword
+	Cost: 30
+	CurrentDurability: 12
+	MaxDurability: 30
+	EquipmentSlot: Weapon1
+}

@@ -5,6 +5,10 @@
 
 using namespace std;
 
+Input::Input(bool* isGameRunning) : m_isGameRunning(isGameRunning)
+{
+}
+
 void Input::GetInput()
 {
 	switch (m_inventory->GetCurrentInputMode())
@@ -23,47 +27,55 @@ void Input::GetInput()
 	}
 }
 
-void Input::SetInventory(Inventory* inventory)
-{
-	m_inventory = inventory;
-}
-
 void Input::GetNavigationInput()
 {
 	char input = _getch();
 	switch (input)
 	{
-		// Move the selection to the object on the left
+	// Move the selection to the object on the left
 	case 'a':
 	case 'A':
 		// TODO : Paulo : Navigation
 		break;
 
-		// Move the selection to the object on the right
+	// Move the selection to the object on the right
 	case 'd':
 	case 'D':
 		// TODO : Paulo : Navigation
 		break;
 
-		// Remove the selected object from the inventory
+	// Remove the selected object from the inventory
 	case 'r':
 	case 'R':
 		// TODO : Remi
 		break;
 
+	// Display the edition menu
 	case 'i':
 	case 'I':
 		m_inventory->SetCurrentInputMode(E_inputMode::Edition);
 		m_inventory->DisplayEditionMenu();
 		break;
 
-	case 's':
-	case 'S':
-		// TODO : Remi save inventory : Display in the cout
-
+	// Load the inventory from the txt file
 	case 'l':
 	case 'L':
-		// TODO : Remi load inventory : Display in the cout
+		// TODO : Remi : test
+		m_inventory->ClearInventoryList();
+		m_fileManager->LoadInventory();
+		break;
+
+	// Save the inventory to the txt file
+	case 's':
+	case 'S':
+		// TODO : Remi save inventory
+		break;
+
+	// Exit the game
+	case 'q':
+	case 'Q':
+	case 'esc':
+		m_isGameRunning = false;
 		break;
 
 	default:
@@ -77,6 +89,7 @@ void Input::GetEditionInput()
 	char input = _getch();
 	switch (input)
 	{
+	// Add a basic object to the inventory
 	case 'b':
 	case 'B':
 		m_inventory->AddBasicObject();
@@ -84,13 +97,15 @@ void Input::GetEditionInput()
 		m_inventory->DisplayNavigationMenu();
 		break;
 
+	// Add a consumable to the inventory
 	case 'c':
 	case 'C':
 		m_inventory->AddConsumable();
 		m_inventory->SetCurrentInputMode(E_inputMode::Navigation);
 		m_inventory->DisplayNavigationMenu();
 		break;
-
+	
+	// Add an equipment to the inventory
 	case 'e':
 	case 'E':
 		m_inventory->AddEquipment();
@@ -98,13 +113,21 @@ void Input::GetEditionInput()
 		m_inventory->DisplayNavigationMenu();
 		break;
 
+	// Quit the game
+	case 'q':
+	case 'Q':
+	case 'esc':
+		m_isGameRunning = false;
+		break;
+
+	// Go back to the navigation menu
 	case 'n':
 	case 'N':
 		m_inventory->DisplayNavigationMenu();
 		m_inventory->SetCurrentInputMode(E_inputMode::Navigation);
 		m_inventory->DisplayNavigationMenu();
 		break;
-
+	
 	default:
 		// TODO : Remi : Error handling : You have to enter an invalid input
 		break;
@@ -190,4 +213,19 @@ void Input::NavigateSlots(bool isNext)
 			m_inventory->SetCurrentInputMode(firstEnumPosition);
 		}
 	}
+}
+
+bool Input::GetIsGameRunning() 
+{
+	return m_isGameRunning;
+}
+
+void Input::SetInventory(Inventory* inventory)
+{
+	m_inventory = inventory;
+}
+
+void Input::SetFileManager(FileManager* fileManager)
+{
+	m_fileManager = fileManager;
 }
