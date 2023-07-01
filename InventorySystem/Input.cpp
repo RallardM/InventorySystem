@@ -47,14 +47,14 @@ void Input::GetNavigationInput()
 	// Move the selection to the object on the left
 	case 'a':
 	case 'A':
-		// TODO : Paulo : Navigation
+		m_inventory->CleanIfLogMessagePrinted();
 		NavigateItems(false);
 		break;
 
 	// Move the selection to the object on the right
 	case 'd':
 	case 'D':
-		// TODO : Paulo : Navigation
+		m_inventory->CleanIfLogMessagePrinted();
 		NavigateItems(true);
 		break;
 
@@ -62,6 +62,7 @@ void Input::GetNavigationInput()
 	case 'r':
 	case 'R':
 		// TODO : Remi
+		m_inventory->RemoveItem();
 		break;
 
 	// Display the edition menu
@@ -235,6 +236,8 @@ void Input::NavigateSlots(bool isNext)
 	}
 }
 
+
+// Paulo coudl not finish in time, I used the help of chatGPT to finish this function as a placeholder for my other tasks
 void Input::NavigateItems(bool isNext)
 {
 	if (!m_inventory->m_inventoryObjectsList.empty())

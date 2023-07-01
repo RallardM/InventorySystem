@@ -31,6 +31,16 @@ void Inventory::AddItem(string itemType, string itemName, unsigned short int ite
 	}
 }
 
+void Inventory::RemoveItem()
+{
+	string itemName = *(*m_inventoryPtrIterator)->GetName();
+	m_inventoryObjectsList.erase(m_inventoryPtrIterator);
+	m_inventoryPtrIterator = m_inventoryObjectsList.begin();
+	DisplayCurrentObject();
+	cout << endl << "    " << itemName << " has been removed from the inventory." << endl;
+	m_isLogMessagePrinted = true;
+}
+
 void Inventory::AddBasicObject()
 {
 	string itemType = "BaseObject";
@@ -301,4 +311,16 @@ bool Inventory::IsInventoryEmpty()
 void Inventory::ClearInventoryList()
 {
 	m_inventoryObjectsList.clear();
+}
+
+void Inventory::CleanIfLogMessagePrinted()
+{
+	if (!m_isLogMessagePrinted)
+	{
+		return;
+	}
+
+	ClearConsolePreviousLine();
+	ClearConsolePreviousLine();
+	m_isLogMessagePrinted = false;
 }

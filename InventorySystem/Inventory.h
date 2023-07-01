@@ -12,10 +12,11 @@ class Inventory
 public:
 	Inventory();
 	void AddItem(string itemType, string itemName, unsigned short int itemCost = 0, unsigned short int itemStacks = 1, unsigned short int currentDurability = 0, unsigned short int maxDurability = 0, E_equimentSlots equipmentSlot = E_equimentSlots::Count);//, bool isPopulated = false);
+	void RemoveItem();
 	void AddBasicObject();
 	void AddConsumable();
 	void AddEquipment();
-	void DisplaySelectedItem();
+	//void DisplaySelectedItem();
 	void DisplayCurrentMenu();
 	void DisplayCurrentSelection();
 	bool IsCurrentSelectionPrinted();
@@ -32,6 +33,7 @@ public:
 	void MoveCursorToLocation(COORD position);
 	bool IsInventoryEmpty();
 	void ClearInventoryList();
+	void CleanIfLogMessagePrinted();
 
 private:
 
@@ -49,4 +51,5 @@ private:
 	const unsigned short int MAX_INVENTORY_OBJECTS = 20;
 	E_equimentSlots m_currentEquipmentSlot = E_equimentSlots::Head;
 	E_inputMode m_currentInputMode = E_inputMode::Navigation;
+	bool m_isLogMessagePrinted = false;
 };
