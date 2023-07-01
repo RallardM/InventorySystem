@@ -55,5 +55,6 @@
     <Text Include="saved_files\InventorySaveFile.txt">
       <Filter>SavedFiles</Filter>
     </Text>
+    <Text Include="InventorySaveFile-Backup.txt" />
   </ItemGroup>
 </Project>

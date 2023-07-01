@@ -22,7 +22,7 @@ FileManager::~FileManager()
 void FileManager::LoadInventory()
 {
 	ifstream loadFile;
-	loadFile.open(m_inventory->LOAD_FILE_PATH);
+	loadFile.open(m_inventory->FILE_PATH);
 	
 	string previousLine = "";
 
@@ -58,6 +58,71 @@ void FileManager::LoadInventory()
 		previousLine = *m_line;
 	}
 	loadFile.close();
+}
+
+void FileManager::SaveInventory()
+{
+	ofstream saveFile;
+	saveFile.open(m_inventory->FILE_PATH);
+
+	if (saveFile.is_open() == false)
+	{
+		cout << endl << "Unable to open file!";
+		exit(EXIT_FAILURE);
+		return;
+	}
+
+	for (const auto& object : m_inventory->m_inventoryObjectsList)
+	{
+		saveFile << *object->GetType() << endl;
+		saveFile << OPENING_BRACKETS << endl;
+		saveFile << "\t" << NAME << " " << *object->GetName() << endl;
+		saveFile << "\t" << COST << " " << *object->GetCost() << endl;
+
+		if (*object->GetStackSize() > 1)
+		{
+			saveFile << "\t" << STACKS << " " << *object->GetStackSize() << endl;
+		}
+
+		if (*object->GetCurrentDurability() > 0)
+		{
+			saveFile << "\t" << CURRENT_DURABILITY << " " << *object->GetCurrentDurability() << endl;
+		}
+
+		if (*object->GetMaxDurability() > 0)
+		{
+			saveFile << "\t" << MAX_DURABILITY << " " << *object->GetMaxDurability() << endl;
+		}
+
+		if (*object->GetEquipmentSlot() != E_equimentSlots::Count)
+		{
+			saveFile << "\t" << EQUIPMENT_SLOT << " " << EnumToString(object->GetEquipmentSlot()) << endl;
+		}
+
+		saveFile << CLOSING_BRACKETS << endl;
+		saveFile << endl;
+	}
+
+	saveFile.close();
+	cout << endl << "Inventory saved!" << endl; // TODO : Remi : Test
+}
+
+// Source : https://stackoverflow.com/questions/17032970/clear-data-inside-text-file-in-c
+void FileManager::CleanTxtFile()
+{
+	// Erase the contents of the file
+	ofstream truncateFile(m_inventory->FILE_PATH, std::ios::trunc);
+
+	// Check if the file was successfully opened and truncated
+	if (!truncateFile)
+	{
+		cout << endl << "Unable to open file!";
+		exit(EXIT_FAILURE);
+		return;
+	}
+
+	// Close the file after truncating
+	truncateFile.close();
 }
 
 // Throws a warning if equipmentSlot is placed last in the parameter list.
@@ -170,7 +235,40 @@ E_equimentSlots FileManager::StringToEnum()
 	}
 	else
 	{
+		cout << endl << "Error in FileManager::StringToEnum() : Invalid slot!";
 		return E_equimentSlots::Count;
+	}
+}
+
+string FileManager::EnumToString(E_equimentSlots* slot)
+{
+	switch (*slot)
+	{
+	case E_equimentSlots::Head:
+		return "Head";
+		break;
+
+	case E_equimentSlots::Chest:
+		return "Chest";
+		break;
+
+	case E_equimentSlots::Legs:
+		return "Legs";
+		break;
+
+	case E_equimentSlots::Weapon1:
+		return "Weapon1";
+		break;
+
+	case E_equimentSlots::Weapon2:
+		return "Weapon2";
+		break;
+
+	case E_equimentSlots::Count:
+	default:
+		cout << endl << "Error in FileManager::EnumToString(E_equimentSlots* slot) : Invalid slot!";
+		return "";
+		break;
 	}
 }
 

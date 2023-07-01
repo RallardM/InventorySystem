@@ -69,6 +69,8 @@ void Input::GetNavigationInput()
 	case 's':
 	case 'S':
 		// TODO : Remi save inventory
+		m_fileManager->CleanTxtFile();
+		m_fileManager->SaveInventory();
 		break;
 
 	// Exit the game

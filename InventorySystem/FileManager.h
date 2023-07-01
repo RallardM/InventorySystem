@@ -11,10 +11,13 @@ public:
 	~FileManager();
 
 	void LoadInventory();
+	void SaveInventory();
+	void CleanTxtFile();
 
 private:
 	void IdentifyString(string& previousLine, string& type, string& name, E_equimentSlots& slot, unsigned short int& cost, unsigned short int& stacks, unsigned short int& currentDurability, unsigned short int& maxDurability);
 	E_equimentSlots StringToEnum();
+	string EnumToString(E_equimentSlots* slot);
 	void RemoveDoubleSpaces();
 	void RemoveSpaceInFront();
 	void RemoveSpaceInMiddle();

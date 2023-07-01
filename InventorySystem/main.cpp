@@ -16,6 +16,7 @@ int main()
 	fileManager->LoadInventory();
 
 	// Give inventory and filemanager access to the input object
+	input->SetFileManager(fileManager);
 	input->SetInventory(inventory);
 
 	// Initial display of current menu, which is the navigation menu by default

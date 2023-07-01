@@ -7,7 +7,6 @@ class Input
 // Methods
 public:
 	Input() = default;
-
 	Input(bool* isGameRunning);
 	void GetInput();
 	void NavigateEquipmentSlots(E_equimentSlots& currentEquipmentSlot);

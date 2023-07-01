@@ -40,8 +40,7 @@ public:
 	list<InventoryObject*> m_inventoryObjectsList = list<InventoryObject*>{ MAX_INVENTORY_OBJECTS };
 
 	//In order to have a string pointer it can only be a const char* with "".
-	const char* FILES_PATH = "saved_files/";
-	const char* LOAD_FILE_PATH = "saved_files/InventorySaveFile.txt";
+	const char* FILE_PATH = "saved_files/InventorySaveFile.txt";
 
 private:
 	InventoryObject* m_currentItem = nullptr;

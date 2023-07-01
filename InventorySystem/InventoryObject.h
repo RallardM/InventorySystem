@@ -20,6 +20,13 @@ public:
 
 	string ToString();
 	void DeleteAttributes();
+	string* GetName() { return m_name; }
+	string* GetType() { return m_type; }
+	E_equimentSlots* GetEquipmentSlot() { return m_equipmentSlot; }
+	unsigned short int* GetCost() { return m_cost; }
+	unsigned short int* GetStackSize() { return m_stackSize; }
+	unsigned short int* GetCurrentDurability() { return m_currentDurability; }
+	unsigned short int* GetMaxDurability() { return m_maxDurability; }
 
 private:
 	//Member variables
