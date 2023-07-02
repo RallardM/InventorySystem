@@ -44,9 +44,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="InventoryObject.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Inventory.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -66,6 +63,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="BaseObject.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryObject.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

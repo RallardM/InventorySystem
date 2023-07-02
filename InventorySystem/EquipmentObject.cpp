@@ -4,7 +4,6 @@
 
 using namespace std;
 
-
 EquipmentObject::EquipmentObject(
 	string name,
 	unsigned short int cost,
@@ -20,6 +19,7 @@ EquipmentObject::EquipmentObject(
 	m_currentDurability = new unsigned short int(currentDurability);
 	m_maxDurability = new unsigned short int(maxDurability);
 	m_equipmentSlot = new E_equimentSlots(slot);
+	InstantiateId();
 }
 
 void EquipmentObject::DeleteAttributes()
@@ -31,4 +31,10 @@ void EquipmentObject::DeleteAttributes()
 	delete m_cost;
 	delete m_currentDurability;
 	delete m_maxDurability;
+}
+
+void EquipmentObject::InstantiateId()
+{
+	m_id = GetNextId();
+	SetNextId(GetNextId() + 1);
 }

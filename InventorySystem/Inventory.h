@@ -37,6 +37,8 @@ public:
 	void DestroyAllInventoryObjects();
 	void ChangeStackSize(bool isIncreasing);
 
+	void SetStackSizeFromObjectId();
+
 	E_inputMode GetCurrentInputMode();
 	E_equimentSlots GetCurrentEquipmentSlot();
 	string GetEnumString(E_equimentSlots* equipmentSlot);
@@ -53,6 +55,7 @@ private:
 	void DisplayStackSize();
 	void OnEmptyStack();
 	void FindOtherStack();
+	void CheckIfLastStack();
 	bool IsInventoryEmpty();
 	
 //Member variables
@@ -72,6 +75,7 @@ private:
 	const char* SELECTED_OBJECT = "Selected objec: ";
 	const char* STACK_SIZE = "Stack size: ";
 	const char* QUIT = "Q. Quit";
+	const char* CHANGE_STACK = "+/- Change Stack";
 
 	//const unsigned short int MAX_INVENTORY_OBJECTS = 20;
 	E_equimentSlots m_currentEquipmentSlot = E_equimentSlots::Head;

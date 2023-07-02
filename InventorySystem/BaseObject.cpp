@@ -13,6 +13,7 @@ BaseObject::BaseObject(
 	m_type = new E_itemType(type);
 	m_name = new string(name);
 	m_cost = new unsigned short int(cost);
+	InstantiateId();
 }
 
 void BaseObject::DeleteAttributes()
@@ -21,4 +22,10 @@ void BaseObject::DeleteAttributes()
 	delete m_name;
 	delete m_type;
 	delete m_cost;
+}
+
+void BaseObject::InstantiateId()
+{
+	m_id = GetNextId();
+	SetNextId(GetNextId() + 1);
 }

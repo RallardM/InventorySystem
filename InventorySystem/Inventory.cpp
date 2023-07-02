@@ -265,11 +265,20 @@ void Inventory::ChangeStackSize(bool isIncreasing)
 	{
 		// Creates another stack of the same item
 		AddItem(*(*m_inventoryPtrIterator)->GetType(), *(*m_inventoryPtrIterator)->GetName(), *(*m_inventoryPtrIterator)->GetCost(), 20, 0, 0, E_equimentSlots::Count, true); // TODO : Remi : Magic numbers
-		unsigned short int stackSize = 1;
-		(*m_inventoryPtrIterator)->SetStackSize(&stackSize);
-		(*m_inventoryPtrIterator)->SetMultupleStacks(true);
+		cout << endl; // Jumps next constructor message
+		ClearConsolePreviousLine(); // Removes constructor message
+		
+		SetStackSizeFromObjectId();
+		//unsigned short int stackSize = 1;
+		//(*m_inventoryPtrIterator)->SetStackSize(&stackSize);
+		//(*m_inventoryPtrIterator)->SetMultupleStacks(true);
+		MoveCursorToLocation(consoleColCharToStack);
+		DisplayStackSize();
 
-		cout << endl << endl << "New stack created";
+		consoleColCharToStack.X = static_cast<SHORT>(strlen(UNIFORM_TAB) + strlen(SELECTED_OBJECT) + (*m_inventoryPtrIterator)->GetNameLenght() + strlen(UNIFORM_TAB) + strlen(STACK_SIZE) + ((*(*m_inventoryPtrIterator)->GetStackSize()) % 10) + strlen(UNIFORM_TAB) + strlen(CHANGE_STACK));
+		consoleColCharToStack.Y = 5;
+		MoveCursorToLocation(consoleColCharToStack);
+		cout << UNIFORM_TAB << "New stack created";
 	}
 	else if (!isIncreasing && currentStackSize > 1)
 	{
@@ -285,6 +294,19 @@ void Inventory::ChangeStackSize(bool isIncreasing)
 	else
 	{
 		cout << endl << "Error : wrong stack manipulation in Inventory::ChangeStackSize()";
+	}
+}
+
+void Inventory::SetStackSizeFromObjectId()
+{
+	for (InventoryObject* object : m_inventoryObjectsList)
+	{
+		if ((*m_inventoryPtrIterator)->GetId() == object->GetId())
+		{
+			unsigned short int stackSize = 1;
+			object->SetStackSize(stackSize);
+			object->SetMultupleStacks(true);
+		}
 	}
 }
 
@@ -383,7 +405,7 @@ bool Inventory::IsCurrentSelectionPrinted() // TODO: To complete
 void Inventory::DisplayStackSize()
 {
 	cout << *(*m_inventoryPtrIterator)->GetStackSize();
-	cout << UNIFORM_TAB << "+/- Change Stack";
+	cout << UNIFORM_TAB << CHANGE_STACK << UNIFORM_TAB;
 }
 
 void Inventory::OnEmptyStack()
@@ -391,10 +413,11 @@ void Inventory::OnEmptyStack()
 	if ((*m_inventoryPtrIterator)->HasMultipleStacks())
 	{
 		FindOtherStack();
+		CheckIfLastStack();
 	}
 	else
 	{
-		// TODO : Remi : Delete the object
+		m_inventoryObjectsList.remove(*m_inventoryPtrIterator);
 	}
 }
 
@@ -402,11 +425,37 @@ void Inventory::FindOtherStack()
 {
 	for (InventoryObject* object : m_inventoryObjectsList)
 	{
-		if (object->GetName() == (*m_inventoryPtrIterator)->GetName() && object != *m_inventoryPtrIterator)
+		if (object->IsStackable() == false)
 		{
-			*m_inventoryPtrIterator = object;
-			return;
+			continue;
 		}
+
+		if (object == *m_inventoryPtrIterator)
+		{
+			continue;
+		}
+
+		*m_inventoryPtrIterator = object;
+		break;
+	}
+}
+
+void Inventory::CheckIfLastStack()
+{
+	unsigned short int count = 0;
+	for (InventoryObject* object : m_inventoryObjectsList)
+	{
+		if (object->IsStackable() == false)
+		{
+			continue;
+		}
+
+		count++;
+	}
+
+	if (count == 1)
+	{
+		(*m_inventoryPtrIterator)->SetMultupleStacks(false);
 	}
 }
 
