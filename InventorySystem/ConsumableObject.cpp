@@ -11,8 +11,7 @@ ConsumableObject::ConsumableObject(
 	unsigned short int cost,
 	E_itemType type /* = E_itemType::Consumable */,
 	unsigned short int stacks/* = 1 */,
-	unsigned short int currentDurability/* = 0 */,
-	unsigned short int maxDurability/* = 0 */)
+	bool hasStack /* = false */)
 {
 	cout << "ConsumableObject constructor called!" << endl;
 	m_type = new E_itemType(type);

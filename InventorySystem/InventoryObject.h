@@ -9,7 +9,9 @@ class InventoryObject
 {
 //Methods
 public:
-	//InventoryObject();
+	InventoryObject(); 
+	
+	// TODO : Remi : Check if removable
 	//InventoryObject(
 	//	E_itemType type,
 	//	string name,
@@ -27,16 +29,18 @@ public:
 	virtual E_equimentSlots* GetEquipmentSlot() { return m_equipmentSlot; }
 	virtual unsigned short int* GetCost() { return m_cost; }
 	virtual unsigned short int* GetStackSize() { return m_stackSize; }
+	virtual void SetStackSize(unsigned short int* new_size) { m_stackSize = new_size; }
 	virtual unsigned short int* GetCurrentDurability() { return m_currentDurability; }
 	virtual unsigned short int* GetMaxDurability() { return m_maxDurability; }
 	virtual unsigned short int GetMaxStackSize() { return MAX_STACK; }
 	virtual const bool IsStackable() { return IS_STACKABLE; }
+	virtual bool HasMultipleStacks() { return m_hasMultipleStacks; }
+	virtual void SetMultupleStacks(bool hasMultipleStacks) { m_hasMultipleStacks = hasMultipleStacks; }
 
 private:
 
 //Member variables
 public:
-
 
 private:
 	string* m_name;
@@ -48,4 +52,5 @@ private:
 	unsigned short int* m_maxDurability;
 	static const unsigned short int MAX_STACK;
 	const bool IS_STACKABLE = false;
+	bool m_hasMultipleStacks = false;
 };

@@ -13,8 +13,7 @@ public:
 		unsigned short int cost,
 		E_itemType type = E_itemType::Consumable,
 		unsigned short int stacks = 1,
-		unsigned short int currentDurability = 0,
-		unsigned short int maxDurability = 0);
+		bool hasStack = false);
 
 	void DeleteAttributes();
 	string* GetName() { return m_name; }
@@ -22,8 +21,12 @@ public:
 	E_itemType* GetType() { return m_type; }
 	unsigned short int* GetCost() { return m_cost; }
 	unsigned short int* GetStackSize() { return m_stackSize; }
+	void SetStackSize(unsigned short int* new_size) { m_stackSize = new_size; }
 	unsigned short int GetMaxStackSize() { return MAX_CONSUMABLE_STACKS; }
 	const bool IsStackable() { return IS_STACKABLE; }
+	bool HasMultipleStacks() { return m_hasMultipleStacks; }
+	void SetMultupleStacks(bool hasMultipleStacks) { m_hasMultipleStacks = hasMultipleStacks; }
+
 private:
 
 //Member variables
@@ -36,4 +39,5 @@ private:
 	unsigned short int* m_stackSize;
 	static const unsigned short int MAX_CONSUMABLE_STACKS;
 	const bool IS_STACKABLE = true;
+	bool m_hasMultipleStacks = false;
 };

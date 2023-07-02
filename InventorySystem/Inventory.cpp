@@ -23,12 +23,12 @@ Inventory::Inventory()
 	m_inventoryPtrIterator = m_inventoryObjectsList.begin();
 }
 
-void Inventory::AddItem(E_itemType itemType, string itemName, unsigned short int itemCost/* = 0 */, unsigned short int itemStacks/* = 1 */, unsigned short int currentDurability/* = 0 */, unsigned short int maxDurability /* = 0 */, E_equimentSlots equipmentSlot/* = E_equimentSlots::Count */)//, bool isEmpty /* = false */)
+void Inventory::AddItem(E_itemType itemType, string itemName, unsigned short int itemCost/* = 0 */, unsigned short int itemStacks/* = 1 */, unsigned short int currentDurability/* = 0 */, unsigned short int maxDurability /* = 0 */, E_equimentSlots equipmentSlot/* = E_equimentSlots::Count */, bool hasStack /* = false */)
 {
 	if (itemType == E_itemType::Consumable)
 	{
 		ConsumableObject* newConsumableObject;
-		newConsumableObject = new ConsumableObject(itemName, itemCost, itemType, itemStacks);
+		newConsumableObject = new ConsumableObject(itemName, itemCost, itemType, itemStacks, hasStack);
 		m_inventoryObjectsList.push_back(newConsumableObject);
 	}
 	else if (itemType == E_itemType::Equipment)
@@ -172,24 +172,6 @@ void Inventory::DisplayCurrentMenu()
 	}
 }
 
-bool Inventory::IsCurrentSelectionPrinted() // TODO: To complete
-{
-	switch (m_currentInputMode)
-	{
-	case E_inputMode::Navigation:
-		break;
-
-	case E_inputMode::Edition:
-		break;
-
-	case E_inputMode::Count:
-	default:
-		// TODO : Remi Error message
-		break;
-	}
-	return false;
-}
-
 void Inventory::DisplayNavigationMenu()
 {
 	system("CLS");
@@ -235,10 +217,10 @@ void Inventory::DisplayCurrentObject()
 	}
 }
 
-void Inventory::DisplayStackSize()
+void Inventory::MoveCursorToLocation(COORD position)
 {
-	cout << *(*m_inventoryPtrIterator)->GetStackSize();
-	cout << UNIFORM_TAB << "+/- Change Stack";
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleCursorPosition(hConsole, position);
 }
 
 void Inventory::DestroyAllInventoryObjects() // TODO : Delete objects of objects before deleting the objects
@@ -253,6 +235,67 @@ void Inventory::DestroyAllInventoryObjects() // TODO : Delete objects of objects
 		delete object;
 	}
 	m_inventoryObjectsList.clear();
+}
+
+void Inventory::ChangeStackSize(bool isIncreasing)
+{
+	//CheckIfStackable();
+	bool isItStackable = (*m_inventoryPtrIterator)->IsStackable(); // TODO : Remi : Delete after Debug
+	if (!isItStackable)
+	{
+		return;
+	}
+
+	InventoryObject* inventoryObject = *m_inventoryPtrIterator;
+	unsigned short int currentStackSize = *inventoryObject->GetStackSize();
+	unsigned short int maxStackSize = inventoryObject->GetMaxStackSize();
+	COORD consoleColCharToStack;
+	consoleColCharToStack.X = static_cast<SHORT>(strlen(UNIFORM_TAB) + strlen(SELECTED_OBJECT) + (*m_inventoryPtrIterator)->GetNameLenght() + strlen(UNIFORM_TAB) + strlen(STACK_SIZE));
+	consoleColCharToStack.Y = 5;
+
+	if (isIncreasing && currentStackSize < maxStackSize)
+	{
+		// Get the number of console collones until the end of 'Stack size: '
+		(*(*m_inventoryPtrIterator)->GetStackSize())++;
+
+		MoveCursorToLocation(consoleColCharToStack);
+		DisplayStackSize();
+	}
+	else if (isIncreasing && currentStackSize == maxStackSize)
+	{
+		// Creates another stack of the same item
+		AddItem(*(*m_inventoryPtrIterator)->GetType(), *(*m_inventoryPtrIterator)->GetName(), *(*m_inventoryPtrIterator)->GetCost(), 20, 0, 0, E_equimentSlots::Count, true); // TODO : Remi : Magic numbers
+		unsigned short int stackSize = 1;
+		(*m_inventoryPtrIterator)->SetStackSize(&stackSize);
+		(*m_inventoryPtrIterator)->SetMultupleStacks(true);
+
+		cout << endl << endl << "New stack created";
+	}
+	else if (!isIncreasing && currentStackSize > 1)
+	{
+		(*(*m_inventoryPtrIterator)->GetStackSize())--;
+
+		MoveCursorToLocation(consoleColCharToStack);
+		DisplayStackSize();
+	}
+	else if (!isIncreasing && currentStackSize == 0)
+	{
+		OnEmptyStack();
+	}
+	else
+	{
+		cout << endl << "Error : wrong stack manipulation in Inventory::ChangeStackSize()";
+	}
+}
+
+E_inputMode Inventory::GetCurrentInputMode()
+{
+	return m_currentInputMode;
+}
+
+E_equimentSlots Inventory::GetCurrentEquipmentSlot()
+{
+	return m_currentEquipmentSlot;
 }
 
 string Inventory::GetEnumString(E_equimentSlots* equipmentSlot)
@@ -287,54 +330,6 @@ string Inventory::GetEnumString(E_equimentSlots* equipmentSlot)
 	return "Error";
 }
 
-void Inventory::ChangeStackSize(bool isIncreasing)
-{
-	//CheckIfStackable();
-	bool isItStackable = (*m_inventoryPtrIterator)->IsStackable(); // TODO : Remi : Delete after Debug
-	if (!isItStackable)
-	{
-		return;
-	}
-
-	InventoryObject* inventoryObject = *m_inventoryPtrIterator;
-	unsigned short int currentStackSize = *inventoryObject->GetStackSize(); 
-	unsigned short int maxStackSize = inventoryObject->GetMaxStackSize();
-	COORD consoleColCharToStack;
-	consoleColCharToStack.X = static_cast<SHORT>(strlen(UNIFORM_TAB) + strlen(SELECTED_OBJECT) + (*m_inventoryPtrIterator)->GetNameLenght() + strlen(UNIFORM_TAB) + strlen(STACK_SIZE));
-	consoleColCharToStack.Y = 5;
-
-	if (isIncreasing && currentStackSize < maxStackSize)
-	{
-		// Get the number of console collones until the end of 'Stack size: '
-		(*(*m_inventoryPtrIterator)->GetStackSize())++;
-
-		MoveCursorToLocation(consoleColCharToStack);
-		DisplayStackSize();
-	}
-	else if (isIncreasing && currentStackSize == maxStackSize)
-	{
-		// Creates another stack of the same item
-
-	}
-	else if (!isIncreasing && currentStackSize > 1)
-	{
-		(*(*m_inventoryPtrIterator)->GetStackSize())--;
-
-		MoveCursorToLocation(consoleColCharToStack);
-		DisplayStackSize();
-	}
-}
-
-E_inputMode Inventory::GetCurrentInputMode()
-{
-	return m_currentInputMode;
-}
-
-E_equimentSlots Inventory::GetCurrentEquipmentSlot()
-{
-	return m_currentEquipmentSlot;
-}
-
 void Inventory::SetCurrentInputMode(E_equimentSlots currentEquipmentSlotPtr)
 {
 	m_currentEquipmentSlot = currentEquipmentSlotPtr;
@@ -343,27 +338,6 @@ void Inventory::SetCurrentInputMode(E_equimentSlots currentEquipmentSlotPtr)
 void Inventory::SetCurrentInputMode(E_inputMode currentInputMode)
 {
 	m_currentInputMode = currentInputMode;
-}
-
-void Inventory::ClearConsolePreviousLine()
-{
-	std::cout << "\033[1A\033[0K";
-}
-
-void Inventory::MoveCursorToLocation(COORD position)
-{
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleCursorPosition(hConsole, position);
-}
-
-bool Inventory::IsInventoryEmpty()
-{
-	return m_inventoryObjectsList.empty();
-}
-
-void Inventory::ClearInventoryList()
-{
-	m_inventoryObjectsList.clear();
 }
 
 void Inventory::CleanIfLogMessagePrinted()
@@ -378,15 +352,65 @@ void Inventory::CleanIfLogMessagePrinted()
 	m_isLogMessagePrinted = false;
 }
 
-//void Inventory::CheckIfStackable()
-//{
-//	bool isItStackable = (*m_inventoryPtrIterator)->IsStackable(); // TODO : Remi : Delete after Debug
-//	if (!isItStackable)
-//	{
-//		return;
-//	}
-//	//else // TODO : Remi : Delete after Debug
-//	//{
-//	//	cout << endl << "Is stackable.";
-//	//}
-//}
+void Inventory::ClearConsolePreviousLine()
+{
+	std::cout << "\033[1A\033[0K";
+}
+
+void Inventory::ClearInventoryList()
+{
+	m_inventoryObjectsList.clear();
+}
+
+bool Inventory::IsCurrentSelectionPrinted() // TODO: To complete
+{
+	switch (m_currentInputMode)
+	{
+	case E_inputMode::Navigation:
+		break;
+
+	case E_inputMode::Edition:
+		break;
+
+	case E_inputMode::Count:
+	default:
+		// TODO : Remi Error message
+		break;
+	}
+	return false;
+}
+
+void Inventory::DisplayStackSize()
+{
+	cout << *(*m_inventoryPtrIterator)->GetStackSize();
+	cout << UNIFORM_TAB << "+/- Change Stack";
+}
+
+void Inventory::OnEmptyStack()
+{
+	if ((*m_inventoryPtrIterator)->HasMultipleStacks())
+	{
+		FindOtherStack();
+	}
+	else
+	{
+		// TODO : Remi : Delete the object
+	}
+}
+
+void Inventory::FindOtherStack()
+{
+	for (InventoryObject* object : m_inventoryObjectsList)
+	{
+		if (object->GetName() == (*m_inventoryPtrIterator)->GetName() && object != *m_inventoryPtrIterator)
+		{
+			*m_inventoryPtrIterator = object;
+			return;
+		}
+	}
+}
+
+bool Inventory::IsInventoryEmpty()
+{
+	return m_inventoryObjectsList.empty();
+}

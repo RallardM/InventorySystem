@@ -11,35 +11,50 @@ class Inventory
 //Methods
 public:
 	Inventory();
-	void AddItem(E_itemType itemType, string itemName, unsigned short int itemCost = 0, unsigned short int itemStacks = 1, unsigned short int currentDurability = 0, unsigned short int maxDurability = 0, E_equimentSlots equipmentSlot = E_equimentSlots::Count);
+	void AddItem(
+		E_itemType itemType, 
+		string itemName, 
+		unsigned short int itemCost = 0, 
+		unsigned short int itemStacks = 1, 
+		unsigned short int currentDurability = 0, 
+		unsigned short int maxDurability = 0, 
+		E_equimentSlots equipmentSlot = E_equimentSlots::Count,
+		bool hasStack = false);
+
 	void UpdateIterator();
 	void RemoveItem();
+
 	void AddBasicObject();
 	void AddConsumable();
 	void AddEquipment();
+
 	void DisplayCurrentMenu();
-	bool IsCurrentSelectionPrinted();
 	void DisplayNavigationMenu();
 	void DisplayEditionMenu();
 	void DisplayCurrentObject();
-	void DisplayStackSize();
+
+	void MoveCursorToLocation(COORD position);
 	void DestroyAllInventoryObjects();
-	string GetEnumString(E_equimentSlots* equipmentSlot);
 	void ChangeStackSize(bool isIncreasing);
+
 	E_inputMode GetCurrentInputMode();
 	E_equimentSlots GetCurrentEquipmentSlot();
+	string GetEnumString(E_equimentSlots* equipmentSlot);
+
 	void SetCurrentInputMode(E_equimentSlots currentEquipmentSlot);
 	void SetCurrentInputMode(E_inputMode currentInputMode);
-	void ClearConsolePreviousLine();
-	void MoveCursorToLocation(COORD position);
-	bool IsInventoryEmpty();
-	void ClearInventoryList();
+
 	void CleanIfLogMessagePrinted();
-	// TODO : Remi : Move and test functions to private
+	void ClearConsolePreviousLine();
+	void ClearInventoryList();
 
 private:
-	//void CheckIfStackable();
-
+	bool IsCurrentSelectionPrinted();
+	void DisplayStackSize();
+	void OnEmptyStack();
+	void FindOtherStack();
+	bool IsInventoryEmpty();
+	
 //Member variables
 public:
 	// Source : https://stackoverflow.com/questions/19762755/creating-a-list-in-c-with-initial-capacity
