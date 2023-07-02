@@ -49,14 +49,18 @@ public:
 	void CleanIfLogMessagePrinted();
 	void ClearConsolePreviousLine();
 	void ClearInventoryList();
+	void CleanIfNewStackLogMessage();
 
 private:
+	void CleanNumberOfcolumnChars(size_t numberOfColToClean);
 	bool IsCurrentSelectionPrinted();
 	void DisplayStackSize();
 	void OnEmptyStack();
 	void FindOtherStack();
 	void CheckIfLastStack();
 	bool IsInventoryEmpty();
+
+
 	
 //Member variables
 public:
@@ -76,9 +80,11 @@ private:
 	const char* STACK_SIZE = "Stack size: ";
 	const char* QUIT = "Q. Quit";
 	const char* CHANGE_STACK = "+/- Change Stack";
+	const char* STACK_CREATED = "New stack created";
 
 	//const unsigned short int MAX_INVENTORY_OBJECTS = 20;
 	E_equimentSlots m_currentEquipmentSlot = E_equimentSlots::Head;
 	E_inputMode m_currentInputMode = E_inputMode::Navigation;
 	bool m_isLogMessagePrinted = false;
+	bool m_isNewStackLogMessagePrinted = false;
 };

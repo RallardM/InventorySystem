@@ -97,11 +97,13 @@ void Input::GetNavigationInput()
 
 	// Increase stack size
 	case '+':
+		m_inventory->CleanIfNewStackLogMessage();
 		m_inventory->ChangeStackSize(true);
 		break;
 
 	// Decrease stack size
 	case '-':
+		m_inventory->CleanIfNewStackLogMessage();
 		m_inventory->ChangeStackSize(false);
 		break;
 

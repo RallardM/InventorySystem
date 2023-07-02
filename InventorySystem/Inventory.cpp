@@ -251,11 +251,11 @@ void Inventory::ChangeStackSize(bool isIncreasing)
 	unsigned short int maxStackSize = inventoryObject->GetMaxStackSize();
 	COORD consoleColCharToStack;
 	consoleColCharToStack.X = static_cast<SHORT>(strlen(UNIFORM_TAB) + strlen(SELECTED_OBJECT) + (*m_inventoryPtrIterator)->GetNameLenght() + strlen(UNIFORM_TAB) + strlen(STACK_SIZE));
-	consoleColCharToStack.Y = 5;
+	consoleColCharToStack.Y = 5; // TODO : Remi : Magic number
 
 	if (isIncreasing && currentStackSize < maxStackSize)
 	{
-		// Get the number of console collones until the end of 'Stack size: '
+		// Get the number of console columns until the end of 'Stack size: '
 		(*(*m_inventoryPtrIterator)->GetStackSize())++;
 
 		MoveCursorToLocation(consoleColCharToStack);
@@ -276,9 +276,10 @@ void Inventory::ChangeStackSize(bool isIncreasing)
 		DisplayStackSize();
 
 		consoleColCharToStack.X = static_cast<SHORT>(strlen(UNIFORM_TAB) + strlen(SELECTED_OBJECT) + (*m_inventoryPtrIterator)->GetNameLenght() + strlen(UNIFORM_TAB) + strlen(STACK_SIZE) + ((*(*m_inventoryPtrIterator)->GetStackSize()) % 10) + strlen(UNIFORM_TAB) + strlen(CHANGE_STACK));
-		consoleColCharToStack.Y = 5;
+		consoleColCharToStack.Y = 5; // TODO : Remi : Magic number
 		MoveCursorToLocation(consoleColCharToStack);
-		cout << UNIFORM_TAB << "New stack created";
+		cout << UNIFORM_TAB << STACK_CREATED;
+		m_isNewStackLogMessagePrinted = true;
 	}
 	else if (!isIncreasing && currentStackSize > 1)
 	{
@@ -382,6 +383,35 @@ void Inventory::ClearConsolePreviousLine()
 void Inventory::ClearInventoryList()
 {
 	m_inventoryObjectsList.clear();
+}
+
+void Inventory::CleanIfNewStackLogMessage()
+{
+	if (!m_isNewStackLogMessagePrinted)
+	{
+		return;
+	}
+
+	COORD consoleColCharToStack{};
+	consoleColCharToStack.X = static_cast<SHORT>(strlen(UNIFORM_TAB) + strlen(SELECTED_OBJECT) + (*m_inventoryPtrIterator)->GetNameLenght() + strlen(UNIFORM_TAB) + strlen(STACK_SIZE) + ((*(*m_inventoryPtrIterator)->GetStackSize()) % 10) + strlen(UNIFORM_TAB) + strlen(CHANGE_STACK));
+	consoleColCharToStack.Y = 5; // TODO : Remi : Magic number
+	MoveCursorToLocation(consoleColCharToStack);
+
+	CleanNumberOfcolumnChars(strlen(UNIFORM_TAB) + strlen(STACK_CREATED));
+
+	consoleColCharToStack.X = consoleColCharToStack.X - static_cast<SHORT>(strlen(UNIFORM_TAB) + strlen(UNIFORM_TAB) + strlen(UNIFORM_TAB) + strlen(UNIFORM_TAB) + strlen(UNIFORM_TAB) + strlen(UNIFORM_TAB));
+	consoleColCharToStack.Y = 5; // TODO : Remi : Magic number
+	MoveCursorToLocation(consoleColCharToStack);
+
+	m_isNewStackLogMessagePrinted = false;
+}
+
+void Inventory::CleanNumberOfcolumnChars(size_t numberOfColToClean)
+{
+	for (size_t i = 0; i < numberOfColToClean; i++)
+	{
+		cout << " ";
+	}
 }
 
 bool Inventory::IsCurrentSelectionPrinted() // TODO: To complete
