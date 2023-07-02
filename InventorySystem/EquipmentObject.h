@@ -10,7 +10,6 @@ public:
 		string name,
 		unsigned short int cost,
 		E_itemType type = E_itemType::Equipment,
-		unsigned short int stacks = 1,
 		unsigned short int currentDurability = 0,
 		unsigned short int maxDurability = 0,
 		E_equimentSlots slot = E_equimentSlots::Count);
@@ -21,10 +20,9 @@ public:
 	E_itemType* GetType() { return m_type; }
 	E_equimentSlots* GetEquipmentSlot() { return m_equipmentSlot; }
 	unsigned short int* GetCost() { return m_cost; }
-	unsigned short int* GetStackSize() { return m_stackSize; }
 	unsigned short int* GetCurrentDurability() { return m_currentDurability; }
 	unsigned short int* GetMaxDurability() { return m_maxDurability; }
-	unsigned short int GetMaxStackSize() { return MAX_EQUIPMENT_OBJECT_STACKS; }
+	const bool IsStackable() { return IS_STACKABLE; }
 
 private:
 
@@ -36,9 +34,8 @@ private:
 	E_itemType* m_type;
 	E_equimentSlots* m_equipmentSlot;
 	unsigned short int* m_cost;
-	unsigned short int* m_stackSize;
 	unsigned short int* m_currentDurability;
 	unsigned short int* m_maxDurability;
-	static const unsigned short int MAX_EQUIPMENT_OBJECT_STACKS;
+	const bool IS_STACKABLE = false;
 };
 

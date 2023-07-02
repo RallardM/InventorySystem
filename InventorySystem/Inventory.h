@@ -13,14 +13,11 @@ public:
 	Inventory();
 	void AddItem(E_itemType itemType, string itemName, unsigned short int itemCost = 0, unsigned short int itemStacks = 1, unsigned short int currentDurability = 0, unsigned short int maxDurability = 0, E_equimentSlots equipmentSlot = E_equimentSlots::Count);
 	void UpdateIterator();
-	//, bool isPopulated = false);
 	void RemoveItem();
 	void AddBasicObject();
 	void AddConsumable();
 	void AddEquipment();
-	//void DisplaySelectedItem();
 	void DisplayCurrentMenu();
-	//void DisplayCurrentMenuMode();
 	bool IsCurrentSelectionPrinted();
 	void DisplayNavigationMenu();
 	void DisplayEditionMenu();
@@ -28,7 +25,6 @@ public:
 	void DisplayStackSize();
 	void DestroyAllInventoryObjects();
 	string GetEnumString(E_equimentSlots* equipmentSlot);
-	void CheckIfConsumable();
 	void ChangeStackSize(bool isIncreasing);
 	E_inputMode GetCurrentInputMode();
 	E_equimentSlots GetCurrentEquipmentSlot();
@@ -39,8 +35,9 @@ public:
 	bool IsInventoryEmpty();
 	void ClearInventoryList();
 	void CleanIfLogMessagePrinted();
-
+	// TODO : Remi : Move and test functions to private
 private:
+	//void CheckIfStackable();
 
 //Member variables
 public:

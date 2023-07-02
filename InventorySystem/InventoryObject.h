@@ -30,6 +30,7 @@ public:
 	virtual unsigned short int* GetCurrentDurability() { return m_currentDurability; }
 	virtual unsigned short int* GetMaxDurability() { return m_maxDurability; }
 	virtual unsigned short int GetMaxStackSize() { return MAX_STACK; }
+	virtual const bool IsStackable() { return IS_STACKABLE; }
 
 private:
 
@@ -46,5 +47,5 @@ private:
 	unsigned short int* m_currentDurability;
 	unsigned short int* m_maxDurability;
 	static const unsigned short int MAX_STACK;
-	//bool* m_isEmpty;
+	const bool IS_STACKABLE = false;
 };

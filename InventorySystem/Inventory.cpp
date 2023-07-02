@@ -28,19 +28,19 @@ void Inventory::AddItem(E_itemType itemType, string itemName, unsigned short int
 	if (itemType == E_itemType::Consumable)
 	{
 		ConsumableObject* newConsumableObject;
-		newConsumableObject = new ConsumableObject(itemName, itemCost, itemType, itemStacks, currentDurability, maxDurability, equipmentSlot);// , isEmpty);
+		newConsumableObject = new ConsumableObject(itemName, itemCost, itemType, itemStacks);
 		m_inventoryObjectsList.push_back(newConsumableObject);
 	}
 	else if (itemType == E_itemType::Equipment)
 	{
 		EquipmentObject* newEquipmentObject;
-		newEquipmentObject = new EquipmentObject(itemName, itemCost, itemType, itemStacks, currentDurability, maxDurability, equipmentSlot);// , isEmpty);
+		newEquipmentObject = new EquipmentObject(itemName, itemCost, itemType, currentDurability, maxDurability, equipmentSlot);
 		m_inventoryObjectsList.push_back(newEquipmentObject);
 	}
 	else if (itemType == E_itemType::BaseObject)
 	{
 		BaseObject* newBaseObject;
-		newBaseObject = new BaseObject(itemName, itemCost, itemType, itemStacks, currentDurability, maxDurability, equipmentSlot);// , isEmpty);
+		newBaseObject = new BaseObject(itemName, itemCost, itemType);
 		m_inventoryObjectsList.push_back(newBaseObject);
 	}
 	else
@@ -228,7 +228,7 @@ void Inventory::DisplayCurrentObject()
 	cout << UNIFORM_TAB << SELECTED_OBJECT;
 	cout << *(*m_inventoryPtrIterator)->GetName() + UNIFORM_TAB;
 
-	if (*(*m_inventoryPtrIterator)->GetStackSize() > 1)
+	if ((*m_inventoryPtrIterator)->IsStackable() && *(*m_inventoryPtrIterator)->GetStackSize() > 1)
 	{
 		cout << STACK_SIZE;
 		DisplayStackSize();
@@ -287,19 +287,17 @@ string Inventory::GetEnumString(E_equimentSlots* equipmentSlot)
 	return "Error";
 }
 
-
-void Inventory::CheckIfConsumable()
+void Inventory::ChangeStackSize(bool isIncreasing)
 {
-	if (*(*m_inventoryPtrIterator)->GetType() != E_itemType::Consumable)
+	//CheckIfStackable();
+	bool isItStackable = (*m_inventoryPtrIterator)->IsStackable(); // TODO : Remi : Delete after Debug
+	if (!isItStackable)
 	{
 		return;
 	}
-}
 
-void Inventory::ChangeStackSize(bool isIncreasing)
-{
 	InventoryObject* inventoryObject = *m_inventoryPtrIterator;
-	unsigned short int currentStackSize = *inventoryObject->GetStackSize();
+	unsigned short int currentStackSize = *inventoryObject->GetStackSize(); 
 	unsigned short int maxStackSize = inventoryObject->GetMaxStackSize();
 	COORD consoleColCharToStack;
 	consoleColCharToStack.X = static_cast<SHORT>(strlen(UNIFORM_TAB) + strlen(SELECTED_OBJECT) + (*m_inventoryPtrIterator)->GetNameLenght() + strlen(UNIFORM_TAB) + strlen(STACK_SIZE));
@@ -379,3 +377,16 @@ void Inventory::CleanIfLogMessagePrinted()
 	ClearConsolePreviousLine();
 	m_isLogMessagePrinted = false;
 }
+
+//void Inventory::CheckIfStackable()
+//{
+//	bool isItStackable = (*m_inventoryPtrIterator)->IsStackable(); // TODO : Remi : Delete after Debug
+//	if (!isItStackable)
+//	{
+//		return;
+//	}
+//	//else // TODO : Remi : Delete after Debug
+//	//{
+//	//	cout << endl << "Is stackable.";
+//	//}
+//}

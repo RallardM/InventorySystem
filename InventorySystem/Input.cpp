@@ -97,7 +97,6 @@ void Input::GetNavigationInput()
 
 	// Increase stack size
 	case '+':
-		m_inventory->CheckIfConsumable();
 		m_inventory->ChangeStackSize(true);
 		break;
 
@@ -255,8 +254,13 @@ void Input::NavigateItems(bool isNext)
 	{
 		if (isNext)
 		{
+			auto iterator = m_inventory->m_inventoryPtrIterator; // TODO : Remi : Delete after denugging
+			auto iteratorEnd = m_inventory->m_inventoryObjectsList.end();// TODO : Remi : Delete after denugging
+			auto penultimateIterator = prev(m_inventory->m_inventoryObjectsList.end());// TODO : Remi : Delete after denugging
+			auto iteratorIsStackable = (*m_inventory->m_inventoryPtrIterator)->IsStackable();// TODO : Remi : Delete after denugging
+
 			// Increment the iterator if it's not pointing to the last element
-			if (m_inventory->m_inventoryPtrIterator != m_inventory->m_inventoryObjectsList.end() && m_inventory->m_inventoryPtrIterator != prev(m_inventory->m_inventoryObjectsList.end()) && *(*m_inventory->m_inventoryPtrIterator)->GetStackSize() != 0)
+			if ((iterator != iteratorEnd) && (iterator != penultimateIterator))
 			{
 				++m_inventory->m_inventoryPtrIterator;
 			}
@@ -270,7 +274,7 @@ void Input::NavigateItems(bool isNext)
 		else
 		{
 			// Decrement the iterator if it's not pointing to the first element
-			if (m_inventory->m_inventoryPtrIterator != m_inventory->m_inventoryObjectsList.begin() && *(*m_inventory->m_inventoryPtrIterator)->GetStackSize() != 0)
+			if (m_inventory->m_inventoryPtrIterator != m_inventory->m_inventoryObjectsList.begin())
 			{
 				--m_inventory->m_inventoryPtrIterator;
 			}
