@@ -1,21 +1,21 @@
 #include <iostream>
 
-#include "ConsumableObject.h"
+#include "EquipmentObject.h"
 
 using namespace std;
 
-const unsigned short int ConsumableObject::MAX_CONSUMABLE_STACKS = 20;
+const unsigned short int EquipmentObject::MAX_EQUIPMENT_OBJECT_STACKS = 1;
 
-ConsumableObject::ConsumableObject(
+EquipmentObject::EquipmentObject(
 	string name,
 	unsigned short int cost,
-	E_itemType type /* = E_itemType::Consumable */,
+	E_itemType type /* = E_itemType::Equipment */,
 	unsigned short int stacks/* = 1 */,
 	unsigned short int currentDurability/* = 0 */,
 	unsigned short int maxDurability/* = 0 */,
 	E_equimentSlots slot/* = E_equimentSlots::COUNT */)
 {
-	cout << "ConsumableObject constructor called!" << endl;
+	cout << "EquipmentObject constructor called!" << endl;
 	m_type = new E_itemType(type);
 	m_name = new string(name);
 	m_cost = new unsigned short int(cost);
@@ -25,9 +25,9 @@ ConsumableObject::ConsumableObject(
 	m_equipmentSlot = new E_equimentSlots(slot);
 }
 
-void ConsumableObject::DeleteAttributes()
+void EquipmentObject::DeleteAttributes()
 {
-	cout << "ConsumableObject DeleteAttributes called!" << endl;
+	cout << "EquipmentObject DeleteAttributes called!" << endl;
 	delete m_name;
 	delete m_type;
 	delete m_equipmentSlot;

@@ -130,8 +130,7 @@ void FileManager::IdentifyString(string& previousLine, E_itemType& type, string&
 {
 	if (m_line[0] == OPENING_BRACKETS)
 	{
-		// TODO : Add a check to see if the type is valid.
-		type = StringToE_itemType();
+		type = StringToE_itemType(&previousLine);
 		return;
 	}
 	else if (m_line[0] == CLOSING_BRACKETS)
@@ -240,17 +239,17 @@ E_equimentSlots FileManager::StringToE_equimentSlots()
 	}
 }
 
-E_itemType FileManager::StringToE_itemType()
+E_itemType FileManager::StringToE_itemType(string* previousLine)
 {
-	if (IsThisStringInLine("BaseObject"))
+	if (IsThisStringInPreviousLine("BaseObject", previousLine))
 	{
 		return E_itemType::BaseObject;
 	}
-	else if (IsThisStringInLine("Consumable"))
+	else if (IsThisStringInPreviousLine("Consumable", previousLine))
 	{
 		return E_itemType::Consumable;
 	}
-	else if (IsThisStringInLine("Equipment"))
+	else if (IsThisStringInPreviousLine("Equipment", previousLine))
 	{
 		return E_itemType::Equipment;
 	}
@@ -595,12 +594,70 @@ bool FileManager::IsThisStringInLine(const char* word)
 	return false;
 }
 
+bool FileManager::IsThisStringInPreviousLine(const char* word, string* previousLine)
+{
+	// Source : https://stackoverflow.com/questions/347949/how-to-convert-a-stdstring-to-const-char-or-char
+	// Convert string* to const char* to compare iterations to the line pointer
+
+	auto sixe = ConstCharSize(word); // TODO : Remove after debug
+
+	for (size_t i = 0; i < ConstCharSize(word); i++)
+	{
+		for (size_t j = i; j < previousLine->length(); j++)
+		{
+
+			auto wordzero = word[i]; // TODO : Remove after debug
+			auto wordone = word[i + 1]; // TODO : Remove after debug
+
+			auto prevLineMinusOne = previousLine->c_str()[j + ConstCharSize(word) - 1]; // TODO : Remove after debug
+			auto prevLinej = previousLine->c_str()[j]; // TODO : Remove after debug
+
+			// If iterations reaches the end of the string, return false
+			if (previousLine->c_str()[j + ConstCharSize(word) - 1] == '\0')
+			{
+				return false;
+			}
+
+			// As long as the characters are not the same, continue
+			if (previousLine->c_str()[j] != word[i])
+			{
+				continue;
+			}
+
+			// Once they are the same,
+			// check if the rest of the elements fits for both line and word
+			if (IsThisStringPreviousLine(word, previousLine, i, j))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 // Verify if the given string is the string in m_line by comparing their char positions at specific elements(indexes)
 bool FileManager::IsThisStringThisString(const char* word, size_t wordIndex, size_t lineIndex)
 {
 	for (size_t i = 0; i < ConstCharSize(word); i++)
 	{
 		if (m_line->c_str()[lineIndex + i] == word[wordIndex + i])
+		{
+			continue;
+		}
+		else
+		{
+			return false;
+		}
+
+	}
+	return true;
+}
+
+bool FileManager::IsThisStringPreviousLine(const char* word, string* previousLine, size_t wordIndex, size_t lineIndex)
+{
+	for (size_t i = 0; i < ConstCharSize(word); i++)
+	{
+		if (previousLine->c_str()[lineIndex + i] == word[wordIndex + i])
 		{
 			continue;
 		}

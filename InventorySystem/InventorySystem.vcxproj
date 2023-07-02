@@ -131,15 +131,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BaseObject.h" />
     <ClInclude Include="ConsumableObject.h" />
     <ClInclude Include="Enumerations.h" />
+    <ClInclude Include="EquipmentObject.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="InventoryObject.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseObject.cpp" />
     <ClCompile Include="ConsumableObject.cpp" />
+    <ClCompile Include="EquipmentObject.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Inventory.cpp" />

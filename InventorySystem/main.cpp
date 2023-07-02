@@ -31,11 +31,6 @@ int main()
 			// Verify that key
 			input->GetInput();
 		}
-
-		//if (!inventory->IsCurrentSelectionPrinted()) // TODO: to complete
-		//{
-		//	inventory->DisplayCurrentMenuMode();
-		//}
 	}
 
 	// Delete pointer objects

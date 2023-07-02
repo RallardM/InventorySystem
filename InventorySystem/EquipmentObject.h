@@ -1,17 +1,15 @@
 #pragma once
 #include "InventoryObject.h"
 
-// This is a placeholder until Paulo implements the Consumable class
-
-class ConsumableObject :
+class EquipmentObject :
     public InventoryObject
 {
 //Methods
 public:
-	ConsumableObject(
+	EquipmentObject(
 		string name,
 		unsigned short int cost,
-		E_itemType type = E_itemType::Consumable,
+		E_itemType type = E_itemType::Equipment,
 		unsigned short int stacks = 1,
 		unsigned short int currentDurability = 0,
 		unsigned short int maxDurability = 0,
@@ -26,7 +24,8 @@ public:
 	unsigned short int* GetStackSize() { return m_stackSize; }
 	unsigned short int* GetCurrentDurability() { return m_currentDurability; }
 	unsigned short int* GetMaxDurability() { return m_maxDurability; }
-	unsigned short int GetMaxStackSize() { return MAX_CONSUMABLE_STACKS; }
+	unsigned short int GetMaxStackSize() { return MAX_EQUIPMENT_OBJECT_STACKS; }
+
 private:
 
 //Member variables
@@ -40,5 +39,6 @@ private:
 	unsigned short int* m_stackSize;
 	unsigned short int* m_currentDurability;
 	unsigned short int* m_maxDurability;
-	static const unsigned short int MAX_CONSUMABLE_STACKS;
+	static const unsigned short int MAX_EQUIPMENT_OBJECT_STACKS;
 };
+

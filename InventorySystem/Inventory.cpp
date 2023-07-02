@@ -7,6 +7,8 @@
 #include "Inventory.h"
 #include "Input.h"
 #include "ConsumableObject.h"
+#include "EquipmentObject.h"
+#include "BaseObject.h"
 
 using namespace std;
 
@@ -23,24 +25,39 @@ Inventory::Inventory()
 
 void Inventory::AddItem(E_itemType itemType, string itemName, unsigned short int itemCost/* = 0 */, unsigned short int itemStacks/* = 1 */, unsigned short int currentDurability/* = 0 */, unsigned short int maxDurability /* = 0 */, E_equimentSlots equipmentSlot/* = E_equimentSlots::Count */)//, bool isEmpty /* = false */)
 {
-	InventoryObject* newObject;
-
-	if (itemType != E_itemType::Consumable)
+	if (itemType == E_itemType::Consumable)
 	{
-		newObject = new InventoryObject(itemType, itemName, itemCost, itemStacks, currentDurability, maxDurability, equipmentSlot);// , isEmpty);
-
+		ConsumableObject* newConsumableObject;
+		newConsumableObject = new ConsumableObject(itemName, itemCost, itemType, itemStacks, currentDurability, maxDurability, equipmentSlot);// , isEmpty);
+		m_inventoryObjectsList.push_back(newConsumableObject);
+	}
+	else if (itemType == E_itemType::Equipment)
+	{
+		EquipmentObject* newEquipmentObject;
+		newEquipmentObject = new EquipmentObject(itemName, itemCost, itemType, itemStacks, currentDurability, maxDurability, equipmentSlot);// , isEmpty);
+		m_inventoryObjectsList.push_back(newEquipmentObject);
+	}
+	else if (itemType == E_itemType::BaseObject)
+	{
+		BaseObject* newBaseObject;
+		newBaseObject = new BaseObject(itemName, itemCost, itemType, itemStacks, currentDurability, maxDurability, equipmentSlot);// , isEmpty);
+		m_inventoryObjectsList.push_back(newBaseObject);
 	}
 	else
 	{
-		newObject = new ConsumableObject(itemName, itemCost, itemType, itemStacks, currentDurability, maxDurability, equipmentSlot);// , isEmpty);
+		cout << "Error: Invalid item type." << endl;
 	}
 
-	m_inventoryObjectsList.push_back(newObject);
+	UpdateIterator();
+}
 
-	if (m_inventoryObjectsList.size() == 1)
+void Inventory::UpdateIterator()
+{
+	if (!m_inventoryObjectsList.empty())
 	{
-		m_inventoryPtrIterator = m_inventoryObjectsList.begin();
-		//m_currentItem = *m_inventoryPtrIterator;
+		// Source : https://www.geeksforgeeks.org/stdprev-in-cpp/
+		// Put the penultimate element as the current iterator
+		m_inventoryPtrIterator = prev(m_inventoryObjectsList.end());
 	}
 }
 
@@ -136,17 +153,6 @@ void Inventory::AddEquipment()
 	AddItem(itemType, itemName, itemCost, 1, currentDurability, maxDurability, m_currentEquipmentSlot);
 }
 
-//void Inventory::DisplaySelectedItem()
-//{
-//	system("CLS");
-//	if (!m_currentItem)
-//	{
-//		cout << endl << "There is no item in this inventory!";
-//		return;
-//	}
-//	cout << endl << "Current item: " << endl << m_currentItem->ToString();
-//}
-
 void Inventory::DisplayCurrentMenu()
 {
 	switch (GetCurrentInputMode())
@@ -165,23 +171,6 @@ void Inventory::DisplayCurrentMenu()
 		break;
 	}
 }
-
-//void Inventory::DisplayCurrentMenuMode() 
-//{
-//	switch (m_currentInputMode)
-//	{
-//	case E_inputMode::Navigation:
-//		break;
-//
-//	case E_inputMode::Edition:
-//		break;
-//
-//	case E_inputMode::Count:
-//	default:
-//		// TODO : Remi Error message
-//		break;
-//	}
-//}
 
 bool Inventory::IsCurrentSelectionPrinted() // TODO: To complete
 {
@@ -258,7 +247,7 @@ void Inventory::DestroyAllInventoryObjects() // TODO : Delete objects of objects
 	{
 		return;
 	}
-	for (InventoryObject* object : m_inventoryObjectsList)
+	for (InventoryObject* object : m_inventoryObjectsList) // TODO : Remi : Add new object classes
 	{
 		object->DeleteAttributes();
 		delete object;
@@ -309,29 +298,28 @@ void Inventory::CheckIfConsumable()
 
 void Inventory::ChangeStackSize(bool isIncreasing)
 {
-	if (isIncreasing && *(*m_inventoryPtrIterator)->GetStackSize() < (*m_inventoryPtrIterator)->GetMaxStackSize())
+	InventoryObject* inventoryObject = *m_inventoryPtrIterator;
+	unsigned short int currentStackSize = *inventoryObject->GetStackSize();
+	unsigned short int maxStackSize = inventoryObject->GetMaxStackSize();
+	COORD consoleColCharToStack;
+	consoleColCharToStack.X = static_cast<SHORT>(strlen(UNIFORM_TAB) + strlen(SELECTED_OBJECT) + (*m_inventoryPtrIterator)->GetNameLenght() + strlen(UNIFORM_TAB) + strlen(STACK_SIZE));
+	consoleColCharToStack.Y = 5;
+
+	if (isIncreasing && currentStackSize < maxStackSize)
 	{
 		// Get the number of console collones until the end of 'Stack size: '
-		COORD consoleColCharToStack;
-		consoleColCharToStack.X = static_cast<SHORT>(strlen(UNIFORM_TAB) + strlen(SELECTED_OBJECT) + (*m_inventoryPtrIterator)->GetNameLenght() + strlen(UNIFORM_TAB) + strlen(STACK_SIZE));
-		consoleColCharToStack.Y = 5;
-
 		(*(*m_inventoryPtrIterator)->GetStackSize())++;
 
 		MoveCursorToLocation(consoleColCharToStack);
 		DisplayStackSize();
 	}
-	else if (isIncreasing && *(*m_inventoryPtrIterator)->GetStackSize() == (*m_inventoryPtrIterator)->GetMaxStackSize())
+	else if (isIncreasing && currentStackSize == maxStackSize)
 	{
 		// Creates another stack of the same item
 
 	}
-	else if (!isIncreasing && *(*m_inventoryPtrIterator)->GetStackSize() > 1)
+	else if (!isIncreasing && currentStackSize > 1)
 	{
-		COORD consoleColCharToStack;
-		consoleColCharToStack.X = static_cast<SHORT>(strlen(UNIFORM_TAB) + strlen(SELECTED_OBJECT) + (*m_inventoryPtrIterator)->GetNameLenght() + strlen(UNIFORM_TAB) + strlen(STACK_SIZE));
-		consoleColCharToStack.Y = 5;
-
 		(*(*m_inventoryPtrIterator)->GetStackSize())--;
 
 		MoveCursorToLocation(consoleColCharToStack);

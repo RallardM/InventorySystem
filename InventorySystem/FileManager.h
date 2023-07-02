@@ -17,7 +17,7 @@ public:
 private:
 	void IdentifyString(string& previousLine, E_itemType& type, string& name, E_equimentSlots& slot, unsigned short int& cost, unsigned short int& stacks, unsigned short int& currentDurability, unsigned short int& maxDurability);
 	E_equimentSlots StringToE_equimentSlots();
-	E_itemType StringToE_itemType();
+	E_itemType StringToE_itemType(string* previousLine);
 	string EnumToString(E_equimentSlots* slot);
 	string EnumToString(E_itemType* slot);
 	void RemoveDoubleSpaces();
@@ -30,7 +30,9 @@ private:
 	bool IsLineEmpty();
 	bool IsLineSingleRawString();
 	bool IsThisStringInLine(const char* word);
+	bool IsThisStringInPreviousLine(const char* word, string* previousLine);
 	bool IsThisStringThisString(const char* word, size_t wordIndex, size_t lineIndex);
+	bool IsThisStringPreviousLine(const char* word, string* previousLine, size_t wordIndex, size_t lineIndex);
 	void ShiftCharsToLeftInLine(size_t index);
 	void ShiftCharsToStartOfString(const char* STRING_TO_MOVE, size_t j);
 	unsigned short int ConstCharSize(const char* a);
