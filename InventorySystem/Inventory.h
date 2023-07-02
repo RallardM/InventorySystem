@@ -36,6 +36,7 @@ public:
 	void ClearInventoryList();
 	void CleanIfLogMessagePrinted();
 	// TODO : Remi : Move and test functions to private
+
 private:
 	//void CheckIfStackable();
 
