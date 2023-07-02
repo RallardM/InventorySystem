@@ -15,9 +15,11 @@ public:
 	void CleanTxtFile();
 
 private:
-	void IdentifyString(string& previousLine, string& type, string& name, E_equimentSlots& slot, unsigned short int& cost, unsigned short int& stacks, unsigned short int& currentDurability, unsigned short int& maxDurability);
-	E_equimentSlots StringToEnum();
+	void IdentifyString(string& previousLine, E_itemType& type, string& name, E_equimentSlots& slot, unsigned short int& cost, unsigned short int& stacks, unsigned short int& currentDurability, unsigned short int& maxDurability);
+	E_equimentSlots StringToE_equimentSlots();
+	E_itemType StringToE_itemType();
 	string EnumToString(E_equimentSlots* slot);
+	string EnumToString(E_itemType* slot);
 	void RemoveDoubleSpaces();
 	void RemoveSpaceInFront();
 	void RemoveSpaceInMiddle();

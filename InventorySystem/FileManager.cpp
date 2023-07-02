@@ -23,15 +23,15 @@ void FileManager::LoadInventory()
 {
 	ifstream loadFile;
 	loadFile.open(m_inventory->FILE_PATH);
-	
+
 	string previousLine = "";
 
-	string type = "";
 	string name = "";
 	unsigned short int cost = 0;
 	unsigned short int stacks = 1;
 	unsigned short int currentDurability = 0;
 	unsigned short int maxDurability = 0;
+	E_itemType type = E_itemType::Count;
 	E_equimentSlots equipmentSlot = E_equimentSlots::Count;
 
 	if (loadFile.is_open() == false)
@@ -74,7 +74,7 @@ void FileManager::SaveInventory()
 
 	for (const auto& object : m_inventory->m_inventoryObjectsList)
 	{
-		saveFile << *object->GetType() << endl;
+		saveFile << EnumToString(object->GetType()) << endl;
 		saveFile << OPENING_BRACKETS << endl;
 		saveFile << "\t" << NAME << " " << *object->GetName() << endl;
 		saveFile << "\t" << COST << " " << *object->GetCost() << endl;
@@ -126,19 +126,19 @@ void FileManager::CleanTxtFile()
 }
 
 // Throws a warning if equipmentSlot is placed last in the parameter list.
-void FileManager::IdentifyString(string& previousLine, string& type, string& name, E_equimentSlots& equipmentSlot, unsigned short int& cost, unsigned short int& stacks, unsigned short int& currentDurability, unsigned short int& maxDurability)
+void FileManager::IdentifyString(string& previousLine, E_itemType& type, string& name, E_equimentSlots& equipmentSlot, unsigned short int& cost, unsigned short int& stacks, unsigned short int& currentDurability, unsigned short int& maxDurability)
 {
 	if (m_line[0] == OPENING_BRACKETS)
 	{
 		// TODO : Add a check to see if the type is valid.
-		type = previousLine;
+		type = StringToE_itemType();
 		return;
 	}
 	else if (m_line[0] == CLOSING_BRACKETS)
 	{
 		m_inventory->AddItem(type, name, cost, stacks, currentDurability, maxDurability, equipmentSlot);
 		previousLine = "";
-		type = "";
+		type = E_itemType::Count;
 		name = "";
 		cost = 0;
 		stacks = 1;
@@ -205,13 +205,13 @@ void FileManager::IdentifyString(string& previousLine, string& type, string& nam
 		RemoveStringFromString(EQUIPMENT_SLOT);
 		RemoveRawStrings();
 		RemoveExtraLengthFromString(EQUIPMENT_SLOT);
-		equipmentSlot = StringToEnum();
+		equipmentSlot = StringToE_equimentSlots();
 		return;
 	}
 
 }
 
-E_equimentSlots FileManager::StringToEnum()
+E_equimentSlots FileManager::StringToE_equimentSlots()
 {
 	if (IsThisStringInLine("Head"))
 	{
@@ -235,8 +235,29 @@ E_equimentSlots FileManager::StringToEnum()
 	}
 	else
 	{
-		cout << endl << "Error in FileManager::StringToEnum() : Invalid slot!";
+		cout << endl << "Error in E_equimentSlots FileManager::StringToEnum() : Invalid slot!";
 		return E_equimentSlots::Count;
+	}
+}
+
+E_itemType FileManager::StringToE_itemType()
+{
+	if (IsThisStringInLine("BaseObject"))
+	{
+		return E_itemType::BaseObject;
+	}
+	else if (IsThisStringInLine("Consumable"))
+	{
+		return E_itemType::Consumable;
+	}
+	else if (IsThisStringInLine("Equipment"))
+	{
+		return E_itemType::Equipment;
+	}
+	else
+	{
+		cout << endl << "Error in E_itemType FileManager::StringToEnum() : Invalid slot!";
+		return E_itemType::Count;
 	}
 }
 
@@ -267,6 +288,30 @@ string FileManager::EnumToString(E_equimentSlots* slot)
 	case E_equimentSlots::Count:
 	default:
 		cout << endl << "Error in FileManager::EnumToString(E_equimentSlots* slot) : Invalid slot!";
+		return "";
+		break;
+	}
+}
+
+string FileManager::EnumToString(E_itemType* slot)
+{
+	switch (*slot)
+	{
+	case E_itemType::BaseObject:
+		return "BaseObject";
+		break;
+
+	case E_itemType::Consumable:
+		return "Consumable";
+		break;
+
+	case E_itemType::Equipment:
+		return "Equipment";
+		break;
+
+	case E_itemType::Count:
+	default:
+		cout << endl << "Error in FileManager::EnumToString(E_itemType* slot) : Invalid slot!";
 		return "";
 		break;
 	}
@@ -343,7 +388,7 @@ void FileManager::RemoveRawStrings()
 {
 	// Source : https://learn.microsoft.com/en-us/cpp/cpp/string-and-character-literals-cpp?view=msvc-170
 	//const char* rawStrings[12] = { '\n', '\r', '\t', '\v', '\f', '\b', '\a', '\\', '\?' , '\'', '\"', '\0'}; // TODO : Remove after debug
-	
+
 	size_t rawStringsLength = sizeof(rawStrings) / sizeof(rawStrings[0]);
 	//const char* newLine = "\n";
 	//const char* carriageReturn = "\r";
@@ -528,7 +573,7 @@ bool FileManager::IsThisStringInLine(const char* word)
 			auto wordone = word[i + 1]; // TODO : Remove after debug
 
 			// If iterations reaches the end of the string, return false
-			if (m_line->c_str()[j + ConstCharSize(word)-1] == '\0')
+			if (m_line->c_str()[j + ConstCharSize(word) - 1] == '\0')
 			{
 				return false;
 			}
@@ -563,7 +608,7 @@ bool FileManager::IsThisStringThisString(const char* word, size_t wordIndex, siz
 		{
 			return false;
 		}
-		
+
 	}
 	return true;
 }
@@ -601,7 +646,7 @@ void FileManager::ShiftCharsToStartOfString(const char* STRING_TO_MOVE, size_t j
 unsigned short int FileManager::ConstCharSize(const char* a)
 {
 	unsigned short int iterations = 0;
-	while (a[iterations] != '\0') 
+	while (a[iterations] != '\0')
 	{
 		++iterations;
 	}

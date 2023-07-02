@@ -34,7 +34,7 @@ int main()
 
 		//if (!inventory->IsCurrentSelectionPrinted()) // TODO: to complete
 		//{
-		//	inventory->DisplayCurrentSelection();
+		//	inventory->DisplayCurrentMenuMode();
 		//}
 	}
 

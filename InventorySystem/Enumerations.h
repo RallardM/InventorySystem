@@ -10,6 +10,14 @@ enum class E_equimentSlots : unsigned short int
 	Count
 };
 
+enum class E_itemType : unsigned short int
+{
+	BaseObject,
+	Consumable,
+	Equipment,
+	Count
+};
+
 enum class E_inputMode : unsigned short int
 {
 	Navigation,

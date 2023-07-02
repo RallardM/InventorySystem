@@ -95,6 +95,17 @@ void Input::GetNavigationInput()
 		m_isGameRunning = false;
 		break;
 
+	// Increase stack size
+	case '+':
+		m_inventory->CheckIfConsumable();
+		m_inventory->ChangeStackSize(true);
+		break;
+
+	// Decrease stack size
+	case '-':
+		m_inventory->ChangeStackSize(false);
+		break;
+
 	default:
 		// TODO : Paulo : Error message : You have to enter an invalid input
 		break;

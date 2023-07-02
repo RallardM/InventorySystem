@@ -3,8 +3,22 @@
 
 using namespace std;
 
+const unsigned short int InventoryObject::MAX_STACK = 50;
+
+InventoryObject::InventoryObject() :
+	m_type(nullptr),
+	m_name(nullptr),
+	m_cost(nullptr),
+	m_stackSize(nullptr),
+	m_currentDurability(nullptr),
+	m_maxDurability(nullptr),
+	m_equipmentSlot(nullptr)
+{
+	cout << "Enters InventoryObject default constructor." << endl;
+}
+
 InventoryObject::InventoryObject(
-	string type,
+	E_itemType type,
 	string name,
 	unsigned short int cost,
 	unsigned short int stacks/* = 1 */,
@@ -13,8 +27,8 @@ InventoryObject::InventoryObject(
 	E_equimentSlots slot/* = E_equimentSlots::COUNT */)//,
 	//bool isEmpty /* = true */)
 {
-	cout << "InventoryObject constructor called!" << endl;
-	m_type = new string(type);
+	cout << "Enters InventoryObject second constructor." << endl;
+	m_type = new E_itemType(type);
 	m_name = new string(name);
 	m_cost = new unsigned short int(cost);
 	m_stackSize = new unsigned short int(stacks);

@@ -2,9 +2,11 @@
 #include <iostream>
 #include <conio.h>
 #include <filesystem>
+#include <Windows.h>
 
 #include "Inventory.h"
 #include "Input.h"
+#include "ConsumableObject.h"
 
 using namespace std;
 
@@ -19,9 +21,20 @@ Inventory::Inventory()
 	m_inventoryPtrIterator = m_inventoryObjectsList.begin();
 }
 
-void Inventory::AddItem(string itemType, string itemName, unsigned short int itemCost/* = 0 */, unsigned short int itemStacks/* = 1 */, unsigned short int currentDurability/* = 0 */, unsigned short int maxDurability /* = 0 */, E_equimentSlots equipmentSlot/* = E_equimentSlots::Count */)//, bool isEmpty /* = false */)
+void Inventory::AddItem(E_itemType itemType, string itemName, unsigned short int itemCost/* = 0 */, unsigned short int itemStacks/* = 1 */, unsigned short int currentDurability/* = 0 */, unsigned short int maxDurability /* = 0 */, E_equimentSlots equipmentSlot/* = E_equimentSlots::Count */)//, bool isEmpty /* = false */)
 {
-	InventoryObject* newObject = new InventoryObject(itemType, itemName, itemCost, itemStacks, currentDurability, maxDurability, equipmentSlot);// , isEmpty);
+	InventoryObject* newObject;
+
+	if (itemType != E_itemType::Consumable)
+	{
+		newObject = new InventoryObject(itemType, itemName, itemCost, itemStacks, currentDurability, maxDurability, equipmentSlot);// , isEmpty);
+
+	}
+	else
+	{
+		newObject = new ConsumableObject(itemName, itemCost, itemType, itemStacks, currentDurability, maxDurability, equipmentSlot);// , isEmpty);
+	}
+
 	m_inventoryObjectsList.push_back(newObject);
 
 	if (m_inventoryObjectsList.size() == 1)
@@ -37,21 +50,21 @@ void Inventory::RemoveItem()
 	m_inventoryObjectsList.erase(m_inventoryPtrIterator);
 	m_inventoryPtrIterator = m_inventoryObjectsList.begin();
 	DisplayCurrentObject();
-	cout << endl << "    " << itemName << " has been removed from the inventory." << endl;
+	cout << endl << UNIFORM_TAB << itemName << " has been removed from the inventory." << endl;
 	m_isLogMessagePrinted = true;
 }
 
 void Inventory::AddBasicObject()
 {
-	string itemType = "BaseObject";
+	E_itemType itemType = E_itemType::BaseObject;
 	string itemName;
 	unsigned short int itemCost;
 
 	cout << endl <<
-		"    " << "Enter item name: ";
+		UNIFORM_TAB << ENTER_NAME;
 	cin >> itemName; // TODO : Remi : Use getline to allow spaces in the name // TODO : Remi : Check for wrong inputs
 	cout << endl <<
-		"    " << "Enter item cost: ";
+		UNIFORM_TAB << ENTER_COST;
 	cin >> itemCost; // TODO : Remi : Check for wrong inputs
 
 	AddItem(itemType, itemName, itemCost);
@@ -59,19 +72,19 @@ void Inventory::AddBasicObject()
 
 void Inventory::AddConsumable()
 {
-	string itemType = "Consumable";
+	E_itemType itemType = E_itemType::Consumable;
 	string itemName;
 	unsigned short int itemCost;
 	unsigned short int itemStacks;
 
 	cout << endl <<
-		"    " << "Enter item name: ";
+		UNIFORM_TAB << ENTER_NAME;
 	cin >> itemName; // TODO : Remi : Check for wrong inputs
 	cout << endl <<
-		"    " << "Enter item cost: ";
+		UNIFORM_TAB << ENTER_COST;
 	cin >> itemCost; // TODO : Remi : Check for wrong inputs
 	cout << endl <<
-		"    " << "Enter item stacks: ";
+		UNIFORM_TAB << "Enter item stacks: ";
 	cin >> itemStacks;
 
 	AddItem(itemType, itemName, itemCost, itemStacks);
@@ -79,37 +92,37 @@ void Inventory::AddConsumable()
 
 void Inventory::AddEquipment()
 {
-	string itemType = "Equipment";
+	E_itemType itemType = E_itemType::Equipment;
 	string itemName;
 	unsigned short int itemCost;
 	unsigned short int currentDurability;
 	unsigned short int maxDurability;
 
-	system("CLS");
+	system("CLS"); // TODO : Remi : Check if wrong clear
 	cout << endl <<
-		"    " << "Enter item name: ";
+		UNIFORM_TAB << ENTER_NAME;
 	cin >> itemName; // TODO : Remi : Check for wrong inputs
 
 	system("CLS");
 	cout << endl <<
-		"    " << "Enter item cost: ";
+		UNIFORM_TAB << ENTER_COST;
 	cin >> itemCost; // TODO : Remi : Check for wrong inputs
 
 	system("CLS");
 	cout << endl <<
-		"    " << "Enter item current durability: ";
+		UNIFORM_TAB << "Enter item current durability: ";
 	cin >> currentDurability; // TODO : Remi : Check for wrong inputs
 
 	system("CLS");
 	cout << endl <<
-		"    " << "Enter item max durability: ";
+		UNIFORM_TAB << "Enter item max durability: ";
 	cin >> maxDurability; // TODO : Remi : Check for wrong inputs
 
 	system("CLS");
 	cout << endl <<
-		"    " << "A. Previous Slot" << "    " << "D. Next Slot" << "    " << "E. Select";
+		UNIFORM_TAB << "A. Previous Slot" << UNIFORM_TAB << "D. Next Slot" << UNIFORM_TAB << "E. Select";
 	cout << endl <<
-		"    " << "Select an item equipment slot: ";
+		UNIFORM_TAB << "Select an item equipment slot: ";
 
 	MoveCursorToLocation({ 35, 2 }); // TODO : Remi : Magic number
 	cout << GetEnumString(&m_currentEquipmentSlot) << endl;
@@ -153,22 +166,22 @@ void Inventory::DisplayCurrentMenu()
 	}
 }
 
-void Inventory::DisplayCurrentSelection()
-{
-	switch (m_currentInputMode)
-	{
-	case E_inputMode::Navigation:
-		break;
-
-	case E_inputMode::Edition:
-		break;
-
-	case E_inputMode::Count:
-	default:
-		// TODO : Remi Error message
-		break;
-	}
-}
+//void Inventory::DisplayCurrentMenuMode() 
+//{
+//	switch (m_currentInputMode)
+//	{
+//	case E_inputMode::Navigation:
+//		break;
+//
+//	case E_inputMode::Edition:
+//		break;
+//
+//	case E_inputMode::Count:
+//	default:
+//		// TODO : Remi Error message
+//		break;
+//	}
+//}
 
 bool Inventory::IsCurrentSelectionPrinted() // TODO: To complete
 {
@@ -192,24 +205,26 @@ void Inventory::DisplayNavigationMenu()
 {
 	system("CLS");
 	cout << endl <<
-		"    " << "A. Previous Object" <<
-		"    " << "D. Next Object" <<
-		"    " << "R. Remove Selected" <<
-		"    " << "I. Edit Objects" << endl << endl <<
-		"    " << "L. Load Invetory" <<
-		"    " << "S. Save Invetory" <<
-		"    " << "Q. Quit" << endl << endl;
+		UNIFORM_TAB << "A. Previous Object" <<
+		UNIFORM_TAB << "D. Next Object" <<
+		UNIFORM_TAB << "R. Remove Selected" <<
+		UNIFORM_TAB << "I. Edit Objects" << endl << endl <<
+		UNIFORM_TAB << "L. Load Invetory" <<
+		UNIFORM_TAB << "S. Save Invetory" <<
+		UNIFORM_TAB << QUIT;
+
+	cout << endl << endl;
 }
 
 void Inventory::DisplayEditionMenu()
 {
 	system("CLS");
 	cout << endl <<
-		"    " << "B. Add Basic Object" <<
-		"    " << "C. Add Consumable" <<
-		"    " << "E. Add Equipment" << endl << endl <<
-		"    " << "N. Back To Navigation" <<
-		"    " << "Q. Quit" << endl << endl;
+		UNIFORM_TAB << "B. Add Basic Object" <<
+		UNIFORM_TAB << "C. Add Consumable" <<
+		UNIFORM_TAB << "E. Add Equipment" << endl << endl <<
+		UNIFORM_TAB << "N. Back To Navigation" <<
+		UNIFORM_TAB << QUIT << endl << endl;
 }
 
 void Inventory::DisplayCurrentObject()
@@ -221,9 +236,20 @@ void Inventory::DisplayCurrentObject()
 
 	cout << endl;
 	ClearConsolePreviousLine();
-	cout << "    " << "Selected objec: ";
-	cout << *(*m_inventoryPtrIterator)->GetName() + "   "; 
-	// TODO : Add stacks from consumable class
+	cout << UNIFORM_TAB << SELECTED_OBJECT;
+	cout << *(*m_inventoryPtrIterator)->GetName() + UNIFORM_TAB;
+
+	if (*(*m_inventoryPtrIterator)->GetStackSize() > 1)
+	{
+		cout << STACK_SIZE;
+		DisplayStackSize();
+	}
+}
+
+void Inventory::DisplayStackSize()
+{
+	cout << *(*m_inventoryPtrIterator)->GetStackSize();
+	cout << UNIFORM_TAB << "+/- Change Stack";
 }
 
 void Inventory::DestroyAllInventoryObjects() // TODO : Delete objects of objects before deleting the objects
@@ -270,6 +296,47 @@ string Inventory::GetEnumString(E_equimentSlots* equipmentSlot)
 		break;
 	}
 	return "Error";
+}
+
+
+void Inventory::CheckIfConsumable()
+{
+	if (*(*m_inventoryPtrIterator)->GetType() != E_itemType::Consumable)
+	{
+		return;
+	}
+}
+
+void Inventory::ChangeStackSize(bool isIncreasing)
+{
+	if (isIncreasing && *(*m_inventoryPtrIterator)->GetStackSize() < (*m_inventoryPtrIterator)->GetMaxStackSize())
+	{
+		// Get the number of console collones until the end of 'Stack size: '
+		COORD consoleColCharToStack;
+		consoleColCharToStack.X = static_cast<SHORT>(strlen(UNIFORM_TAB) + strlen(SELECTED_OBJECT) + (*m_inventoryPtrIterator)->GetNameLenght() + strlen(UNIFORM_TAB) + strlen(STACK_SIZE));
+		consoleColCharToStack.Y = 5;
+
+		(*(*m_inventoryPtrIterator)->GetStackSize())++;
+
+		MoveCursorToLocation(consoleColCharToStack);
+		DisplayStackSize();
+	}
+	else if (isIncreasing && *(*m_inventoryPtrIterator)->GetStackSize() == (*m_inventoryPtrIterator)->GetMaxStackSize())
+	{
+		// Creates another stack of the same item
+
+	}
+	else if (!isIncreasing && *(*m_inventoryPtrIterator)->GetStackSize() > 1)
+	{
+		COORD consoleColCharToStack;
+		consoleColCharToStack.X = static_cast<SHORT>(strlen(UNIFORM_TAB) + strlen(SELECTED_OBJECT) + (*m_inventoryPtrIterator)->GetNameLenght() + strlen(UNIFORM_TAB) + strlen(STACK_SIZE));
+		consoleColCharToStack.Y = 5;
+
+		(*(*m_inventoryPtrIterator)->GetStackSize())--;
+
+		MoveCursorToLocation(consoleColCharToStack);
+		DisplayStackSize();
+	}
 }
 
 E_inputMode Inventory::GetCurrentInputMode()

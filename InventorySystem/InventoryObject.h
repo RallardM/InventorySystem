@@ -7,10 +7,11 @@ using namespace std;
 
 class InventoryObject
 {
-	//Methods
+//Methods
 public:
+	InventoryObject();
 	InventoryObject(
-		string type,
+		E_itemType type,
 		string name,
 		unsigned short int cost,
 		unsigned short int stacks = 1,
@@ -22,26 +23,30 @@ public:
 	string ToString();
 	void DeleteAttributes();
 	string* GetName() { return m_name; }
-	string* GetType() { return m_type; }
+	size_t GetNameLenght() const { return m_name->length(); }
+	E_itemType* GetType() { return m_type; }
 	E_equimentSlots* GetEquipmentSlot() { return m_equipmentSlot; }
 	unsigned short int* GetCost() { return m_cost; }
 	unsigned short int* GetStackSize() { return m_stackSize; }
 	unsigned short int* GetCurrentDurability() { return m_currentDurability; }
 	unsigned short int* GetMaxDurability() { return m_maxDurability; }
+	virtual unsigned short int GetMaxStackSize() { return MAX_STACK; }
 	//bool* IsEmpty() { return m_isEmpty; }
 
 private:
-	//Member variables
+
+//Member variables
 public:
 
 
 private:
 	string* m_name;
-	string* m_type;
+	E_itemType* m_type;
 	E_equimentSlots* m_equipmentSlot;
 	unsigned short int* m_cost;
 	unsigned short int* m_stackSize;
 	unsigned short int* m_currentDurability;
 	unsigned short int* m_maxDurability;
+	static const unsigned short int MAX_STACK;
 	//bool* m_isEmpty;
 };

@@ -11,20 +11,23 @@ class Inventory
 //Methods
 public:
 	Inventory();
-	void AddItem(string itemType, string itemName, unsigned short int itemCost = 0, unsigned short int itemStacks = 1, unsigned short int currentDurability = 0, unsigned short int maxDurability = 0, E_equimentSlots equipmentSlot = E_equimentSlots::Count);//, bool isPopulated = false);
+	void AddItem(E_itemType itemType, string itemName, unsigned short int itemCost = 0, unsigned short int itemStacks = 1, unsigned short int currentDurability = 0, unsigned short int maxDurability = 0, E_equimentSlots equipmentSlot = E_equimentSlots::Count);//, bool isPopulated = false);
 	void RemoveItem();
 	void AddBasicObject();
 	void AddConsumable();
 	void AddEquipment();
 	//void DisplaySelectedItem();
 	void DisplayCurrentMenu();
-	void DisplayCurrentSelection();
+	//void DisplayCurrentMenuMode();
 	bool IsCurrentSelectionPrinted();
 	void DisplayNavigationMenu();
 	void DisplayEditionMenu();
 	void DisplayCurrentObject();
+	void DisplayStackSize();
 	void DestroyAllInventoryObjects();
 	string GetEnumString(E_equimentSlots* equipmentSlot);
+	void CheckIfConsumable();
+	void ChangeStackSize(bool isIncreasing);
 	E_inputMode GetCurrentInputMode();
 	E_equimentSlots GetCurrentEquipmentSlot();
 	void SetCurrentInputMode(E_equimentSlots currentEquipmentSlot);
@@ -48,6 +51,13 @@ public:
 
 private:
 	//InventoryObject* m_currentItem = nullptr;
+	const char* UNIFORM_TAB = "    "; // "\t" is not working properly. It is not tabulating the same way for every string.
+	const char* ENTER_NAME = "Enter item name: ";
+	const char* ENTER_COST = "Enter item cost: ";
+	const char* SELECTED_OBJECT = "Selected objec: ";
+	const char* STACK_SIZE = "Stack size: ";
+	const char* QUIT = "Q. Quit";
+
 	const unsigned short int MAX_INVENTORY_OBJECTS = 20;
 	E_equimentSlots m_currentEquipmentSlot = E_equimentSlots::Head;
 	E_inputMode m_currentInputMode = E_inputMode::Navigation;
