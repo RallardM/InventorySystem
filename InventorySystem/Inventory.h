@@ -64,6 +64,7 @@ public:
 	void SetIsInventoryPrinted(bool isInventoryPrinted);
 
 	void EquipObject();
+	bool IsEquipmentSlotFull();
 
 private:
 	void CleanNumberOfcolumnChars(size_t numberOfColToClean);

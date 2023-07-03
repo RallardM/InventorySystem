@@ -36,3 +36,21 @@ Equipment
 	MaxDurability: 30
 	EquipmentSlot: Weapon1
 }
+Equipment
+{
+	Cost: 30
+		Name: ugly Helmet
+	CurrentDurability: 2
+	MaxDurability: 50
+	
+	
+		EquipmentSlot: Head
+}
+Equipment
+{
+	Name: Masmune Sword
+	Cost: 3000
+	CurrentDurability: 100
+	MaxDurability: 100
+	EquipmentSlot: Weapon1
+}

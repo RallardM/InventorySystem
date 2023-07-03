@@ -546,20 +546,44 @@ void Inventory::EquipObject()
 {
 	if (*(*m_inventoryPtrIterator)->GetType() != E_itemType::Equipment)
 	{
-		// TODO : Remi : add 'not equipable' message
+		// TODO : Remi : add 'not equipable' message and a log cleanup process
 		return;
 	}
 
 	if ((*m_inventoryPtrIterator)->IsEquiped())
 	{
 		(*m_inventoryPtrIterator)->SetIsEquiped(false);
+
 	}
 	else
 	{
+		if (IsEquipmentSlotFull())
+		{
+			// TODO : Remi : add 'slot full' message and a log cleanup process
+			return;
+		}
+
 		(*m_inventoryPtrIterator)->SetIsEquiped(true);
 	}
 
 	RefreshPrintedInventory();
+}
+
+bool Inventory::IsEquipmentSlotFull()
+{
+	for (InventoryObject* object : m_inventoryObjectsList)
+	{
+		if (!object->IsEquiped())
+		{
+			continue;
+		}
+
+		if (*object->GetEquipmentSlot() == *(*m_inventoryPtrIterator)->GetEquipmentSlot())
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void Inventory::CleanNumberOfcolumnChars(size_t numberOfColToClean)
