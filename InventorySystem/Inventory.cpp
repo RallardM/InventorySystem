@@ -214,19 +214,56 @@ void Inventory::DisplayCurrentObject()
 		cout << STACK_SIZE;
 		DisplayStackSize();
 	}
+
+	UpdateCursorMenu();
 }
 
 void Inventory::DisplayInventory()
 {
-	m_cursorPositionBeforeInventory = GetConsoleCursorPosition();
+	if (IsEquipmentPrinted())
+	{
+		MoveCursorToLocation(m_printedEquipmentLastCursorPosition);
+	}
+
+	m_cursorPositionBeforeInventory = GetConsoleCursorPosition();// TODO : Remi : Test if still usefull 
 	ResetPrintedInventoryRows();
 
 	PrintInventoryRows();
+
+	m_printedInvetoryLastCursorPosition = GetConsoleCursorPosition(); // TODO : Remi : Test if still usefull 
+	SetIsInventoryPrinted(true);
+
+	if (IsEquipmentPrinted())
+	{
+		MoveCursorToLocation(m_cursorPositionEndOfMenu);
+		return;
+	}
+
+	MoveCursorToLocation(m_cursorPositionBeforeInventory);// TODO : Remi : Test if still usefull 
+}
+
+void Inventory::DisplayEquipment()
+{
+	if (IsInventoryPrinted())
+	{
+		MoveCursorToLocation(m_printedInvetoryLastCursorPosition);
+	}
+
+	m_cursorPositionBeforeEquipment = GetConsoleCursorPosition();// TODO : Remi : Test if still usefull 
+	ResetPrintedEquipmentRows();
+
 	PrintEquipmentRows();
 
-	m_printedInvetoryLastCursorPosition = GetConsoleCursorPosition();
-	MoveCursorToLocation(m_cursorPositionBeforeInventory);
-	SetIsInventoryPrinted(true);
+	m_printedEquipmentLastCursorPosition = GetConsoleCursorPosition();// TODO : Remi : Test if still usefull 
+	SetIsEquipmentPrinted(true);
+
+	if (IsInventoryPrinted())
+	{
+		MoveCursorToLocation(m_cursorPositionEndOfMenu);
+		return;
+	}
+
+	MoveCursorToLocation(m_cursorPositionBeforeEquipment);// TODO : Remi : Test if still usefull 
 }
 
 void Inventory::PrintInventoryRows()
@@ -269,12 +306,12 @@ void Inventory::PrintEquipmentRows()
 
 	cout << endl << endl;
 	cout << UNIFORM_TAB << "Equipment: " << endl << endl;
-	SetPrintedInventoryRows(m_printedInventoryRows + 3);
+	SetPrintedEquipmentRows(m_printedEquipmentRows + 3);
 
 	if (!IsThereEquipedItems())
 	{
 		cout << UNIFORM_TAB << "No item equiped.";
-		SetPrintedInventoryRows(m_printedInventoryRows + 1);
+		SetPrintedEquipmentRows(m_printedEquipmentRows + 1);
 		return;
 	}
 
@@ -288,13 +325,13 @@ void Inventory::PrintEquipmentRows()
 		if (iteration == 5)
 		{
 			cout << endl;
-			SetPrintedInventoryRows(m_printedInventoryRows + 1);
+			SetPrintedEquipmentRows(m_printedEquipmentRows + 1);
 		}
 
 		cout << UNIFORM_TAB << *object->GetName() << UNIFORM_TAB;
 		iteration++;
 	}
-	SetPrintedInventoryRows(m_printedInventoryRows + 1);
+	SetPrintedEquipmentRows(m_printedEquipmentRows + 1);
 }
 
 void Inventory::MoveCursorToLocation(COORD position)
@@ -362,7 +399,7 @@ void Inventory::ChangeStackSize(bool isIncreasing)
 		cout << UNIFORM_TAB << STACK_CREATED;
 		m_isNewStackLogMessagePrinted = true;
 		SetPrintedInventoryRows(m_printedInventoryRows + 1);
-		RefreshPrintedInventory();
+		RefreshToggledContainers();
 	}
 	else if (!isIncreasing && currentStackSize > 1)
 	{
@@ -374,7 +411,7 @@ void Inventory::ChangeStackSize(bool isIncreasing)
 	else if (!isIncreasing && currentStackSize == 1)
 	{
 		OnLastOnStack();
-		RefreshPrintedInventory();
+		RefreshToggledContainers();
 	}
 	else
 	{
@@ -510,6 +547,11 @@ void Inventory::CleanIfNewStackLogMessage()
 
 void Inventory::CleanInventory()
 {
+	if (!IsInventoryPrinted())
+	{
+		return;
+	}
+
 	MoveCursorToLocation(m_printedInvetoryLastCursorPosition);
 	cout << endl;
 
@@ -519,7 +561,39 @@ void Inventory::CleanInventory()
 	}
 
 	SetIsInventoryPrinted(false);
+
+	if (!IsEquipmentPrinted())
+	{
+		MoveCursorToLocation(m_cursorPositionEndOfMenu);
+		return;
+	}
+
 	MoveCursorToLocation(m_cursorPositionBeforeInventory);
+}
+
+void Inventory::CleanEquipment()
+{
+	if (!IsEquipmentPrinted())
+	{
+		return;
+	}
+
+	MoveCursorToLocation(m_printedEquipmentLastCursorPosition);
+	cout << endl;
+
+	for (size_t i = 0; i < GetPrintedEquipmentRows(); i++)
+	{
+		ClearConsolePreviousLine();
+	}
+
+	SetIsEquipmentPrinted(false);
+
+	if (!IsInventoryPrinted())
+	{
+		MoveCursorToLocation(m_cursorPositionEndOfMenu);
+		return;
+	}
+	MoveCursorToLocation(m_cursorPositionBeforeEquipment);
 }
 
 bool Inventory::GetInventoryToggle()
@@ -540,6 +614,26 @@ bool Inventory::IsInventoryPrinted()
 void Inventory::SetIsInventoryPrinted(bool isInventoryPrinted)
 {
 	m_isInventoryPrinted = isInventoryPrinted;
+}
+
+bool Inventory::GetEquipmentToggle()
+{
+	return m_equipmentToggle;
+}
+
+void Inventory::SetEquipmentToggle(bool isEquipmentDisplayed)
+{
+	m_equipmentToggle = isEquipmentDisplayed;
+}
+
+bool Inventory::IsEquipmentPrinted()
+{
+	return m_isEquipmentPrinted;
+}
+
+void Inventory::SetIsEquipmentPrinted(bool isInventoryPrinted)
+{
+	m_isEquipmentPrinted = isInventoryPrinted;
 }
 
 void Inventory::EquipObject()
@@ -566,7 +660,7 @@ void Inventory::EquipObject()
 		(*m_inventoryPtrIterator)->SetIsEquiped(true);
 	}
 
-	RefreshPrintedInventory();
+	RefreshToggledContainers();
 }
 
 bool Inventory::IsEquipmentSlotFull()
@@ -584,6 +678,14 @@ bool Inventory::IsEquipmentSlotFull()
 		}
 	}
 	return false;
+}
+
+void Inventory::UpdateCursorMenu()
+{
+	if (!GetEquipmentToggle() && !GetInventoryToggle())
+	{
+		m_cursorPositionEndOfMenu = GetConsoleCursorPosition();
+	}
 }
 
 void Inventory::CleanNumberOfcolumnChars(size_t numberOfColToClean)
@@ -676,19 +778,37 @@ bool Inventory::IsInventoryEmpty()
 	return m_inventoryObjectsList.empty();
 }
 
-void Inventory::RefreshPrintedInventory()
+void Inventory::RefreshToggledContainers() // TODO : Remi : To test : New stack, Remove last stack, equipe/unequip
 {
-	if (IsInventoryEmpty())
+	if (!GetInventoryToggle() && !GetEquipmentToggle())
 	{
 		return;
 	}
+	else if (GetInventoryToggle() && GetEquipmentToggle())
+	{
+		CleanInventory();
+		CleanEquipment();
+	}
+	else if (GetInventoryToggle() && !GetEquipmentToggle())
+	{
+		CleanInventory();
+	}
+	else if (!GetInventoryToggle() && GetEquipmentToggle())
+	{
+		CleanEquipment();
+	}
+	
+}
 
+void Inventory::RefreshPrintedInventory()
+{
 	if (!GetInventoryToggle())
 	{
 		return;
 	}
 
 	CleanInventory();
+	MoveCursorToLocation(m_cursorPositionEndOfMenu);
 	DisplayInventory();
 }
 
@@ -706,6 +826,33 @@ size_t Inventory::GetPrintedInventoryRows()
 void Inventory::SetPrintedInventoryRows(size_t printedInventoryRows)
 {
 	m_printedInventoryRows = printedInventoryRows;
+}
+
+void Inventory::RefreshPrintedEquipment()
+{
+	if (!GetEquipmentToggle())
+	{
+		return;
+	}
+
+	CleanEquipment();
+	MoveCursorToLocation(m_cursorPositionEndOfMenu);
+	DisplayEquipment();
+}
+
+void Inventory::ResetPrintedEquipmentRows()
+{
+	SetPrintedEquipmentRows(0);
+}
+
+size_t Inventory::GetPrintedEquipmentRows()
+{
+	return m_printedEquipmentRows;
+}
+
+void Inventory::SetPrintedEquipmentRows(size_t printedInventoryRows)
+{
+	m_printedEquipmentRows = printedInventoryRows;
 }
 
 bool Inventory::IsThereEquipedItems()

@@ -33,6 +33,7 @@ public:
 	void DisplayEditionMenu();
 	void DisplayCurrentObject();
 	void DisplayInventory();
+	void DisplayEquipment();
 
 	void PrintInventoryRows();
 	void PrintEquipmentRows();
@@ -56,15 +57,22 @@ public:
 	void ClearInventoryList();
 	void CleanIfNewStackLogMessage();
 	void CleanInventory();
+	void CleanEquipment();
 
 	bool GetInventoryToggle();
 	void SetInventoryToggle(bool isInventoryDisplayed);
-
 	bool IsInventoryPrinted();
 	void SetIsInventoryPrinted(bool isInventoryPrinted);
 
+	bool GetEquipmentToggle();
+	void SetEquipmentToggle(bool isEquipmentDisplayed);
+	bool IsEquipmentPrinted();
+	void SetIsEquipmentPrinted(bool isInventoryPrinted);
+
 	void EquipObject();
 	bool IsEquipmentSlotFull();
+	void UpdateCursorMenu();
+	void RefreshToggledContainers();
 
 private:
 	void CleanNumberOfcolumnChars(size_t numberOfColToClean);
@@ -74,12 +82,19 @@ private:
 	void FindOtherStack();
 	void CheckIfLastStack();
 	bool IsInventoryEmpty();
+
 	void RefreshPrintedInventory();
 	void ResetPrintedInventoryRows();
 	size_t GetPrintedInventoryRows();
 	void SetPrintedInventoryRows(size_t printedInventoryRows);
+
+	void RefreshPrintedEquipment();
+	void ResetPrintedEquipmentRows();
+	size_t GetPrintedEquipmentRows();
+	void SetPrintedEquipmentRows(size_t printedInventoryRows);
+
 	bool IsThereEquipedItems();
-	
+
 //Member variables
 public:
 	// Source : https://stackoverflow.com/questions/19762755/creating-a-list-in-c-with-initial-capacity
@@ -101,13 +116,24 @@ private:
 
 	COORD m_printedInvetoryLastCursorPosition;
 	COORD m_cursorPositionBeforeInventory;
+	//COORD m_refreshInventoryLastCursorPosition;
+
+	COORD m_printedEquipmentLastCursorPosition;
+	COORD m_cursorPositionBeforeEquipment;
+	//COORD m_refreshEquipmentLastCursorPosition;
+
+	COORD m_cursorPositionEndOfMenu;
 
 	size_t m_printedInventoryRows = 0;
+	size_t m_printedEquipmentRows = 0;
 	
 	E_equimentSlots m_currentEquipmentSlot = E_equimentSlots::Head;
 	E_inputMode m_currentInputMode = E_inputMode::Navigation;
 	bool m_isLogMessagePrinted = false;
 	bool m_isNewStackLogMessagePrinted = false;
+
 	bool m_inventoryToggle = false;
 	bool m_isInventoryPrinted = false;
+	bool m_equipmentToggle = false;
+	bool m_isEquipmentPrinted = false;
 };

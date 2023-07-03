@@ -20,6 +20,7 @@ private:
 	void GetNavigationInput();
 	void GetEditionInput();
 	void InventoryDisplayToggle();
+	void EquipmentDisplayToggle();
 	
 // Member variables
 public:

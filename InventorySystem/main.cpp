@@ -5,6 +5,7 @@
 #include "FileManager.h"
 
 void InventoryRender(Inventory* inventory);
+void EquipmentRender(Inventory* inventory);
 
 int main()
 {
@@ -30,11 +31,12 @@ int main()
 		// If the user presses a key
 		if (_kbhit())
 		{
-			// Verify that key
+			// Verify that key 
 			input->GetInput();
 		}
 
 		InventoryRender(inventory);
+		EquipmentRender(inventory);
 	}
 
 	// Delete pointer objects
@@ -48,7 +50,6 @@ int main()
 
 void InventoryRender(Inventory* inventory)
 {
-
 	if (inventory->GetInventoryToggle() && !inventory->IsInventoryPrinted())
 	{
 		inventory->DisplayInventory();
@@ -56,5 +57,19 @@ void InventoryRender(Inventory* inventory)
 	else if (!inventory->GetInventoryToggle() && inventory->IsInventoryPrinted())
 	{
 		inventory->CleanInventory();
+		inventory->RefreshToggledContainers();
+	}
+}
+
+void EquipmentRender(Inventory* inventory)
+{
+	if (inventory->GetEquipmentToggle() && !inventory->IsEquipmentPrinted())
+	{
+		inventory->DisplayEquipment();
+	}
+	else if (!inventory->GetEquipmentToggle() && inventory->IsEquipmentPrinted())
+	{
+		inventory->CleanEquipment();
+		inventory->RefreshToggledContainers();
 	}
 }

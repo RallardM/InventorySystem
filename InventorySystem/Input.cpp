@@ -136,6 +136,12 @@ void Input::GetNavigationInput()
 		m_fileManager->LoadInventory();
 		break;
 
+	// Show equiped objects
+	case 'p':
+	case 'P':
+		EquipmentDisplayToggle();
+		break;
+
 	// Save the inventory to the txt file
 	case 's':
 	case 'S':
@@ -328,5 +334,17 @@ void Input::InventoryDisplayToggle()
 	else
 	{
 		m_inventory->SetInventoryToggle(true);
+	}
+}
+
+void Input::EquipmentDisplayToggle()
+{
+	if (m_inventory->GetEquipmentToggle())
+	{
+		m_inventory->SetEquipmentToggle(false);
+	}
+	else
+	{
+		m_inventory->SetEquipmentToggle(true);
 	}
 }
