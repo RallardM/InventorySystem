@@ -212,7 +212,7 @@ void Inventory::DisplayCurrentObject()
 	cout << UNIFORM_TAB << SELECTED_OBJECT;
 	cout << *(*m_inventoryPtrIterator)->GetName() + UNIFORM_TAB;
 
-	if ((*m_inventoryPtrIterator)->IsStackable() && *(*m_inventoryPtrIterator)->GetStackSize() > 1)
+	if ((*m_inventoryPtrIterator)->IsStackable() && *(*m_inventoryPtrIterator)->GetStackSize() > 0)
 	{
 		cout << STACK_SIZE;
 		DisplayStackSize();
@@ -225,23 +225,24 @@ void Inventory::DisplayInventory()
 
 	cout << endl << endl;
 	size_t iteration = 0;
+	ResetPrintedInventoryRows();
 
 	for (InventoryObject* object : m_inventoryObjectsList)
 	{
 		if (iteration == 5)
 		{
 			cout << endl;
-			m_printedInventoryRows++;
+			SetPrintedInventoryRows(m_printedInventoryRows + 1);
 		}
 
 		cout << UNIFORM_TAB << *(*object).GetName() << UNIFORM_TAB;
 		iteration++;
 	}
 
-	if (!m_inventoryObjectsList.empty() && m_printedInventoryRows == 0)
-	{
-		m_printedInventoryRows++;
-	}
+	//if (!m_inventoryObjectsList.empty() && GetPrintedInventoryRows() == 0)
+	//{
+	SetPrintedInventoryRows(m_printedInventoryRows + 1);
+	//}
 
 	m_printedInvetoryLastCursorPosition = GetConsoleCursorPosition();
 	MoveCursorToLocation(m_cursorPositionBeforeInventory);
@@ -270,17 +271,16 @@ void Inventory::DestroyAllInventoryObjects() // TODO : Delete objects of objects
 
 void Inventory::ChangeStackSize(bool isIncreasing)
 {
-	//CheckIfStackable();
 	bool isItStackable = (*m_inventoryPtrIterator)->IsStackable(); // TODO : Remi : Delete after Debug
 	if (!isItStackable)
 	{
 		return;
 	}
 
-	InventoryObject* inventoryObject = *m_inventoryPtrIterator;
-	unsigned short int currentStackSize = *inventoryObject->GetStackSize();
-	unsigned short int maxStackSize = inventoryObject->GetMaxStackSize();
-	COORD consoleColCharToStack;
+	InventoryObject* inventoryObject = *m_inventoryPtrIterator;// TODO : Remi : Delete after Debug
+	unsigned short int currentStackSize = *inventoryObject->GetStackSize();// TODO : Remi : Delete after Debug
+	unsigned short int maxStackSize = inventoryObject->GetMaxStackSize();// TODO : Remi : Delete after Debug
+	COORD consoleColCharToStack;// TODO : Remi : Delete after Debug
 	consoleColCharToStack.X = static_cast<SHORT>(strlen(UNIFORM_TAB) + strlen(SELECTED_OBJECT) + (*m_inventoryPtrIterator)->GetNameLenght() + strlen(UNIFORM_TAB) + strlen(STACK_SIZE));
 	consoleColCharToStack.Y = 5; // TODO : Remi : Magic number
 
@@ -313,6 +313,8 @@ void Inventory::ChangeStackSize(bool isIncreasing)
 		MoveCursorToLocation(consoleColCharToStack);
 		cout << UNIFORM_TAB << STACK_CREATED;
 		m_isNewStackLogMessagePrinted = true;
+		SetPrintedInventoryRows(m_printedInventoryRows + 1);
+		RefreshPrintedInventory();
 	}
 	else if (!isIncreasing && currentStackSize > 1)
 	{
@@ -321,9 +323,10 @@ void Inventory::ChangeStackSize(bool isIncreasing)
 		MoveCursorToLocation(consoleColCharToStack);
 		DisplayStackSize();
 	}
-	else if (!isIncreasing && currentStackSize == 0)
+	else if (!isIncreasing && currentStackSize == 1)
 	{
-		OnEmptyStack();
+		OnLastOnStack();
+		RefreshPrintedInventory();
 	}
 	else
 	{
@@ -462,21 +465,13 @@ void Inventory::CleanInventory()
 	MoveCursorToLocation(m_printedInvetoryLastCursorPosition);
 	cout << endl;
 
-	for (size_t i = 0; i < m_printedInventoryRows; i++)
+	for (size_t i = 0; i < GetPrintedInventoryRows(); i++)
 	{
 		ClearConsolePreviousLine();
 	}
 
 	SetIsInventoryPrinted(false);
 	MoveCursorToLocation(m_cursorPositionBeforeInventory);
-	ResetPrintedInventoryValues();
-}
-
-void Inventory::ResetPrintedInventoryValues()
-{
-	m_printedInventoryRows = 0;
-	m_printedInvetoryLastCursorPosition = {0,0};
-	m_cursorPositionBeforeInventory = {0,0};
 }
 
 bool Inventory::GetInventoryToggle()
@@ -531,8 +526,9 @@ void Inventory::DisplayStackSize()
 	cout << UNIFORM_TAB << CHANGE_STACK << UNIFORM_TAB;
 }
 
-void Inventory::OnEmptyStack()
-{
+void Inventory::OnLastOnStack()
+{ 
+	bool hasMultipleStacks = (*m_inventoryPtrIterator)->HasMultipleStacks(); // TODO : Remi : Delete after debug 
 	if ((*m_inventoryPtrIterator)->HasMultipleStacks())
 	{
 		FindOtherStack();
@@ -540,7 +536,8 @@ void Inventory::OnEmptyStack()
 	}
 	else
 	{
-		m_inventoryObjectsList.remove(*m_inventoryPtrIterator);
+		m_inventoryPtrIterator = m_inventoryObjectsList.erase(m_inventoryPtrIterator);
+		DisplayCurrentObject();
 	}
 }
 
@@ -585,4 +582,43 @@ void Inventory::CheckIfLastStack()
 bool Inventory::IsInventoryEmpty()
 {
 	return m_inventoryObjectsList.empty();
+}
+
+void Inventory::RefreshPrintedInventory()
+{
+	if (IsInventoryEmpty())
+	{
+		return;
+	}
+
+	if (!GetInventoryToggle())
+	{
+		return;
+	}
+
+	CleanInventory();
+	DisplayInventory();
+}
+
+//void Inventory::ResetPrintedInventoryValues()
+//{
+//	ResetPrintedInventoryRows();
+//	m_printedInvetoryLastCursorPosition = { 0,0 };
+//	m_cursorPositionBeforeInventory = { 0,0 };
+//}
+
+void Inventory::ResetPrintedInventoryRows()
+{
+	SetPrintedInventoryRows(0);
+}
+
+
+size_t Inventory::GetPrintedInventoryRows()
+{
+	return m_printedInventoryRows;
+}
+
+void Inventory::SetPrintedInventoryRows(size_t printedInventoryRows)
+{
+	m_printedInventoryRows = printedInventoryRows;
 }

@@ -318,14 +318,12 @@ void Input::NavigateItems(bool isNext)
 
 void Input::InventoryDisplayToggle()
 {
-	
 	if (m_inventory->GetInventoryToggle())
 	{
 		m_inventory->SetInventoryToggle(false);
 	}
 	else
 	{
-		//m_inventory->ResetPrintedInventoryValues();
 		m_inventory->SetInventoryToggle(true);
 	}
 }

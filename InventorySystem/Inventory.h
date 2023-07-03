@@ -53,7 +53,6 @@ public:
 	void ClearInventoryList();
 	void CleanIfNewStackLogMessage();
 	void CleanInventory();
-	void ResetPrintedInventoryValues();
 
 	bool GetInventoryToggle();
 	void SetInventoryToggle(bool isInventoryDisplayed);
@@ -65,10 +64,14 @@ private:
 	void CleanNumberOfcolumnChars(size_t numberOfColToClean);
 	bool IsCurrentSelectionPrinted();
 	void DisplayStackSize();
-	void OnEmptyStack();
+	void OnLastOnStack();
 	void FindOtherStack();
 	void CheckIfLastStack();
 	bool IsInventoryEmpty();
+	void RefreshPrintedInventory();
+	void ResetPrintedInventoryRows();
+	size_t GetPrintedInventoryRows();
+	void SetPrintedInventoryRows(size_t printedInventoryRows);
 	
 //Member variables
 public:
