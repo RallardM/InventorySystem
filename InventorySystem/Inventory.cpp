@@ -15,10 +15,6 @@ using namespace std;
 Inventory::Inventory()
 {
 	cout << "Enters Inventory constructor" << endl;
-	//for (size_t i = 0; i < MAX_INVENTORY_OBJECTS; i++)
-	//{
-	//	m_inventoryObjectsList.push_back(new InventoryObject("Typeless", "Nameless", 0, 0, 0, 0, E_equimentSlots::Count, true));
-	//}
 
 	m_inventoryPtrIterator = m_inventoryObjectsList.begin();
 }
@@ -34,7 +30,7 @@ void Inventory::AddItem(E_itemType itemType, string itemName, unsigned short int
 	else if (itemType == E_itemType::Equipment)
 	{
 		EquipmentObject* newEquipmentObject;
-		newEquipmentObject = new EquipmentObject(itemName, itemCost, itemType, currentDurability, maxDurability, equipmentSlot);
+		newEquipmentObject = new EquipmentObject(itemName, itemCost, false, itemType, currentDurability, maxDurability, equipmentSlot);
 		m_inventoryObjectsList.push_back(newEquipmentObject);
 	}
 	else if (itemType == E_itemType::BaseObject)
@@ -178,9 +174,10 @@ void Inventory::DisplayNavigationMenu()
 	cout << endl <<
 		UNIFORM_TAB << "A. Previous Object" <<
 		UNIFORM_TAB << "D. Next Object" <<
-		UNIFORM_TAB << "R. Remove Selected" <<
-		UNIFORM_TAB << "I. Edit Objects" << endl << endl <<
+	    UNIFORM_TAB << "E. Equip Object" <<
+		UNIFORM_TAB << "R. Remove Selected" << endl << endl <<
 		UNIFORM_TAB << "SPACE. Show Invetory" <<
+		UNIFORM_TAB << "I. Edit Objects" << 
 		UNIFORM_TAB << "L. Load Invetory" <<
 		UNIFORM_TAB << "S. Save Invetory" <<
 		UNIFORM_TAB << QUIT;
@@ -222,31 +219,82 @@ void Inventory::DisplayCurrentObject()
 void Inventory::DisplayInventory()
 {
 	m_cursorPositionBeforeInventory = GetConsoleCursorPosition();
-
-	cout << endl << endl;
-	size_t iteration = 0;
 	ResetPrintedInventoryRows();
 
+	PrintInventoryRows();
+	PrintEquipmentRows();
+
+	m_printedInvetoryLastCursorPosition = GetConsoleCursorPosition();
+	MoveCursorToLocation(m_cursorPositionBeforeInventory);
+	SetIsInventoryPrinted(true);
+}
+
+void Inventory::PrintInventoryRows()
+{
+	size_t iteration = 0;
+
+	cout << endl << endl;
+	cout << UNIFORM_TAB << "Inventory: " << endl << endl;
+	SetPrintedInventoryRows(m_printedInventoryRows + 3);
+
+	if (IsInventoryEmpty())
+	{
+		cout << UNIFORM_TAB << "Inventory is empty.";
+		SetPrintedInventoryRows(m_printedInventoryRows + 1);
+		return;
+	}
+	
 	for (InventoryObject* object : m_inventoryObjectsList)
 	{
+		if (*object->GetType() == E_itemType::Equipment && object->IsEquiped() == true)
+		{
+			continue;
+		}
+
 		if (iteration == 5)
 		{
 			cout << endl;
 			SetPrintedInventoryRows(m_printedInventoryRows + 1);
 		}
 
-		cout << UNIFORM_TAB << *(*object).GetName() << UNIFORM_TAB;
+		cout << UNIFORM_TAB << *object->GetName() << UNIFORM_TAB;
 		iteration++;
 	}
-
-	//if (!m_inventoryObjectsList.empty() && GetPrintedInventoryRows() == 0)
-	//{
 	SetPrintedInventoryRows(m_printedInventoryRows + 1);
-	//}
+}
 
-	m_printedInvetoryLastCursorPosition = GetConsoleCursorPosition();
-	MoveCursorToLocation(m_cursorPositionBeforeInventory);
-	SetIsInventoryPrinted(true);
+void Inventory::PrintEquipmentRows()
+{
+	size_t iteration = 0;
+
+	cout << endl << endl;
+	cout << UNIFORM_TAB << "Equipment: " << endl << endl;
+	SetPrintedInventoryRows(m_printedInventoryRows + 3);
+
+	if (!IsThereEquipedItems())
+	{
+		cout << UNIFORM_TAB << "No item equiped.";
+		SetPrintedInventoryRows(m_printedInventoryRows + 1);
+		return;
+	}
+
+	for (InventoryObject* object : m_inventoryObjectsList)
+	{
+		if (*object->GetType() != E_itemType::Equipment || object->IsEquiped() == false)
+		{
+			continue;
+		}
+
+		if (iteration == 5)
+		{
+			cout << endl;
+			SetPrintedInventoryRows(m_printedInventoryRows + 1);
+		}
+
+		cout << UNIFORM_TAB << *object->GetName() << UNIFORM_TAB;
+		iteration++;
+	}
+	SetPrintedInventoryRows(m_printedInventoryRows + 1);
 }
 
 void Inventory::MoveCursorToLocation(COORD position)
@@ -494,6 +542,26 @@ void Inventory::SetIsInventoryPrinted(bool isInventoryPrinted)
 	m_isInventoryPrinted = isInventoryPrinted;
 }
 
+void Inventory::EquipObject()
+{
+	if (*(*m_inventoryPtrIterator)->GetType() != E_itemType::Equipment)
+	{
+		// TODO : Remi : add 'not equipable' message
+		return;
+	}
+
+	if ((*m_inventoryPtrIterator)->IsEquiped())
+	{
+		(*m_inventoryPtrIterator)->SetIsEquiped(false);
+	}
+	else
+	{
+		(*m_inventoryPtrIterator)->SetIsEquiped(true);
+	}
+
+	RefreshPrintedInventory();
+}
+
 void Inventory::CleanNumberOfcolumnChars(size_t numberOfColToClean)
 {
 	for (size_t i = 0; i < numberOfColToClean; i++)
@@ -600,13 +668,6 @@ void Inventory::RefreshPrintedInventory()
 	DisplayInventory();
 }
 
-//void Inventory::ResetPrintedInventoryValues()
-//{
-//	ResetPrintedInventoryRows();
-//	m_printedInvetoryLastCursorPosition = { 0,0 };
-//	m_cursorPositionBeforeInventory = { 0,0 };
-//}
-
 void Inventory::ResetPrintedInventoryRows()
 {
 	SetPrintedInventoryRows(0);
@@ -621,4 +682,16 @@ size_t Inventory::GetPrintedInventoryRows()
 void Inventory::SetPrintedInventoryRows(size_t printedInventoryRows)
 {
 	m_printedInventoryRows = printedInventoryRows;
+}
+
+bool Inventory::IsThereEquipedItems()
+{
+	for (InventoryObject* object : m_inventoryObjectsList)
+	{
+		if (object->IsEquiped())
+		{
+			return true;
+		}
+	}
+	return false;
 }

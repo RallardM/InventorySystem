@@ -25,6 +25,8 @@ public:
 	virtual unsigned short int GetMaxStackSize() const { return NULL; }
 	virtual const bool IsStackable() const { return NULL; }
 	virtual bool HasMultipleStacks() const { return NULL; }
+	virtual bool IsEquiped() const { return NULL; }
+	virtual void SetIsEquiped(bool isEquiped) {  }
 	virtual void SetMultupleStacks(bool hasMultipleStacks) {  }
 	virtual unsigned short int* GetId() { return NULL; }
 	virtual void InstantiateId() {};

@@ -110,10 +110,15 @@ void Input::GetNavigationInput()
 		NavigateItems(true);
 		break;
 
+	// Equip the selected object
+	case 'e':
+	case 'E':
+		m_inventory->EquipObject();
+		break;
+
 	// Remove the selected object from the inventory
 	case 'r':
 	case 'R':
-		// TODO : Remi
 		m_inventory->RemoveItem();
 		break;
 
@@ -127,7 +132,6 @@ void Input::GetNavigationInput()
 	// Load the inventory from the txt file
 	case 'l':
 	case 'L':
-		// TODO : Remi : test
 		m_inventory->ClearInventoryList();
 		m_fileManager->LoadInventory();
 		break;
@@ -135,7 +139,6 @@ void Input::GetNavigationInput()
 	// Save the inventory to the txt file
 	case 's':
 	case 'S':
-		// TODO : Remi save inventory
 		m_fileManager->CleanTxtFile();
 		m_fileManager->SaveInventory();
 		break;

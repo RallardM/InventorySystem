@@ -7,6 +7,7 @@ using namespace std;
 EquipmentObject::EquipmentObject(
 	string name,
 	unsigned short int cost,
+	bool equipped /* = false */,
 	E_itemType type /* = E_itemType::Equipment */,
 	unsigned short int currentDurability/* = 0 */,
 	unsigned short int maxDurability/* = 0 */,

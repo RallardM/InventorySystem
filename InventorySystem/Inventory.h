@@ -34,6 +34,9 @@ public:
 	void DisplayCurrentObject();
 	void DisplayInventory();
 
+	void PrintInventoryRows();
+	void PrintEquipmentRows();
+
 	void MoveCursorToLocation(COORD position);
 	void DestroyAllInventoryObjects();
 	void ChangeStackSize(bool isIncreasing);
@@ -60,6 +63,8 @@ public:
 	bool IsInventoryPrinted();
 	void SetIsInventoryPrinted(bool isInventoryPrinted);
 
+	void EquipObject();
+
 private:
 	void CleanNumberOfcolumnChars(size_t numberOfColToClean);
 	bool IsCurrentSelectionPrinted();
@@ -72,6 +77,7 @@ private:
 	void ResetPrintedInventoryRows();
 	size_t GetPrintedInventoryRows();
 	void SetPrintedInventoryRows(size_t printedInventoryRows);
+	bool IsThereEquipedItems();
 	
 //Member variables
 public:
