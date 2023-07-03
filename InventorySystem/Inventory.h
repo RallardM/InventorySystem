@@ -32,6 +32,7 @@ public:
 	void DisplayNavigationMenu();
 	void DisplayEditionMenu();
 	void DisplayCurrentObject();
+	void DisplayInventory();
 
 	void MoveCursorToLocation(COORD position);
 	void DestroyAllInventoryObjects();
@@ -39,6 +40,7 @@ public:
 
 	void SetStackSizeFromObjectId();
 
+	COORD GetConsoleCursorPosition();
 	E_inputMode GetCurrentInputMode();
 	E_equimentSlots GetCurrentEquipmentSlot();
 	string GetEnumString(E_equimentSlots* equipmentSlot);
@@ -50,6 +52,14 @@ public:
 	void ClearConsolePreviousLine();
 	void ClearInventoryList();
 	void CleanIfNewStackLogMessage();
+	void CleanInventory();
+	void ResetPrintedInventoryValues();
+
+	bool GetInventoryToggle();
+	void SetInventoryToggle(bool isInventoryDisplayed);
+
+	bool IsInventoryPrinted();
+	void SetIsInventoryPrinted(bool isInventoryPrinted);
 
 private:
 	void CleanNumberOfcolumnChars(size_t numberOfColToClean);
@@ -59,8 +69,6 @@ private:
 	void FindOtherStack();
 	void CheckIfLastStack();
 	bool IsInventoryEmpty();
-
-
 	
 //Member variables
 public:
@@ -72,7 +80,6 @@ public:
 	const char* FILE_PATH = "saved_files/InventorySaveFile.txt";
 
 private:
-	//InventoryObject* m_currentItem = nullptr;
 	const char* UNIFORM_TAB = "    "; // "\t" is not working properly. It is not tabulating the same way for every string.
 	const char* ENTER_NAME = "Enter item name: ";
 	const char* ENTER_COST = "Enter item cost: ";
@@ -82,9 +89,15 @@ private:
 	const char* CHANGE_STACK = "+/- Change Stack";
 	const char* STACK_CREATED = "New stack created";
 
-	//const unsigned short int MAX_INVENTORY_OBJECTS = 20;
+	COORD m_printedInvetoryLastCursorPosition;
+	COORD m_cursorPositionBeforeInventory;
+
+	size_t m_printedInventoryRows = 0;
+	
 	E_equimentSlots m_currentEquipmentSlot = E_equimentSlots::Head;
 	E_inputMode m_currentInputMode = E_inputMode::Navigation;
 	bool m_isLogMessagePrinted = false;
 	bool m_isNewStackLogMessagePrinted = false;
+	bool m_inventoryToggle = false;
+	bool m_isInventoryPrinted = false;
 };

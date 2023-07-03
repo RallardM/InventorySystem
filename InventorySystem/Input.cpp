@@ -39,6 +39,58 @@ void Input::GetInput()
 	}
 }
 
+void Input::NavigateEquipmentSlots(E_equimentSlots& currentEquipmentSlot)
+{
+	bool IsChoiceMade = false;
+	while (!IsChoiceMade)
+	{
+		if (_kbhit())
+		{
+			char input = _getch();
+			switch (input)
+			{
+				// Move the selection to the slot on the left
+			case 'a':
+			case 'A':
+				NavigateSlots(false); // TODO: Remi : check if correct directions
+				break;
+
+				// Move the selection to the slot on the right
+			case 'd':
+			case 'D':
+				NavigateSlots(true); // TODO: Remi : check if correct directions
+				break;
+
+				// Choose the selected slot
+			case 'e':
+			case 'E':
+				IsChoiceMade = true;
+				m_inventory->ClearConsolePreviousLine();
+				break;
+
+			default:
+				// TODO : Remi : Error message : You have to enter an invalid input
+				break;
+			}
+		}
+	}
+}
+
+bool Input::GetIsGameRunning()
+{
+	return m_isGameRunning;
+}
+
+void Input::SetInventory(Inventory* inventory)
+{
+	m_inventory = inventory;
+}
+
+void Input::SetFileManager(FileManager* fileManager)
+{
+	m_fileManager = fileManager;
+}
+
 void Input::GetNavigationInput()
 {
 	char input = _getch();
@@ -107,6 +159,11 @@ void Input::GetNavigationInput()
 		m_inventory->ChangeStackSize(false);
 		break;
 
+	// Show inventory
+	case 32: // Space
+		InventoryDisplayToggle();
+		break;
+
 	default:
 		// TODO : Paulo : Error message : You have to enter an invalid input
 		break;
@@ -145,13 +202,6 @@ void Input::GetEditionInput()
 		m_inventory->DisplayCurrentObject();
 		break;
 
-	// Quit the game
-	case 'q':
-	case 'Q':
-	case 'esc':
-		m_isGameRunning = false;
-		break;
-
 	// Go back to the navigation menu
 	case 'n':
 	case 'N':
@@ -160,47 +210,23 @@ void Input::GetEditionInput()
 		m_inventory->DisplayNavigationMenu();
 		m_inventory->DisplayCurrentObject();
 		break;
-	
+
+
+	// Quit the game
+	case 'q':
+	case 'Q':
+	case 'esc':
+		m_isGameRunning = false;
+		break;
+
+	// Show inventory
+	case '32': // Space
+		InventoryDisplayToggle();
+		break;
+
 	default:
 		// TODO : Remi : Error handling : You have to enter an invalid input
 		break;
-	}
-}
-
-void Input::NavigateEquipmentSlots(E_equimentSlots& currentEquipmentSlot)
-{
-	bool IsChoiceMade = false;
-	while (!IsChoiceMade)
-	{
-		if (_kbhit())
-		{
-			char input = _getch();
-			switch (input)
-			{
-			// Move the selection to the slot on the left
-			case 'a':
-			case 'A':
-				NavigateSlots(false); // TODO: Remi : check if correct directions
-				break;
-
-			// Move the selection to the slot on the right
-			case 'd':
-			case 'D':
-				NavigateSlots(true); // TODO: Remi : check if correct directions
-				break;
-
-			// Choose the selected slot
-			case 'e':
-			case 'E':
-				IsChoiceMade = true;
-				m_inventory->ClearConsolePreviousLine();
-				break;
-
-			default:
-				// TODO : Remi : Error message : You have to enter an invalid input
-				break;
-			}
-		}
 	}
 }
 
@@ -248,7 +274,6 @@ void Input::NavigateSlots(bool isNext)
 	}
 }
 
-
 // Paulo coudl not finish in time, I used the help of chatGPT to finish this function as a placeholder for my other tasks
 void Input::NavigateItems(bool isNext)
 {
@@ -291,18 +316,16 @@ void Input::NavigateItems(bool isNext)
 	}
 }
 
-
-bool Input::GetIsGameRunning() 
+void Input::InventoryDisplayToggle()
 {
-	return m_isGameRunning;
-}
-
-void Input::SetInventory(Inventory* inventory)
-{
-	m_inventory = inventory;
-}
-
-void Input::SetFileManager(FileManager* fileManager)
-{
-	m_fileManager = fileManager;
+	
+	if (m_inventory->GetInventoryToggle())
+	{
+		m_inventory->SetInventoryToggle(false);
+	}
+	else
+	{
+		//m_inventory->ResetPrintedInventoryValues();
+		m_inventory->SetInventoryToggle(true);
+	}
 }

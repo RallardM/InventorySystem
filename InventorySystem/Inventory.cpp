@@ -180,6 +180,7 @@ void Inventory::DisplayNavigationMenu()
 		UNIFORM_TAB << "D. Next Object" <<
 		UNIFORM_TAB << "R. Remove Selected" <<
 		UNIFORM_TAB << "I. Edit Objects" << endl << endl <<
+		UNIFORM_TAB << "SPACE. Show Invetory" <<
 		UNIFORM_TAB << "L. Load Invetory" <<
 		UNIFORM_TAB << "S. Save Invetory" <<
 		UNIFORM_TAB << QUIT;
@@ -194,6 +195,7 @@ void Inventory::DisplayEditionMenu()
 		UNIFORM_TAB << "B. Add Basic Object" <<
 		UNIFORM_TAB << "C. Add Consumable" <<
 		UNIFORM_TAB << "E. Add Equipment" << endl << endl <<
+		UNIFORM_TAB << "SPACE. Show Invetory" <<
 		UNIFORM_TAB << "N. Back To Navigation" <<
 		UNIFORM_TAB << QUIT << endl << endl;
 }
@@ -215,6 +217,35 @@ void Inventory::DisplayCurrentObject()
 		cout << STACK_SIZE;
 		DisplayStackSize();
 	}
+}
+
+void Inventory::DisplayInventory()
+{
+	m_cursorPositionBeforeInventory = GetConsoleCursorPosition();
+
+	cout << endl << endl;
+	size_t iteration = 0;
+
+	for (InventoryObject* object : m_inventoryObjectsList)
+	{
+		if (iteration == 5)
+		{
+			cout << endl;
+			m_printedInventoryRows++;
+		}
+
+		cout << UNIFORM_TAB << *(*object).GetName() << UNIFORM_TAB;
+		iteration++;
+	}
+
+	if (!m_inventoryObjectsList.empty() && m_printedInventoryRows == 0)
+	{
+		m_printedInventoryRows++;
+	}
+
+	m_printedInvetoryLastCursorPosition = GetConsoleCursorPosition();
+	MoveCursorToLocation(m_cursorPositionBeforeInventory);
+	SetIsInventoryPrinted(true);
 }
 
 void Inventory::MoveCursorToLocation(COORD position)
@@ -269,6 +300,8 @@ void Inventory::ChangeStackSize(bool isIncreasing)
 		ClearConsolePreviousLine(); // Removes constructor message
 		
 		SetStackSizeFromObjectId();
+
+		// TODO : Remi : Delete after Debug
 		//unsigned short int stackSize = 1;
 		//(*m_inventoryPtrIterator)->SetStackSize(&stackSize);
 		//(*m_inventoryPtrIterator)->SetMultupleStacks(true);
@@ -308,6 +341,24 @@ void Inventory::SetStackSizeFromObjectId()
 			object->SetStackSize(stackSize);
 			object->SetMultupleStacks(true);
 		}
+	}
+}
+
+// Source : https://www.w3schools.blog/c-get-cursor-position-console
+// Source : https://stackoverflow.com/questions/35800020/how-do-i-find-the-coordinates-of-the-cursor-in-a-console-window
+COORD Inventory::GetConsoleCursorPosition()
+{
+	HANDLE hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO cbsi;
+	if (GetConsoleScreenBufferInfo(hConsoleOutput, &cbsi))
+	{
+		return cbsi.dwCursorPosition;
+	}
+	else
+	{
+		// The function failed. Call GetLastError() for details.
+		COORD invalid = { 0, 0 };
+		return invalid;
 	}
 }
 
@@ -404,6 +455,48 @@ void Inventory::CleanIfNewStackLogMessage()
 	MoveCursorToLocation(consoleColCharToStack);
 
 	m_isNewStackLogMessagePrinted = false;
+}
+
+void Inventory::CleanInventory()
+{
+	MoveCursorToLocation(m_printedInvetoryLastCursorPosition);
+	cout << endl;
+
+	for (size_t i = 0; i < m_printedInventoryRows; i++)
+	{
+		ClearConsolePreviousLine();
+	}
+
+	SetIsInventoryPrinted(false);
+	MoveCursorToLocation(m_cursorPositionBeforeInventory);
+	ResetPrintedInventoryValues();
+}
+
+void Inventory::ResetPrintedInventoryValues()
+{
+	m_printedInventoryRows = 0;
+	m_printedInvetoryLastCursorPosition = {0,0};
+	m_cursorPositionBeforeInventory = {0,0};
+}
+
+bool Inventory::GetInventoryToggle()
+{
+	return m_inventoryToggle;
+}
+
+void Inventory::SetInventoryToggle(bool isInventoryDisplayed)
+{
+	m_inventoryToggle = isInventoryDisplayed;
+}
+
+bool Inventory::IsInventoryPrinted()
+{
+	return m_isInventoryPrinted;
+}
+
+void Inventory::SetIsInventoryPrinted(bool isInventoryPrinted)
+{
+	m_isInventoryPrinted = isInventoryPrinted;
 }
 
 void Inventory::CleanNumberOfcolumnChars(size_t numberOfColToClean)

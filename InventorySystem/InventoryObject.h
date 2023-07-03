@@ -16,7 +16,7 @@ public:
 	virtual E_equimentSlots* GetEquipmentSlot() const { return nullptr; }
 	virtual unsigned short int* GetCost() const { return nullptr; }
 	virtual unsigned short int* GetStackSize() const { return nullptr; }
-	virtual void SetStackSize(unsigned short int new_size) 
+	virtual void SetStackSize(unsigned short int new_size) // TODO : Remi : Collapse after debug
 	{  
 		return;
 	}
@@ -26,9 +26,8 @@ public:
 	virtual const bool IsStackable() const { return NULL; }
 	virtual bool HasMultipleStacks() const { return NULL; }
 	virtual void SetMultupleStacks(bool hasMultipleStacks) {  }
-
 	virtual unsigned short int* GetId() { return NULL; }
-	void InstantiateId() {};
+	virtual void InstantiateId() {};
 	
 protected:
 

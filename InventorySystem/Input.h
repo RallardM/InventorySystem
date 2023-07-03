@@ -10,15 +10,16 @@ public:
 	Input(bool* isGameRunning);
 	void GetInput();
 	void NavigateEquipmentSlots(E_equimentSlots& currentEquipmentSlot);
-	void NavigateSlots(bool isNext);
-	void NavigateItems(bool isNext);
 	bool GetIsGameRunning();
 	void SetInventory(Inventory* inventory);
 	void SetFileManager(FileManager* fileManager);
 
 private:
+	void NavigateSlots(bool isNext);
+	void NavigateItems(bool isNext);
 	void GetNavigationInput();
 	void GetEditionInput();
+	void InventoryDisplayToggle();
 	
 // Member variables
 public:

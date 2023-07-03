@@ -4,6 +4,8 @@
 #include "Input.h"
 #include "FileManager.h"
 
+void InventoryRender(Inventory* inventory);
+
 int main()
 {
 	// Create pointer objects
@@ -31,6 +33,8 @@ int main()
 			// Verify that key
 			input->GetInput();
 		}
+
+		InventoryRender(inventory);
 	}
 
 	// Delete pointer objects
@@ -40,4 +44,17 @@ int main()
 	inventory->DestroyAllInventoryObjects();
 	delete inventory;
 	delete input;
+}
+
+void InventoryRender(Inventory* inventory)
+{
+
+	if (inventory->GetInventoryToggle() && !inventory->IsInventoryPrinted())
+	{
+		inventory->DisplayInventory();
+	}
+	else if (!inventory->GetInventoryToggle() && inventory->IsInventoryPrinted())
+	{
+		inventory->CleanInventory();
+	}
 }
