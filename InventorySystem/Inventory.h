@@ -116,11 +116,9 @@ private:
 
 	COORD m_printedInvetoryLastCursorPosition;
 	COORD m_cursorPositionBeforeInventory;
-	//COORD m_refreshInventoryLastCursorPosition;
 
 	COORD m_printedEquipmentLastCursorPosition;
 	COORD m_cursorPositionBeforeEquipment;
-	//COORD m_refreshEquipmentLastCursorPosition;
 
 	COORD m_cursorPositionEndOfMenu;
 

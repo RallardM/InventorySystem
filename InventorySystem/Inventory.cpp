@@ -208,8 +208,18 @@ void Inventory::DisplayCurrentObject()
 	ClearConsolePreviousLine();
 	cout << UNIFORM_TAB << SELECTED_OBJECT;
 	cout << *(*m_inventoryPtrIterator)->GetName() + UNIFORM_TAB;
+	string cost = to_string(*(*m_inventoryPtrIterator)->GetCost());
+	cout << "$" + cost + UNIFORM_TAB;
 
-	if ((*m_inventoryPtrIterator)->IsStackable() && *(*m_inventoryPtrIterator)->GetStackSize() > 0)
+	if (*(*m_inventoryPtrIterator)->GetType() == E_itemType::Equipment)
+	{
+		string currDur = to_string(*(*m_inventoryPtrIterator)->GetCurrentDurability());
+		string maxDur = to_string(*(*m_inventoryPtrIterator)->GetMaxDurability());
+		cout << "Durability: " + currDur + "/" + maxDur + UNIFORM_TAB;
+		cout << "Equip On: " + GetEnumString((*m_inventoryPtrIterator)->GetEquipmentSlot()) + UNIFORM_TAB;
+	}
+
+	if ((*m_inventoryPtrIterator)->IsStackable())
 	{
 		cout << STACK_SIZE;
 		DisplayStackSize();

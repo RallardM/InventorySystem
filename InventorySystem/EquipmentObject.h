@@ -20,7 +20,10 @@ public:
 	size_t GetNameLenght() const override { return m_name->length(); }
 	E_itemType* GetType() const override { return m_type; }
 	E_equimentSlots* GetEquipmentSlot() const override { return m_equipmentSlot; }
-	unsigned short int* GetCost() const override { return m_cost; }
+	unsigned short int* GetCost() const override // TODO: Collapse after debug
+	{ 
+		return m_cost; 
+	}
 	unsigned short int* GetCurrentDurability() const override { return m_currentDurability; }
 	unsigned short int* GetMaxDurability() const override { return m_maxDurability; }
 	const bool IsStackable() const override { return IS_STACKABLE; }
